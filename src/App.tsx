@@ -1,15 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-
+import { ThemeProvider, colors, createTheme } from '@mui/material'
+import Home from './pages/Home'
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: colors.teal[300],
+      contrastText: "white",
+    },
+    secondary: {
+      main: colors.grey[500],
+    }
+  }
+})
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>Hello tui la Quynh ne mn</h1>
-    </>
+    <ThemeProvider theme={theme}>
+      <Home />
+    </ThemeProvider>
   )
 }
 
