@@ -5,6 +5,7 @@ import UserSpeedDial from "../components/UserSpeedDial.tsx";
 import Header from "../components/Header.tsx";
 import Carousel from "../components/Carousel.tsx";
 import ProductSection from "../components/ProductSection.tsx";
+import MyOrder from "../components/MyOrder.tsx";
 
 const User = () => {
     return (
@@ -15,7 +16,7 @@ const User = () => {
                     <UserSpeedDial />
                 </Box>
                 <Box sx={{ flex: 10, padding: '16px' }}>
-                    <UserProfile />
+                    <MyOrder />
                 </Box>
             </Box>
             <ProductSection />
