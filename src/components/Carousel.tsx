@@ -65,15 +65,17 @@ const Carousel = () => {
         autoplaySpeed: 2000,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
-        
+
     }
     return (
-        <Slider {...setting}>
-            <CarouselItem image={carouse1} />
-            <CarouselItem image={carouse2} />
-            <CarouselItem image={carouse3} />
-            <CarouselItem image={carouse4} />
-        </Slider>
+        <Box sx={{mt:3  }}>
+            <Slider  {...setting}>
+                <CarouselItem image={carouse1} />
+                <CarouselItem image={carouse2} />
+                <CarouselItem image={carouse3} />
+                <CarouselItem image={carouse4} />
+            </Slider>
+        </Box>
     )
 }
 
