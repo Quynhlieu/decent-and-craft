@@ -1,6 +1,7 @@
 import './App.css'
 import { ThemeProvider, colors, createTheme } from '@mui/material'
 import Home from './pages/Home'
+import ProductDetail from "./pages/ProductDetail.tsx";
 const theme = createTheme({
   palette: {
     primary: {
@@ -15,7 +16,8 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Home />
+      {/*<Home />*/}
+      <ProductDetail/>  
     </ThemeProvider>
   )
 }
