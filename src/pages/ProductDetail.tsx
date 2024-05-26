@@ -8,6 +8,7 @@ const ProductDetail = () => {
         <Header/>
         <MyBreadcrumb/>
         <Detail/>
+        
     </Box>
 )
 }
