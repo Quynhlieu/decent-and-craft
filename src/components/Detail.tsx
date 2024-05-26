@@ -1,7 +1,5 @@
-import {Box, Button, colors, Grid, Stack, Typography} from "@mui/material";
+import {Box, Button, colors, Grid, Stack, Tab, Tabs, Typography} from "@mui/material";
 import {grey} from "@mui/material/colors";
-import logo from "./Physical diagram.png"
-import {Splide, SplideSlide} from "@splidejs/react-splide";
 import '@splidejs/splide/dist/css/splide.min.css';
 import React from "react";
 import MySplideSlider from "./MySplideSlider.tsx";
@@ -9,15 +7,11 @@ import QuantityButton from "./QuantityButton.tsx";
 import TwitterIcon from '@mui/icons-material/Twitter';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 import FacebookIcon from '@mui/icons-material/Facebook';
-// interface productProps {
-//
-// }
+import {productDescription} from "../data/productDescription.ts"
+import {IProductDescription} from "../interfaces/IProductDescription.ts";
+import "../assets/product-detail.css"
 
-// interface MySplideSliderProps {
-//     images: string[];
-// }
-
-const Test: React.FC = () => {
+const Slider: React.FC = () => {
     const mainImages = [
         'https://via.placeholder.com/800x400?text=Image+1',
         'https://via.placeholder.com/800x400?text=Image+2',
@@ -35,31 +29,11 @@ const Test: React.FC = () => {
     return (
         <div className="App">
             <h1>Splide Slider with Thumbnails</h1>
-            <MySplideSlider mainImages={mainImages} thumbnails={thumbnails} />
+            <MySplideSlider mainImages={mainImages} thumbnails={thumbnails}/>
         </div>
     );
 };
 
-
-const ThumbnailSlider = () => {
-
-    return(
-            <Splide>
-                <SplideSlide>
-                    <img src={logo} alt="Image 1"/>
-                </SplideSlide>
-                <SplideSlide>
-                    <img src={logo} alt="Image 2"/>
-                </SplideSlide>
-                <SplideSlide>
-                    <img src={logo} alt="Image 1"/>
-                </SplideSlide>
-                <SplideSlide>
-                    <img src={logo} alt="Image 1"/>
-                </SplideSlide>
-            </Splide>
-    )
-}
 
 // Product Name
 const Title = () => {
@@ -123,7 +97,8 @@ const InformationProduct = () => {
             <Price/>
             <Box>
                 <Typography variant='subtitle1'>
-                    Sáp Thơm 100% Tinh Dầu Thiên Nhiên được tạo ra với tinh thần tôn trọng và đề cao vẻ đẹp giản dị của thiên nhiên.
+                    Sáp Thơm 100% Tinh Dầu Thiên Nhiên được tạo ra với tinh thần tôn trọng và đề cao vẻ đẹp giản dị của
+                    thiên nhiên.
                 </Typography>
                 <Typography variant='subtitle1'>
                     Thành phần: Sáp ong chất lượng cao và tinh dầu thiên nhiên cao cấp.
@@ -140,7 +115,7 @@ const InformationProduct = () => {
             </Box>
             <Stack direction="row" spacing={2} mt={2}>
                 <QuantityButton quantity={1} quantityStock={15}/>
-                <Button className="btn btn-cart" variant='contained' >THÊM VÀO GIỎ</Button>
+                <Button className="btn btn-cart" variant='contained'>THÊM VÀO GIỎ</Button>
             </Stack>
             <Stack direction="column" mt={2}>
                 <Typography variant="body2" className="product-meta">
@@ -162,18 +137,85 @@ const InformationProduct = () => {
     )
 }
 
+/* Description Tab*/
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+    const {children, value, index, ...other} = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{p: 3}}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+}
+
+const DescriptionProduct = () => {
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
+
+    // render các title
+    const showTitleTab: JSX.Element[] = productDescription.map((item: IProductDescription, index: number) => {
+            return (<Tab label={item.title} ></Tab>)
+        }
+    )
+    // render nội dung các tab
+    const showContentTab = productDescription.map((description: IProductDescription, index: number) => {
+        const descriptions = description.description.map((text, i) => (
+            <Typography key={i} variant="subtitle2">{text}</Typography>
+        ));
+        return (
+            <CustomTabPanel key={index} index={index} value={value}>
+                {descriptions}
+            </CustomTabPanel>
+        );
+    });
+
+    return (
+        <Box sx={{width: '100%', paddingX: 10}}>
+            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+                <Tabs value={value} onChange={handleChange}>
+                    {showTitleTab}
+                </Tabs>
+            </Box>
+            {showContentTab}
+        </Box>
+    );
+};
+/* End Description Tab*/
+
 // Chi tiet san pham
 const Detail = () => {
     return (
-        <Grid container spacing={5} paddingX={10}>
-            <Grid item xs={4}>
-                {/*<ThumbnailSlider/>*/}
-                <Test/>
+        <Box>
+            <Grid container spacing={5} paddingX={10}>
+                <Grid item xs={4}>
+                    <Slider/>
+                </Grid>
+                <Grid item xs={8}>
+                    <InformationProduct/>
+                </Grid>
+                <Grid item xs={12}>
+                    <DescriptionProduct/>
+                </Grid>
             </Grid>
-            <Grid item xs={8}>
-                <InformationProduct/>
-            </Grid>
-        </Grid>
+
+        </Box>
     )
 }
 export default Detail;

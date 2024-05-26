@@ -1,10 +1,10 @@
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-const MyBreadcrumb = () => {
+const BreadcrumbHeader = () => {
     return (
         <Breadcrumbs
             separator={<NavigateNextIcon fontSize='small'/>}
-            sx={{ paddingX: 10, mt: 5 }}
+            sx={{ paddingX: 10, marginY:5 }}
         >
             <Link underline="hover" color="inherit" href="#">
                 Fairy Corner
@@ -20,4 +20,4 @@ const MyBreadcrumb = () => {
     );
 }
 
-export default MyBreadcrumb;
+export default BreadcrumbHeader;
