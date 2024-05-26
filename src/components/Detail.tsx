@@ -1,7 +1,7 @@
 import {Box, colors, Grid, Stack, Typography} from "@mui/material";
 import {grey} from "@mui/material/colors";
-import { Splide, SplideSlide } from '@splidejs/react-splide';
-import logo form "Phy"
+import logo from "./Physical diagram.png"
+import {Splide, SplideSlide} from "@splidejs/react-splide";
 // interface productProps {
 //
 // }
@@ -9,22 +9,20 @@ import logo form "Phy"
 const SplideThumsnail = () => {
 
     return(
-        <>
             <Splide>
                 <SplideSlide>
-                    <img src="./Physical%20diagram.png" alt="Image 1"/>
+                    <img src={logo} alt="Image 1"/>
                 </SplideSlide>
                 <SplideSlide>
-                    <img src="./Physical%20diagram.png" alt="Image 2"/>
+                    <img src={logo} alt="Image 2"/>
                 </SplideSlide>
                 <SplideSlide>
-                    <img src="./Physical%20diagram.png" alt="Image 1"/>
+                    <img src={logo} alt="Image 1"/>
                 </SplideSlide>
                 <SplideSlide>
-                    <img src="./Physical%20diagram.png" alt="Image 1"/>
+                    <img src={logo} alt="Image 1"/>
                 </SplideSlide>
             </Splide>
-        </>
     )
 }
 
