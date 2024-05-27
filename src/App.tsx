@@ -1,6 +1,7 @@
 import './App.css'
 import { ThemeProvider, colors, createTheme } from '@mui/material'
 import Home from './pages/Home'
+import ProductDetail from "./pages/ProductDetail.tsx";
 import User from "./pages/User";
 import Header from './components/Header';
 const theme = createTheme({
@@ -17,7 +18,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <User />
+      {/*<Home />*/}
+      <ProductDetail/>  
+      {/*<User />*/}
     </ThemeProvider>
   )
 }
