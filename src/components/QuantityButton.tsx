@@ -1,32 +1,28 @@
-import {Box, Button, Stack, TextField} from "@mui/material";
-import React, {useState} from "react";
-import {grey} from "@mui/material/colors";
+import { Box, Button, Stack, TextField } from "@mui/material";
+import React, { useState } from "react";
+import { grey } from "@mui/material/colors";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import "../assets/product-detail.css"
 
-interface QuantityProps{
+interface QuantityProps {
     quantity: number,
     quantityStock: number,
 }
 
-const QuantityButton: React.FC<QuantityProps> = ({quantity, quantityStock}) => {
-    const [quantityState, setQuantityState] = useState(quantity);
+const QuantityButton: React.FC<QuantityProps> = ({ quantity }) => {
+    const [quantityState, setQuantityState] = useState<number>(quantity);
 
     const handleDecrement = () => {
         return quantityState > 1 ? setQuantityState(prevCount => prevCount - 1) : quantityState;
     }
     const handleIncrement = () => {
-        return quantityState < quantityStock ? setQuantityState(prevCount => prevCount + 1) : quantityState;
+        return  setQuantityState(prevCount => prevCount + 1);
     }
 
-    // Chưa hoàn thiện
     const handleQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(event.target.value);
-        if(!isNaN(value) && value >= 1 && value < quantityStock){
-            setQuantityState(value);
-        }
-
+        const value = event.target.value ? parseInt(event.target.value) : 1;
+        setQuantityState(value);
     }
     const baseSx = {
         borderRadius: 50,
@@ -40,9 +36,9 @@ const QuantityButton: React.FC<QuantityProps> = ({quantity, quantityStock}) => {
     return (
         <Box>
             <Stack sx={baseSx} direction="row" >
-                <Button className="btn btn-quantity" onClick={handleDecrement} endIcon={<RemoveIcon/>}/>
-                <TextField className="text-field" onChange={handleQuantity} inputProps={{min: 1, max: quantityStock}} value={quantityState}/>
-                <Button className="btn btn-quantity" onClick={handleIncrement} startIcon={<AddIcon/>}/>
+                <Button className="btn btn-quantity" onClick={handleDecrement} endIcon={<RemoveIcon />} />
+                <TextField className="text-field" type="tel" onChange={handleQuantity} inputProps={{ min: 1}} value={quantityState} />
+                <Button className="btn btn-quantity" onClick={handleIncrement} startIcon={<AddIcon />} />
             </Stack>
         </Box>
 

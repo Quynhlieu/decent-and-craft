@@ -4,6 +4,7 @@
     opacity: 0.7;
 }
 
+
 .thumbnails .splide__slide.is-active img {
     opacity: 1;
     border: 2px solid #007bff;
