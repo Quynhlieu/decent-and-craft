@@ -3,6 +3,7 @@ import React from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Link } from 'react-router-dom';
 
 interface NavItemProps {
     active?: boolean,
@@ -32,7 +33,9 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
 const NavBar = () => {
     return (
         <Stack direction="row" spacing={8} sx={{ paddingX: 10, mt: 5 }} >
-            <NavItem active={true} >Trang chủ</NavItem>
+            <Link to="/"  >
+                <NavItem active={true} >Trang chủ</NavItem>
+            </Link>
             <NavItem  >Gift Sets</NavItem>
             <NavItem  >Album</NavItem>
             <NavItem  >Khung hình</NavItem>
@@ -48,7 +51,7 @@ const NavBar = () => {
 const Header = () => {
     return (
         <Box>
-            <AppBar  position='static' sx={{boxShadow:"none"}} color='transparent'>
+            <AppBar position='static' sx={{ boxShadow: "none" }} color='transparent'>
                 <Toolbar  >
                     <Typography variant='h4'>
                         Decent&Craft
@@ -59,10 +62,12 @@ const Header = () => {
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
                     <Stack sx={{ marginX: 3 }} spacing={3} direction="row">
-                        <Button sx={{
-                            borderRadius: 10,
-                            fontWeight: "bold"
-                        }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>
+                        <Link to="user">
+                            <Button sx={{
+                                borderRadius: 10,
+                                fontWeight: "bold"
+                            }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>
+                        </Link>
                         <Divider orientation='vertical' flexItem />
                         <Button
                             sx={{

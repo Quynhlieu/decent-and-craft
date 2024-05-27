@@ -8,7 +8,6 @@ import FeaturesBanner from '../components/FeaturesBanner'
 const Home = () => {
     return (
         <Box sx={{ paddingX: 20 }}>
-            <Header />
             <Carousel />
             <HotProductList />
             <FeaturesBanner />

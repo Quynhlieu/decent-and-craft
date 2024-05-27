@@ -3,11 +3,15 @@ import { Product } from '../interfaces/Product'
 import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { NumericFormat } from 'react-number-format';
+import { useNavigate } from 'react-router-dom';
 const ProductCard = (product: { data: Product }) => {
     const { id, name, price, thumb } = product.data;
+    const navigate = useNavigate();
     return (
         <Card sx={{ minWidth: 350 }}>
-            <CardActionArea>
+            <CardActionArea onClick={() => {
+                navigate("product-detail");
+            }}>
                 <CardMedia
                     component="img"
                     height="140"
