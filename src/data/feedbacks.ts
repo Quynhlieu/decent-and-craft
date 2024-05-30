@@ -2,7 +2,7 @@ import { Feedback } from "../components/Feedbacks";
 
 export const feedbacks: Feedback[] = [
     {
-        author: "Dang Thu",
+        author: "Diem Quynh",
         rating: 5,
         text: "DECENT&CRAFT thật sự rất đáng yêu. Các bạn nhân viên của shop nhiệt tình dễ thương nữa.Vào DECENT& CRAFT thì chỉ muốn mua và mang hết cái góc nguyên liệu xinh yêu về nha luôn.Sẽ đến",
         avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
@@ -23,10 +23,10 @@ export const feedbacks: Feedback[] = [
         source: "Facebook"
     },
     {
-        author: "Le Thi Nhan",
+        author: "Nguyen Hoang Bao Ngoc",
         rating: 5,
-        text: "DECENT&CRAFT thật sự rất đáng yêu. Các bạn nhân viên của shop nhiệt tình dễ thương nữa.Vào DECENT& CRAFT thì chỉ muốn mua và mang hết cái góc nguyên liệu xinh yêu về nha luôn.Sẽ đến",
-        avatar: "https://i.pravatar.cc/150?u=a0ds581f4e290a6764d",
+        text: "Good",
+        avatar: "https://i.pravatar.cc/150?u=a0zgj81f4e290a6764d",
         source: "Facebook"
     },
     {

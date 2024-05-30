@@ -8,7 +8,7 @@ import Feedbacks from '../components/Feedbacks'
 
 const Home = () => {
     return (
-        <Box sx={{ paddingX: 20 }}>
+        <Box >
             <Carousel />
             <HotProductList />
             <FeaturesBanner />
