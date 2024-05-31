@@ -45,19 +45,19 @@
     padding: 0 50px;
 }
 .ListItemButton {
-    width: 100%; /* Chiếm toàn bộ chiều rộng của ListItemButton */
+    width: 100%;
 }
 
 .ListItemButton:hover {
-    background-color: rgba(0, 0, 0, 0.04); /* Hiệu ứng hover màu xám nhẹ */
+    background-color: rgba(0, 0, 0, 0.04);
 }
 
 .ListItemIcon {
-    min-width: 36px; /* Đảm bảo các biểu tượng có cùng kích thước */
+    min-width: 36px;
 }
 
 .ListItemText {
-    margin-left: 10px; /* Khoảng cách giữa biểu tượng và văn bản */
+    margin-left: 10px;
 }
 .text-info{
     color: darkgray;
