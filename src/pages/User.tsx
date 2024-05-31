@@ -15,9 +15,9 @@ const User = () => {
                 <Box sx={{ flex: 2, padding: '16px' }}>
                     <UserSpeedDial />
                 </Box>
-                <Box sx={{ flex: 10, padding: '16px' }}>
-                    <MyOrder />
-                </Box>
+                {/*<Box sx={{ flex: 10, padding: '16px' }}>*/}
+                {/*    <MyOrder />*/}
+                {/*</Box>*/}
             </Box>
             <ProductSection />
         </Box>

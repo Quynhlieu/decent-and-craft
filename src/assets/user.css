@@ -7,6 +7,85 @@
     align-content: center;
     justify-content: center;
 }
-/*.css-1ri1ca4-MuiDataGrid-root .MuiDataGrid-cell--textRight {*/
-/*    justify-content: center!important;*/
-/*}*/
+.UserProfile {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left {
+    overflow: hidden;
+    transition: width 0.3s ease;
+    width: 300px;
+}
+
+.Fab {
+    margin: 10px; /* Khoảng cách cho nút Fab */
+}
+
+.expanded {
+    max-height: 1000px;
+    transition: max-height 0.3s ease-in;
+    padding: 10px; /* Thêm padding cho nội dung */
+}
+
+.collapsed {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.right {
+    text-align: center;
+    justify-content: center;
+    width: 1350px;
+    align-items: center;
+}
+
+.right .list{
+    padding: 0 50px;
+}
+.ListItemButton {
+    width: 100%; /* Chiếm toàn bộ chiều rộng của ListItemButton */
+}
+
+.ListItemButton:hover {
+    background-color: rgba(0, 0, 0, 0.04); /* Hiệu ứng hover màu xám nhẹ */
+}
+
+.ListItemIcon {
+    min-width: 36px; /* Đảm bảo các biểu tượng có cùng kích thước */
+}
+
+.ListItemText {
+    margin-left: 10px; /* Khoảng cách giữa biểu tượng và văn bản */
+}
+.text-info{
+    color: darkgray;
+    flex: 2;
+    text-align: right;
+
+}
+.header-with-lines {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+.header-with-lines::before,
+.header-with-lines::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 35%;
+    height: 1px;
+    background-color: #000;
+}
+
+.header-with-lines::before {
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.header-with-lines::after {
+    right: 0;
+    transform: translateY(-50%);
+}

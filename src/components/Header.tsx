@@ -14,7 +14,7 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
     const baseSx = {
         textTransform: "none",
         color: "secondary",
-        fontSize: 22
+        fontSize: 20,
     }
     const activeSx = active ? {
         fontWeight: "bold",
@@ -26,23 +26,23 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
         <Button
             size='large'
             color={active ? "primary" : "secondary"}
-            sx={style}> {children} </Button >
+            sx={style}  style={{ marginLeft: '43px' }}> {children} </Button >
     )
 }
 
 const NavBar = () => {
     return (
-        <Stack direction="row" spacing={8} sx={{ paddingX: 10, mt: 5 }} >
+        <Stack direction="row" spacing={8} sx={{ padding: 0, mt: 3 }} >
             <Link to="/"  >
                 <NavItem active={true} >Trang chủ</NavItem>
             </Link>
-            <NavItem  >Gift Sets</NavItem>
-            <NavItem  >Album</NavItem>
-            <NavItem  >Khung hình</NavItem>
-            <NavItem  >Quà tặng</NavItem>
-            <NavItem  >Thiệp</NavItem>
-            <NavItem  >Nguyên liệu</NavItem>
-            <NavItem  >Blogs</NavItem>
+            <NavItem >Gift Sets</NavItem>
+            <NavItem >Album</NavItem>
+            <NavItem >Khung hình</NavItem>
+            <NavItem >Quà tặng</NavItem>
+            <NavItem >Thiệp</NavItem>
+            <NavItem >Nguyên liệu</NavItem>
+            <NavItem >Blogs</NavItem>
 
         </Stack>
     )
@@ -50,9 +50,15 @@ const NavBar = () => {
 
 const Header = () => {
     return (
-        <Box>
+        <Box sx={{
+            padding: 0,
+            margin:0
+        }} >
             <AppBar position='static' sx={{ boxShadow: "none" }} color='transparent'>
-                <Toolbar  >
+                <Toolbar sx={{
+                    padding: 0,
+                    margin:0,
+                }} >
                     <Typography variant='h4'>
                         Decent&Craft
                     </Typography>
@@ -61,9 +67,11 @@ const Header = () => {
                         <LocalPhoneIcon />
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
-                    <Stack sx={{ marginX: 3 }} spacing={3} direction="row">
+                    <Stack sx={{ marginX: 2}} spacing={3} direction="row">
                         <Link to="user">
                             <Button sx={{
+                                height: 30,
+                                width: 200,
                                 borderRadius: 10,
                                 fontWeight: "bold"
                             }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>
@@ -71,6 +79,7 @@ const Header = () => {
                         <Divider orientation='vertical' flexItem />
                         <Button
                             sx={{
+                                height: 30,
                                 borderRadius: 10,
                                 textTransform: "none"
                             }}
