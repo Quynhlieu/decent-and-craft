@@ -6,13 +6,14 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PasswordIcon from '@mui/icons-material/Password';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import EmailIcon from '@mui/icons-material/Email';
-import FemaleIcon from '@mui/icons-material/Female';
 import '../assets/user.css';
 
-function UserSpeedDial() {
-    const [isExpanded, setIsExpanded] = useState(false);
+interface UserSpeedDialProps {
+    onComponentChange: (componentName: string) => void;
+}
+
+const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
+    const [isExpanded, setIsExpanded] = useState(true);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
@@ -28,7 +29,7 @@ function UserSpeedDial() {
                     <nav aria-label="main mailbox folders">
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton>
+                                <ListItemButton onClick={() => onComponentChange('UserProfile')}>
                                     <ListItemIcon>
                                         <AccountCircleIcon />
                                     </ListItemIcon>
@@ -36,7 +37,7 @@ function UserSpeedDial() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton>
+                                <ListItemButton onClick={() => onComponentChange('MyOrder')}>
                                     <ListItemIcon>
                                         <AssignmentIcon />
                                     </ListItemIcon>
@@ -44,7 +45,7 @@ function UserSpeedDial() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton>
+                                <ListItemButton onClick={() => onComponentChange('MyAddress')}>
                                     <ListItemIcon>
                                         <LocationOnIcon />
                                     </ListItemIcon>
@@ -52,7 +53,7 @@ function UserSpeedDial() {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton>
+                                <ListItemButton onClick={() => onComponentChange('ChangePassword')}>
                                     <ListItemIcon>
                                         <PasswordIcon />
                                     </ListItemIcon>
