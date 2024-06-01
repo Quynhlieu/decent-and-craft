@@ -8,7 +8,7 @@ import React from "react";
 
 const UserProfile  = () => {
     return (
-        <Box  sx={{ height: 320, width: 950}}>
+        <Box  sx={{ height: 320, width: 800}}>
             <Typography variant='h3'  sx={{
                 textAlign: 'center',
                 position: 'relative',
@@ -17,7 +17,7 @@ const UserProfile  = () => {
                 Thông tin tài khoản
             </Typography>
             <List
-                sx={{ width: '100%', maxWidth: 950, bgcolor: 'background.paper' }}
+                sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}
                 aria-label="contacts"
             >
                 <ListItem disablePadding>

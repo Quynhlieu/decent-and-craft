@@ -4,8 +4,8 @@ import { Box, Typography, Avatar } from "@mui/material";
 import "../assets/user.css"
 
 const columns = [
-    { field: 'id', headerName: 'ID', width: 70 , headerClassName: 'custom-header'},
-    { field: 'product', headerName: 'Sản phẩm', width: 310,
+    { field: 'id', headerName: 'ID', width: 50 , headerClassName: 'custom-header'},
+    { field: 'product', headerName: 'Sản phẩm', width: 330,
         headerClassName: 'custom-header',
         renderCell: (params) => (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -14,9 +14,9 @@ const columns = [
             </Box>
         )
     },
-    { field: 'quantity', headerName: 'Số lượng', type: 'number', width: 150, headerClassName: 'custom-header' },
-    { field: 'price', headerName: 'Giá', type: 'number', width: 150 , headerClassName: 'custom-header'},
-    { field: 'total', headerName: 'Tổng tiền', type: 'number', width: 180 , headerClassName: 'custom-header'},
+    { field: 'quantity', headerName: 'Số lượng', type: 'number', width: 110, headerClassName: 'custom-header' },
+    { field: 'price', headerName: 'Giá', type: 'number', width: 110 , headerClassName: 'custom-header'},
+    { field: 'total', headerName: 'Tổng tiền', type: 'number', width: 110 , headerClassName: 'custom-header'},
 ];
 
 const rows = [
@@ -29,7 +29,7 @@ const rows = [
 
 const MyOrder = () => {
     return (
-        <Box sx={{ height: 500, width: 950 }}>
+        <Box sx={{ height: 500, width: 800 }}>
             <Typography variant='h3' sx={{
                 textAlign: 'center',
                 position: 'relative',
