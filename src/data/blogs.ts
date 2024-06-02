@@ -23,11 +23,5 @@ export const blogs: any[] = [
         tag: "HƯỚNG DẪN",
         thumb:"https://fairycorner.vn/wp-content/uploads/2018/01/IMG_4922_01-1067x800.jpg"
     },
-    {
-        title: "5 Dụng cụ scrapbook hàng đầu bạn cần có",
-        date: "25/02/2024",
-        tag: "DỤNG CỤ",
-        thumb:"https://bizweb.dktcdn.net/100/427/928/articles/huong-dan-cach-lam-scrapbook-album-anh-handmade-don-gian-dep-vintage.jpg?v=1647668422957"
-    },
 
 ];

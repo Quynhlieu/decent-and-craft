@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography, TypographyTypeMap, duration } from '@mui/material'
+import { Box, Divider, Grid, Stack, Typography, TypographyTypeMap, duration } from '@mui/material'
 import TitleBar from './TitleBar'
 import { blogs } from "../data/blogs";
 import { Link } from 'react-router-dom';
@@ -119,7 +119,7 @@ const BlogCarouselItem = (props: BlogItemProps) => {
         <div className='p-relative'  >
             <div className="carousel-thumb" style={{
                 backgroundImage: `url(${thumb})`,
-                height: 350,
+                height: 300,
                 backgroundRepeat:"no-repeat",
                 backgroundSize:"cover",
                 filter: show ? "blur(12px)" : "blur(0)"
@@ -178,8 +178,8 @@ const BlogCarousel = () => {
 
     }
     return (
-        <Grid container sx={{ mt: 5 }}>
-            <Grid item sx={{ mt: 10 }} xs={6} >
+        <Grid container sx={{ mt: 5 }} spacing={2}>
+            <Grid item sx={{ mt: 12 }} xs={6} >
                 <Box sx={{ height: "100%" }} onMouseOver={() => {
                     setShow(true);
                 }} onMouseOut={() => {
@@ -190,10 +190,11 @@ const BlogCarousel = () => {
                     </Slider>
                 </Box>
             </Grid>
+            {/* <Divider orientation='vertical' flexItem /> */}
             <Grid item xs={6} >
                 <Box>
                     <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
-                    <Stack sx={{ ml: 2 }} spacing={2}>
+                    <Stack sx={{ ml: 2 }} spacing={1}>
                         {blogs.map(blog => <BlogItem  date={blog.date} title={blog.title} />)}
                     </Stack>
                 </Box>
