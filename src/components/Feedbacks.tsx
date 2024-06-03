@@ -3,6 +3,7 @@ import React from 'react'
 import TitleBar from './TitleBar'
 import Slider from 'react-slick'
 import { feedbacks } from "../data/feedbacks";
+import { NextArrow, PrevArrow } from './Carousel';
 export type Feedback = {
     avatar: string,
     rating: number,
@@ -44,8 +45,8 @@ const Feedbacks = () => {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
-        // nextArrow: <NextArrow />,
-        // prevArrow: <PrevArrow />,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
 
     }
     return (

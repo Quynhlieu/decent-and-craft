@@ -9,7 +9,7 @@ import carouse3 from "../assets/carousels/carousel3.jpeg";
 import carouse4 from "../assets/carousels/carousel4.jpeg";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-const NextArrow = (props: any) => {
+export const NextArrow = (props: any) => {
     const { className, style, onClick } = props;
     return (
         <div
@@ -26,7 +26,7 @@ const NextArrow = (props: any) => {
     )
 }
 
-const PrevArrow = (props: any) => {
+export const PrevArrow = (props: any) => {
     const { className, style, onClick } = props;
     return (
         <div
