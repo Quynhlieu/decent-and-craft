@@ -3,7 +3,7 @@ import React from 'react'
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import carouse1 from "../assets/carousels/carousel1.jpeg";
+import carouse1 from "../assets/carousels/carousel1.jpg";
 import carouse2 from "../assets/carousels/carousel2.jpeg";
 import carouse3 from "../assets/carousels/carousel3.jpeg";
 import carouse4 from "../assets/carousels/carousel4.jpeg";
@@ -48,7 +48,7 @@ const CarouselItem = (props: any) => {
     const { image } = props;
     return (
         <div className='flex-center'>
-            <img width={800} src={image} alt="" />
+            <img width={1200} height={600} style={{objectFit:"cover"}} src={image} alt="" />
         </div >
     )
 }

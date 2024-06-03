@@ -8,7 +8,7 @@ const ProductCard = (product: { data: Product }) => {
     const { id, name, price, thumb } = product.data;
     const navigate = useNavigate();
     return (
-        <Card sx={{ minWidth: 350 }}>
+        <Card sx={{ minWidth: 280 }}>
             <CardActionArea onClick={() => {
                 navigate("product-detail");
             }}>
@@ -21,12 +21,12 @@ const ProductCard = (product: { data: Product }) => {
                     <Typography gutterBottom variant="h5" component="div">
                         {name}
                     </Typography>
-                    <Typography fontWeight="bold" variant="h5" component="div">
+                    <Typography fontWeight="bold" variant="h6" component="div">
                         <NumericFormat value={price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
                     </Typography>
                 </CardContent>
             </CardActionArea >
-            <CardActions sx={{ paddingTop: 5, paddingBottom: 3 }}>
+            <CardActions sx={{ paddingY:2 }}>
                 <Button
                     variant='contained'
                     sx={{
@@ -36,7 +36,7 @@ const ProductCard = (product: { data: Product }) => {
                     size="large"
                     color="primary"
                     endIcon={<AddShoppingCartIcon />}>
-                    Thêm vào giỏ hàng
+                    Thêm vào giỏ
                 </Button>
             </CardActions>
         </Card>
