@@ -1,5 +1,4 @@
 export interface ProductDescription {
-    id: number,
     productId: number,
     title: string,
     descriptions: (string | IReview)[],

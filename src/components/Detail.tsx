@@ -154,7 +154,7 @@ function CustomTabPanel(props: TabPanelProps) {
             {...other}
         >
             {value === index && (
-                <Box sx={{p: 3}}>
+                <Box sx={value !== 2 ? { p: 2 } : {p:0}}>
                     {children}
                 </Box>
             )}
@@ -167,7 +167,7 @@ const ReviewItem = (props: IReview) => {
     const {reviewData} = props;
 
     return (
-        <Box sx={{my: 5, borderBottom: '1px solid', borderColor: 'secondary.main'}}>
+        <Box sx={{my: 2, borderBottom: '1px solid', borderColor: 'secondary.main'}}>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
                     <Avatar alt={reviewData.fullName} src={reviewData.avatar}/>
@@ -180,9 +180,8 @@ const ReviewItem = (props: IReview) => {
                         readOnly
                         sx={{fontSize: 15,}}
                     />
-                    <Typography sx={{fontSize: 10,}}>{reviewData.created_at}</Typography>
+                    <Typography sx={{fontSize: 10,color: grey[500]}}>{reviewData.created_at}</Typography>
                     <Typography sx={{mt:1, mb:3}}>{reviewData.contents}</Typography>
-
                 </Grid>
             </Grid>
         </Box>
@@ -214,6 +213,7 @@ const DescriptionProduct = () => {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        console.log("value: ",value)
         setValue(newValue);
     };
 
@@ -225,23 +225,10 @@ const DescriptionProduct = () => {
     // render nội dung các tab
     const showContentTab = productDescription.map((description: ProductDescription, index: number) => {
         let content;
-        // console.log(description)
-        // console.log("id cua tab",description.id)
-        // if (description.id === 3) {
-        //     return (
-        //         <Review reviewList={description.descriptions}/>
-        //     );
-        // } else {
-        //     content = description.descriptions.map((item, i) => {
-        //             return (
-        //                 <Typography key={i} variant="subtitle2">{item}</Typography>
-        //             );
-        //         }
-        //     )
-        // }
+        console.log("index:", index)
 
         content = description.descriptions.map((item, i) => {
-            if (description.id === 3) {
+            if (index === 2) {
                 return (
                     <ReviewItem reviewData={item}/>
                 );
@@ -255,7 +242,7 @@ const DescriptionProduct = () => {
         } )
 
         return (
-            <CustomTabPanel key={index} index={index} value={value}>
+            <CustomTabPanel index={index} value={value}>
                 {content}
             </CustomTabPanel>
         );
