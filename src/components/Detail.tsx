@@ -1,4 +1,4 @@
-import {Box, Button, colors, Grid, Stack, Tab, Tabs, Typography} from "@mui/material";
+import {Avatar, Box, Button, colors, Grid, Rating, Stack, Tab, Tabs, Typography} from "@mui/material";
 import {grey} from "@mui/material/colors";
 import '@splidejs/splide/dist/css/splide.min.css';
 import React from "react";
@@ -8,7 +8,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import {productDescription} from "../data/productDescription.ts"
-import {IProductDescription} from "../interfaces/IProductDescription.ts";
+import {ProductDescription, IReview} from "../interfaces/IProductDescription.ts";
 import "../assets/product-detail.css"
 
 const Slider: React.FC = () => {
@@ -155,13 +155,61 @@ function CustomTabPanel(props: TabPanelProps) {
         >
             {value === index && (
                 <Box sx={{p: 3}}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
     );
 }
 
+// ReviewItem
+const ReviewItem = (props: IReview) => {
+    const {reviewData} = props;
+
+    return (
+        <Box sx={{my: 5, borderBottom: '1px solid', borderColor: 'secondary.main'}}>
+            <Grid container spacing={2}>
+                <Grid item xs={1}>
+                    <Avatar alt={reviewData.fullName} src={reviewData.avatar}/>
+                </Grid>
+                <Grid item xs={11} direction="column">
+                    <Typography>{reviewData.fullName}</Typography>
+                    <Rating
+                        name="read-only"
+                        value={reviewData.rating}
+                        readOnly
+                        sx={{fontSize: 15,}}
+                    />
+                    <Typography sx={{fontSize: 10,}}>{reviewData.created_at}</Typography>
+                    <Typography sx={{mt:1, mb:3}}>{reviewData.contents}</Typography>
+
+                </Grid>
+            </Grid>
+        </Box>
+    )
+}
+
+// Component Review
+// const Review = (props: IReview[]) => {
+//     const {reviewList} = props;
+//     const showList = reviewList.map((reviewData: IReview) => {
+//         return (
+//             <ReviewItem reviewData={reviewData}></ReviewItem>
+//         )
+//     })
+//
+//     return (
+//         <div>
+//             <h1>Giao diện Review</h1>
+//             {showList}
+//         </div>
+//     )
+// }
+
+
+/*
+* Component thông tin bổ sung cho sản phẩm
+* */
 const DescriptionProduct = () => {
     const [value, setValue] = React.useState(0);
 
@@ -170,20 +218,48 @@ const DescriptionProduct = () => {
     };
 
     // render các title
-    const showTitleTab: JSX.Element[] = productDescription.map((item: IProductDescription, index: number) => {
-            return (<Tab label={item.title} ></Tab>)
+    const showTitleTab: JSX.Element[] = productDescription.map((item: ProductDescription) => {
+            return (<Tab label={item.title}></Tab>)
         }
     )
     // render nội dung các tab
-    const showContentTab = productDescription.map((description: IProductDescription, index: number) => {
-        const descriptions = description.description.map((text, i) => (
-            <Typography key={i} variant="subtitle2">{text}</Typography>
-        ));
+    const showContentTab = productDescription.map((description: ProductDescription, index: number) => {
+        let content;
+        // console.log(description)
+        // console.log("id cua tab",description.id)
+        // if (description.id === 3) {
+        //     return (
+        //         <Review reviewList={description.descriptions}/>
+        //     );
+        // } else {
+        //     content = description.descriptions.map((item, i) => {
+        //             return (
+        //                 <Typography key={i} variant="subtitle2">{item}</Typography>
+        //             );
+        //         }
+        //     )
+        // }
+
+        content = description.descriptions.map((item, i) => {
+            if (description.id === 3) {
+                return (
+                    <ReviewItem reviewData={item}/>
+                );
+            } else {
+
+                return (
+                    <Typography key={i} variant="subtitle2">{item}</Typography>
+                );
+            }
+
+        } )
+
         return (
             <CustomTabPanel key={index} index={index} value={value}>
-                {descriptions}
+                {content}
             </CustomTabPanel>
         );
+
     });
 
     return (

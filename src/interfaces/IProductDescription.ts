@@ -1,6 +1,14 @@
-export interface IProductDescription {
+export interface ProductDescription {
     id: number,
     productId: number,
     title: string,
-    description: string[]
+    descriptions: (string | IReview)[],
+}
+
+export interface IReview {
+    avatar: string;
+    fullName: string;
+    rating: number;
+    contents: string;
+    created_at: string;
 }
