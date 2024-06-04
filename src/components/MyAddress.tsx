@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Box, Container, Fab, TextField, Typography} from "@mui/material";
+import {Box, Container, Fab, Grid, Paper, TextField, Typography} from "@mui/material";
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Accordion from '@mui/material/Accordion';
@@ -8,6 +8,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
 
 const AddAddressForm = ({ onBack }) => {
     const [formData, setFormData] = useState({
@@ -38,80 +39,85 @@ const AddAddressForm = ({ onBack }) => {
     };
 
     return (
-        <Container sx={{ minHeight: 320, width: 800 }}>
-            <Box sx={{ marginTop: 4 }}>
-                <Typography variant="h5" gutterBottom>
-                    Thêm Địa Chỉ Mới
-                </Typography>
+        <Container maxWidth="sm">
+            <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                    <AddLocationIcon color="primary" sx={{ mr: 1 }} />
+                    <Typography variant="h5" align="center">
+                        Thêm Địa Chỉ Mới
+                    </Typography>
+                </Box>
                 <form onSubmit={handleSubmit}>
-                    <TextField
-                        fullWidth
-                        required
-                        name="name"
-                        label="Họ và Tên"
-                        variant="outlined"
-                        value={formData.name}
-                        onChange={handleChange}
-                        margin="normal"
-                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
-                    />
-                    <TextField
-                        fullWidth
-                        required
-                        name="phone"
-                        label="Số điện thoại"
-                        variant="outlined"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        margin="normal"
-                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
-                    />
-                    <TextField
-                        fullWidth
-                        required
-                        name="province"
-                        label="Thành phố/ tỉnh"
-                        variant="outlined"
-                        value={formData.province}
-                        onChange={handleChange}
-                        margin="normal"
-                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
-                    />
-                    <TextField
-                        fullWidth
-                        required
-                        name="district"
-                        label="Quận/ huyện"
-                        variant="outlined"
-                        value={formData.district}
-                        onChange={handleChange}
-                        margin="normal"
-                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
-                    />
-                    <TextField
-                        fullWidth
-                        required
-                        name="ward"
-                        label="Phường/ xã "
-                        variant="outlined"
-                        value={formData.ward}
-                        onChange={handleChange}
-                        margin="normal"
-                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
-                    />
-                    <TextField
-                        fullWidth
-                        required
-                        name="description"
-                        label="Ghi chú"
-                        variant="outlined"
-                        value={formData.description}
-                        onChange={handleChange}
-                        margin="normal"
-                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
-                    />
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-                        <Button sx={{marginRight: 2}} variant="contained" color="secondary"  onClick={onBack}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                required
+                                name="name"
+                                label="Họ và Tên"
+                                variant="outlined"
+                                value={formData.name}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                required
+                                name="phone"
+                                label="Số điện thoại"
+                                variant="outlined"
+                                value={formData.phone}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                required
+                                name="province"
+                                label="Thành phố/ tỉnh"
+                                variant="outlined"
+                                value={formData.province}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                required
+                                name="district"
+                                label="Quận/ huyện"
+                                variant="outlined"
+                                value={formData.district}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                required
+                                name="ward"
+                                label="Phường/ xã "
+                                variant="outlined"
+                                value={formData.ward}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                required
+                                name="description"
+                                label="Ghi chú"
+                                variant="outlined"
+                                value={formData.description}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 3 }}>
+                        <Button variant="outlined" color="secondary" onClick={onBack} sx={{ marginRight: 2 }}>
                             Quay lại
                         </Button>
                         <Button type="submit" variant="contained" color="primary">
@@ -119,10 +125,11 @@ const AddAddressForm = ({ onBack }) => {
                         </Button>
                     </Box>
                 </form>
-            </Box>
+            </Paper>
         </Container>
     );
 };
+
 const MyAddress = () => {
     const [expanded, setExpanded] = useState(false);
     const [isFormVisible, setIsFormVisible] = useState(false);
