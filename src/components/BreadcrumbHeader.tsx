@@ -4,7 +4,7 @@ const BreadcrumbHeader = () => {
     return (
         <Breadcrumbs
             separator={<NavigateNextIcon fontSize='small'/>}
-            sx={{ paddingX: 10, marginY:5 }}
+            sx={{ marginY:5 }}
         >
             <Link underline="hover" color="inherit" href="#">
                 Fairy Corner
