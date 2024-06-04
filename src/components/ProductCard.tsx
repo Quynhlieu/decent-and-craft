@@ -4,8 +4,17 @@ import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typo
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { NumericFormat } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { cartItemAdd } from '../features/cart/cartSlice';
+import { ToastContainer, toast } from 'react-toastify';
+export const VNDNumericFormat = (prop: { price: number }) => {
+    return (
+        <NumericFormat  value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
+    )
+}
 const ProductCard = (product: { data: Product }) => {
     const { id, name, price, thumb } = product.data;
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     return (
         <Card sx={{ minWidth: 280 }}>
@@ -22,11 +31,11 @@ const ProductCard = (product: { data: Product }) => {
                         {name}
                     </Typography>
                     <Typography fontWeight="bold" variant="h6" component="div">
-                        <NumericFormat value={price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
+                        <VNDNumericFormat price={price} />
                     </Typography>
                 </CardContent>
             </CardActionArea >
-            <CardActions sx={{ paddingY:2 }}>
+            <CardActions sx={{ paddingY: 2 }}>
                 <Button
                     variant='contained'
                     sx={{
@@ -35,7 +44,15 @@ const ProductCard = (product: { data: Product }) => {
                     }}
                     size="large"
                     color="primary"
-                    endIcon={<AddShoppingCartIcon />}>
+                    endIcon={<AddShoppingCartIcon />}
+                    onClick={() => {
+                        dispatch(cartItemAdd({
+                            product: product.data,
+                            quantity: 1
+                        }))
+                        toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000,position:"bottom-left" })
+                    }}
+                >
                     Thêm vào giỏ
                 </Button>
             </CardActions>

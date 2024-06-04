@@ -1,10 +1,14 @@
-import { AppBar, Box, Button, Divider, Stack, Toolbar, Typography } from '@mui/material'
-import React from 'react'
+import { AppBar, Badge, Box, Button, Divider, Stack, Toolbar, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import { getCount, getTotalPrice } from '../features/cart/cartSlice';
+import { VNDNumericFormat } from './ProductCard';
+import CartContainer from './Cart/CartContainer';
 interface NavItemProps {
     active?: boolean,
     children: React.ReactNode
@@ -26,7 +30,7 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
         <Button
             size='large'
             color={active ? "primary" : "secondary"}
-            sx={style}  style={{ marginLeft: '43px' }}> {children} </Button >
+            sx={style} style={{ marginLeft: '43px' }}> {children} </Button >
     )
 }
 
@@ -49,15 +53,17 @@ const NavBar = () => {
 }
 
 const Header = () => {
+    const cart = useSelector((state: RootState) => state.cart);
+    const [showCart, setShowCart] = useState<boolean>(false);
     return (
         <Box sx={{
             padding: 0,
-            margin:0
+            margin: 0
         }} >
             <AppBar position='static' sx={{ boxShadow: "none" }} color='transparent'>
                 <Toolbar sx={{
                     padding: 0,
-                    margin:0,
+                    margin: 0,
                 }} >
                     <Typography variant='h4'>
                         Decent&Craft
@@ -67,7 +73,7 @@ const Header = () => {
                         <LocalPhoneIcon />
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
-                    <Stack sx={{ marginX: 2}} spacing={3} direction="row">
+                    <Stack sx={{ marginX: 2 }} spacing={3} direction="row">
                         <Link to="user">
                             <Button sx={{
                                 height: 30,
@@ -78,14 +84,26 @@ const Header = () => {
                         </Link>
                         <Divider orientation='vertical' flexItem />
                         <Button
+                            onMouseOver={() => {
+                                setShowCart(true);
+                            }}
+                            onMouseOut={() => {
+                                setShowCart(false);
+                            }}
                             sx={{
                                 height: 30,
                                 borderRadius: 10,
-                                textTransform: "none"
+                                textTransform: "none",
+                                position: "relative"
                             }}
                             variant='contained'
-                            endIcon={<ShoppingCartIcon />}>
-                            0đ
+                            endIcon={<Badge color='error' badgeContent={getCount(cart)}>
+                                <ShoppingCartIcon />
+                            </Badge>}>
+                            <VNDNumericFormat price={getTotalPrice(cart)} />
+                            <CartContainer onMouseOut={() => {
+                                setShowCart(false);
+                            }} showCart={showCart} />
                         </Button>
                     </Stack>
                 </Toolbar>
