@@ -12,6 +12,7 @@ import "../assets/product-detail.css"
 import ProductList from "./ProductList.tsx";
 import {hotProducts} from "../data/products.ts";
 import SendIcon from '@mui/icons-material/Send';
+import TitleBar from "./TitleBar.tsx";
 
 const Slider: React.FC = () => {
     const mainImages = [
@@ -167,10 +168,10 @@ function CustomTabPanel(props: TabPanelProps) {
 // ReviewItem
 const ReviewItem = ({reviewData}) => {
     return (
-        <Box sx={{my: 2, borderBottom: '1px solid', borderColor: ' #e0e0e0'}} >
+        <Box sx={{my: 2, borderBottom: '1px solid', borderColor: ' #e0e0e0'}}>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
-                    <Avatar sx={{marginLeft: 5}} alt={reviewData.fullName} src={reviewData.avatar} />
+                    <Avatar sx={{marginLeft: 5}} alt={reviewData.fullName} src={reviewData.avatar}/>
                 </Grid>
                 <Grid item xs={10} direction="column">
                     <Typography>{reviewData.fullName}</Typography>
@@ -352,20 +353,12 @@ const DescriptionProduct = () => {
 * */
 const SimilarProductList = () => {
     const data = hotProducts;
-    const productListSX = {
-        '.MuiBox-root': {
-            background: 'red',
-        },
-        '.MuiGrid-item': {
-            padding: 0, // Tắt padding cho tất cả các item trong ProductList
-        },
-    };
     return (
-        <Box sx={{my: 5, pt: 2}} className="product-meta">
+        <Box sx={{my: 5}}>
             <Typography sx={{fontWeight: 'bold'}}>SẢN PHẨM TƯƠNG TỰ</Typography>
-            <ProductList products={data} sx={{backgroundColor: '#ffff'}}/>
+            <ProductList products={data}/>
         </Box>
-    );
+    )
 }
 
 // Chi tiet san pham
