@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Fab, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -14,9 +14,18 @@ interface UserSpeedDialProps {
 
 const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
+    const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile'); // Thay đổi ở đây
+
+    useEffect(() => {
+        onComponentChange(selectedComponent);
+    }, [selectedComponent, onComponentChange]);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
+    };
+
+    const handleItemClick = (componentName: string) => {
+        setSelectedComponent(componentName);
     };
 
     return (
@@ -29,7 +38,17 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                     <nav aria-label="main mailbox folders">
                         <List>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={() => onComponentChange('UserProfile')}>
+                                <ListItemButton
+                                    onClick={() => handleItemClick('UserProfile')}
+                                    selected={selectedComponent === 'UserProfile'}
+                                    sx={{
+                                        '&.Mui-selected': {
+                                            bgcolor: 'primary.main',
+                                            color: 'white',
+                                            '& .MuiListItemIcon-root': { color: 'white' }
+                                        }
+                                    }}
+                                >
                                     <ListItemIcon>
                                         <AccountCircleIcon />
                                     </ListItemIcon>
@@ -37,7 +56,17 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={() => onComponentChange('MyOrder')}>
+                                <ListItemButton
+                                    onClick={() => handleItemClick('MyOrder')}
+                                    selected={selectedComponent === 'MyOrder'}
+                                    sx={{
+                                        '&.Mui-selected': {
+                                            bgcolor: 'primary.main',
+                                            color: 'white',
+                                            '& .MuiListItemIcon-root': { color: 'white' }
+                                        }
+                                    }}
+                                >
                                     <ListItemIcon>
                                         <AssignmentIcon />
                                     </ListItemIcon>
@@ -45,7 +74,17 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={() => onComponentChange('MyAddress')}>
+                                <ListItemButton
+                                    onClick={() => handleItemClick('MyAddress')}
+                                    selected={selectedComponent === 'MyAddress'}
+                                    sx={{
+                                        '&.Mui-selected': {
+                                            bgcolor: 'primary.main',
+                                            color: 'white',
+                                            '& .MuiListItemIcon-root': { color: 'white' }
+                                        }
+                                    }}
+                                >
                                     <ListItemIcon>
                                         <LocationOnIcon />
                                     </ListItemIcon>
@@ -53,7 +92,17 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding>
-                                <ListItemButton onClick={() => onComponentChange('ChangePassword')}>
+                                <ListItemButton
+                                    onClick={() => handleItemClick('ChangePassword')}
+                                    selected={selectedComponent === 'ChangePassword'}
+                                    sx={{
+                                        '&.Mui-selected': {
+                                            bgcolor: 'primary.main',
+                                            color: 'white',
+                                            '& .MuiListItemIcon-root': { color: 'white' }
+                                        }
+                                    }}
+                                >
                                     <ListItemIcon>
                                         <PasswordIcon />
                                     </ListItemIcon>
