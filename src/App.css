@@ -3,3 +3,26 @@
     justify-content: center;
     align-items: center;
 }
+.arrow  {
+    transition: all 0.3s ease;
+}
+.carousel-text{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 0.4s ease;
+    width: 80%;
+    text-align: center;
+}
+.p-relative{
+    position: relative;
+}
+.p-absolute{
+    position: absolute;
+}
+.slick-prev:before{
+    visibility: hidden;
+}
+.slick-next:before{
+    visibility: hidden;
+}

@@ -3,6 +3,7 @@ import React from 'react'
 import TitleBar from './TitleBar'
 import Slider from 'react-slick'
 import { feedbacks } from "../data/feedbacks";
+import { NextArrow, PrevArrow } from './Carousel';
 export type Feedback = {
     avatar: string,
     rating: number,
@@ -15,7 +16,7 @@ const FeedbackItem = (prop: { feedback: Feedback }) => {
     const { feedback } = prop;
     return (
         <div style={{
-            padding: 50,
+            padding: 25,
         }} >
             <Box style={{
                 flexDirection: "column",
@@ -25,7 +26,12 @@ const FeedbackItem = (prop: { feedback: Feedback }) => {
                     height: 120,
                 }} src={feedback.avatar} />
                 <Rating readOnly size='large' value={feedback.rating} />
-                <Typography sx={{ fontSize: 20, my: 5, fontStyle: "italic" }}>
+                <Typography sx={{
+                    fontSize: 20,
+                    my: 3,
+                    minHeight: 270,
+                    fontStyle: "italic"
+                }}>
                     {feedback.text}
                 </Typography>
             </Box>
@@ -44,8 +50,8 @@ const Feedbacks = () => {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
-        // nextArrow: <NextArrow />,
-        // prevArrow: <PrevArrow />,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
 
     }
     return (

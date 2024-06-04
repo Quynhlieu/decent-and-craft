@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import React from 'react'
 const AddressBar = () => {
     return (
         <Box bgcolor="primary.main" sx={{ p: 2,mt:10 }} >

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {Box, Container, Fab, TextField, Typography} from "@mui/material";
 import Divider from '@mui/material/Divider';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
@@ -10,7 +9,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 
-const AddAddressForm = () => {
+const AddAddressForm = ({ onBack }) => {
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -54,9 +53,7 @@ const AddAddressForm = () => {
                         value={formData.name}
                         onChange={handleChange}
                         margin="normal"
-                        sx={{'& .MuiInputLabel-root': {
-                                alignItems: 'baseline'
-                            },'& input': { padding: '10px' } }}
+                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
                     />
                     <TextField
                         fullWidth
@@ -67,9 +64,7 @@ const AddAddressForm = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         margin="normal"
-                        sx={{'& .MuiInputLabel-root': {
-                                alignItems: 'baseline'
-                            },'& input': { padding: '10px' } }}
+                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
                     />
                     <TextField
                         fullWidth
@@ -80,9 +75,7 @@ const AddAddressForm = () => {
                         value={formData.province}
                         onChange={handleChange}
                         margin="normal"
-                        sx={{'& .MuiInputLabel-root': {
-                                alignItems: 'baseline'
-                            },'& input': { padding: '10px' } }}
+                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
                     />
                     <TextField
                         fullWidth
@@ -93,9 +86,7 @@ const AddAddressForm = () => {
                         value={formData.district}
                         onChange={handleChange}
                         margin="normal"
-                        sx={{'& .MuiInputLabel-root': {
-                                alignItems: 'baseline'
-                            },'& input': { padding: '10px' } }}
+                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
                     />
                     <TextField
                         fullWidth
@@ -106,9 +97,7 @@ const AddAddressForm = () => {
                         value={formData.ward}
                         onChange={handleChange}
                         margin="normal"
-                        sx={{'& .MuiInputLabel-root': {
-                                alignItems: 'baseline'
-                            },'& input': { padding: '10px' } }}
+                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
                     />
                     <TextField
                         fullWidth
@@ -119,13 +108,16 @@ const AddAddressForm = () => {
                         value={formData.description}
                         onChange={handleChange}
                         margin="normal"
-                        sx={{'& .MuiInputLabel-root': {
-                                alignItems: 'baseline'
-                            },'& input': { padding: '10px' } }}
+                        sx={{ '& .MuiInputLabel-root': { alignItems: 'baseline' }, '& input': { padding: '10px' } }}
                     />
-                    <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                        Thêm Địa Chỉ
-                    </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+                        <Button sx={{marginRight: 2}} variant="contained" color="secondary"  onClick={onBack}>
+                            Quay lại
+                        </Button>
+                        <Button type="submit" variant="contained" color="primary">
+                            Thêm Địa Chỉ
+                        </Button>
+                    </Box>
                 </form>
             </Box>
         </Container>
@@ -146,11 +138,14 @@ const MyAddress = () => {
     const handleAddClick = () => {
         setIsFormVisible(true);
     };
+    const handleBack = () => {
+        setIsFormVisible(false);
+    };
 
     return (
         <Box sx={{ minHeight: 320, width: 800 }}>
             {isFormVisible ? (
-                <AddAddressForm />
+                <AddAddressForm onBack={handleBack} />
             ) : (
                 <>
             <Typography variant='h3' sx={{

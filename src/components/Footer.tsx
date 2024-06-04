@@ -50,7 +50,7 @@ const Column4 = () => (
         <Box sx={{ mt: 3 }}>
             <Typography variant='h6'>
                 <strong>
-                    KẾT NỐI VỚI DECENT & CRAFT TẠI
+                    KẾT NỐI DECENT&CRAFT TẠI
                 </strong>
             </Typography>
             <Stack direction="row" spacing={2} >
@@ -153,17 +153,17 @@ const Footer = () => {
             height: 400,
             mt: 5
         }}>
-            <Grid container spacing={6}>
+            <Grid container spacing={2}>
                 <Grid xs={3} item>
                     <Column1 />
                 </Grid>
                 <Grid xs={3} item>
                     <Column2 />
                 </Grid>
-                <Grid xs={3} item>
+                <Grid xs={2.5} item>
                     <Column3 />
                 </Grid>
-                <Grid xs={3} item>
+                <Grid xs={3.5} item>
                     <Column4 />
                 </Grid>
             </Grid>

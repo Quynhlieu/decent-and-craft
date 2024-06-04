@@ -15,15 +15,15 @@ const theme = createTheme({
     secondary: {
       main: colors.grey[500],
     }
+  },
+  transitions: {
+    duration: {
+      standard: 500,
+    }
   }
 })
 function App() {
   return (
-    // <ThemeProvider theme={theme}>
-    //   {/* <Home /> */}
-    //   {/* <ProductDetail/>   */}
-    //   <User />
-    // </ThemeProvider>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
