@@ -5,7 +5,7 @@ import ProductSection from "../components/ProductSection.tsx";
 import BreadcrumbFooter from "../components/BreadcrumbFooter.tsx";
 const ProductDetail = () => {
     return (
-    <Box sx={{ mb:10}}>
+    <Box sx={{mb:10, paddingX:6}}>
         <BreadcrumbHeader/>
         <Detail/>
         <ProductSection/>

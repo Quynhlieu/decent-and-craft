@@ -12,6 +12,7 @@ import "../assets/product-detail.css"
 import ProductList from "./ProductList.tsx";
 import {hotProducts} from "../data/products.ts";
 import SendIcon from '@mui/icons-material/Send';
+
 const Slider: React.FC = () => {
     const mainImages = [
         'https://via.placeholder.com/800x400?text=Image+1',
@@ -155,7 +156,7 @@ function CustomTabPanel(props: TabPanelProps) {
             {...other}
         >
             {value === index && (
-                <Box sx={value !== 2 ? { p: 2 } : {p:0}}>
+                <Box sx={value !== 2 ? {p: 2} : {p: 0}}>
                     {children}
                 </Box>
             )}
@@ -163,8 +164,32 @@ function CustomTabPanel(props: TabPanelProps) {
     );
 }
 
+// ReviewItem
+const ReviewItem = ({reviewData}) => {
+    return (
+        <Box sx={{my: 2, borderBottom: '1px solid', borderColor: ' #e0e0e0'}} >
+            <Grid container spacing={2}>
+                <Grid item xs={1}>
+                    <Avatar sx={{marginLeft: 5}} alt={reviewData.fullName} src={reviewData.avatar} />
+                </Grid>
+                <Grid item xs={10} direction="column">
+                    <Typography>{reviewData.fullName}</Typography>
+                    <Rating
+                        name="read-only"
+                        value={reviewData.rating}
+                        readOnly
+                        sx={{fontSize: 15}}
+                    />
+                    <Typography sx={{fontSize: 10, color: grey[500]}}>{reviewData.created_at}</Typography>
+                    <Typography sx={{mt: 1, mb: 3}}>{reviewData.contents}</Typography>
+                </Grid>
+            </Grid>
+        </Box>
+    );
+};
+
 // Review form
-const ReviewForm = ({ onSubmit }) => {
+const ReviewForm = ({onSubmit}) => {
     const [fullName, setFullName] = React.useState('');
     const [rating, setRating] = React.useState(0);
     const [contents, setContents] = React.useState('');
@@ -186,13 +211,13 @@ const ReviewForm = ({ onSubmit }) => {
 
     return (
         <Box my={3}>
-            <Typography sx={{ fontWeight: 'bold'}}>VIẾT ĐÁNH GIÁ</Typography>
+            <Typography sx={{fontWeight: 'bold'}}>VIẾT ĐÁNH GIÁ</Typography>
             <Box component="form" onSubmit={handleSubmit} className="product-meta-border review-form">
                 <Rating
                     name="rating"
                     value={rating}
                     onChange={(e, newValue) => setRating(newValue)}
-                    sx={{ mb: 2 }}
+                    sx={{mb: 2}}
                     size="large"
                 />
                 <TextField
@@ -201,7 +226,7 @@ const ReviewForm = ({ onSubmit }) => {
                     onChange={(e) => setContents(e.target.value)}
                     multiline
                     rows={1}
-                    sx={{ mb: 2, width: '80%'}}
+                    sx={{mb: 2, width: '80%'}}
                 />
                 <Button type="submit" variant="contained" startIcon={<SendIcon/>}>Gửi đánh giá</Button>
             </Box>
@@ -209,79 +234,55 @@ const ReviewForm = ({ onSubmit }) => {
     );
 };
 
-// ReviewItem
-const ReviewItem = ({ reviewData }) => {
-    return (
-        <Box sx={{ my: 2, borderBottom: '1px solid', borderColor: 'secondary.main' }}>
-            <Grid container spacing={2}>
-                <Grid item xs={1}>
-                    <Avatar alt={reviewData.fullName} src={reviewData.avatar} />
-                </Grid>
-                <Grid item xs={11} direction="column">
-                    <Typography>{reviewData.fullName}</Typography>
-                    <Rating
-                        name="read-only"
-                        value={reviewData.rating}
-                        readOnly
-                        sx={{ fontSize: 15 }}
-                    />
-                    <Typography sx={{ fontSize: 10, color: grey[500] }}>{reviewData.created_at}</Typography>
-                    <Typography sx={{ mt: 1, mb: 3 }}>{reviewData.contents}</Typography>
-                </Grid>
-            </Grid>
-        </Box>
-    );
-};
-
 const RatingOverview = () => {
     return (
-       <Box my={3} class="rating-overview">
-           <Typography sx={{ fontWeight: 'bold'}}>ĐÁNH GIÁ SẢN PHẨM</Typography>
-           <Box
-               className="product-meta-border"
-               padding={3}
-               sx={{backgroundColor: "#eff8f8"}}
-           >
-               <Grid container direction="row">
-                   <Grid
-                       item
-                       xs={3}
-                       container
-                       direction="column"
-                       justifyContent="center"
-                       alignItems="center"
-                       style={{ height: '100%', }}
-                   >
-                       <Stack direction="row" spacing={1} alignItems="center">
-                           <Typography sx={{ fontSize: 30 }}>4.9</Typography>
-                           <Typography>trên 5</Typography>
-                       </Stack>
-                       <Rating
-                           name="half-read-only"
-                           defaultValue={0}
-                           value={4.9}
-                           precision={0.25}
-                           readOnly
-                           sx={{ fontSize: 25 }}
-                       />
-                   </Grid>
-                   <Grid item xs={9} className="size-12">
-                       <Stack spacing={2} direction="row">
-                           <Button variant="outlined" size="small">Tất cả</Button>
-                           <Button variant="outlined" size="small">1 sao</Button>
-                           <Button variant="outlined" size="small">2 sao</Button>
-                           <Button variant="outlined" size="small">3 sao</Button>
-                           <Button variant="outlined" size="small">4 sao</Button>
-                           <Button variant="outlined" size="small">5 sao</Button>
-                       </Stack>
-                   </Grid>
-               </Grid>
-           </Box>
-       </Box>
+        <Box my={3} class="rating-overview">
+            <Typography sx={{fontWeight: 'bold'}}>ĐÁNH GIÁ SẢN PHẨM</Typography>
+            <Box
+                className="product-meta-border"
+                padding={3}
+                sx={{backgroundColor: "#eff8f8"}}
+            >
+                <Grid container direction="row">
+                    <Grid
+                        item
+                        xs={3}
+                        container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        style={{height: '100%',}}
+                    >
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography sx={{fontSize: 30}}>4.9</Typography>
+                            <Typography>trên 5</Typography>
+                        </Stack>
+                        <Rating
+                            name="half-read-only"
+                            defaultValue={0}
+                            value={4.9}
+                            precision={0.25}
+                            readOnly
+                            sx={{fontSize: 25}}
+                        />
+                    </Grid>
+                    <Grid item xs={9} className="size-12">
+                        <Stack spacing={2} direction="row">
+                            <Button variant="outlined" size="small">Tất cả</Button>
+                            <Button variant="outlined" size="small">1 sao</Button>
+                            <Button variant="outlined" size="small">2 sao</Button>
+                            <Button variant="outlined" size="small">3 sao</Button>
+                            <Button variant="outlined" size="small">4 sao</Button>
+                            <Button variant="outlined" size="small">5 sao</Button>
+                        </Stack>
+                    </Grid>
+                </Grid>
+            </Box>
+        </Box>
     )
 }
 
-const Review = ({ reviewList }) => {
+const Review = ({reviewList}) => {
     const [reviews, setReviews] = useState(reviewList);
 
     const handleNewReview = (newReview) => {
@@ -290,13 +291,13 @@ const Review = ({ reviewList }) => {
 
     return (
         <div>
-            <ReviewForm onSubmit={handleNewReview} />
+            <ReviewForm onSubmit={handleNewReview}/>
             <Box>
                 <RatingOverview/>
             </Box>
 
             {reviews.map((reviewData, index) => (
-                <ReviewItem key={index} reviewData={reviewData} />
+                <ReviewItem key={index} reviewData={reviewData}/>
             ))}
         </div>
     );
@@ -313,13 +314,13 @@ const DescriptionProduct = () => {
     };
 
     const showTitleTab = productDescription.map((item, index) => (
-        <Tab key={index} label={item.title} />
+        <Tab key={index} label={item.title}/>
     ));
 
     const showContentTab = productDescription.map((description, index) => {
         let content;
         if (index === 2) {
-            content = <Review reviewList={description.descriptions} />;
+            content = <Review reviewList={description.descriptions}/>;
         } else {
             content = description.descriptions.map((item, i) => (
                 <Typography key={i} variant="subtitle2">{item}</Typography>
@@ -334,8 +335,8 @@ const DescriptionProduct = () => {
     });
 
     return (
-        <Box sx={{ width: '100%', paddingX: 10 }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{width: '100%', paddingX: 10}}>
+            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange}>
                     {showTitleTab}
                 </Tabs>
@@ -360,9 +361,9 @@ const SimilarProductList = () => {
         },
     };
     return (
-        <Box sx={{ my: 5, pt: 2 }} className="product-meta">
-            <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM TƯƠNG TỰ</Typography>
-            <ProductList products={data} sx={{backgroundColor:'#ffff'}} />
+        <Box sx={{my: 5, pt: 2}} className="product-meta">
+            <Typography sx={{fontWeight: 'bold'}}>SẢN PHẨM TƯƠNG TỰ</Typography>
+            <ProductList products={data} sx={{backgroundColor: '#ffff'}}/>
         </Box>
     );
 }
@@ -371,7 +372,7 @@ const SimilarProductList = () => {
 const Detail = () => {
     return (
         <Box>
-            <Grid container spacing={5} >
+            <Grid container spacing={5}>
                 <Grid item xs={4}>
                     <Slider/>
                 </Grid>
