@@ -1,18 +1,17 @@
-import {Avatar, Box, Button, colors, Grid, Rating, Stack, Tab, Tabs, Typography} from "@mui/material";
+import {Avatar, Box, Button, colors, Grid, Rating, Stack, Tab, Tabs, TextField, Typography} from "@mui/material";
 import {grey, red} from "@mui/material/colors";
 import '@splidejs/splide/dist/css/splide.min.css';
-import React from "react";
+import React, {useState} from "react";
 import MySplideSlider from "./MySplideSlider.tsx";
 import QuantityButton from "./QuantityButton.tsx";
 import TwitterIcon from '@mui/icons-material/Twitter';
 import PinterestIcon from '@mui/icons-material/Pinterest';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import {productDescription} from "../data/productDescription.ts"
-import {ProductDescription, IReview} from "../interfaces/IProductDescription.ts";
 import "../assets/product-detail.css"
 import ProductList from "./ProductList.tsx";
 import {hotProducts} from "../data/products.ts";
-
+import SendIcon from '@mui/icons-material/Send';
 const Slider: React.FC = () => {
     const mainImages = [
         'https://via.placeholder.com/800x400?text=Image+1',
@@ -164,15 +163,59 @@ function CustomTabPanel(props: TabPanelProps) {
     );
 }
 
-// ReviewItem
-const ReviewItem = (props: IReview) => {
-    const {reviewData} = props;
+// Review form
+const ReviewForm = ({ onSubmit }) => {
+    const [fullName, setFullName] = React.useState('');
+    const [rating, setRating] = React.useState(0);
+    const [contents, setContents] = React.useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newReview = {
+            fullName,
+            rating,
+            contents,
+            created_at: new Date().toLocaleDateString(),
+            avatar: '', // add default avatar if necessary
+        };
+        onSubmit(newReview);
+        setFullName('');
+        setRating(0);
+        setContents('');
+    };
 
     return (
-        <Box sx={{my: 2, borderBottom: '1px solid', borderColor: 'secondary.main'}}>
+        <Box my={3}>
+            <Typography sx={{ fontWeight: 'bold'}}>VIẾT ĐÁNH GIÁ</Typography>
+            <Box component="form" onSubmit={handleSubmit} className="product-meta-border review-form">
+                <Rating
+                    name="rating"
+                    value={rating}
+                    onChange={(e, newValue) => setRating(newValue)}
+                    sx={{ mb: 2 }}
+                    size="large"
+                />
+                <TextField
+                    label="Nội dung"
+                    value={contents}
+                    onChange={(e) => setContents(e.target.value)}
+                    multiline
+                    rows={1}
+                    sx={{ mb: 2, width: '80%'}}
+                />
+                <Button type="submit" variant="contained" startIcon={<SendIcon/>}>Gửi đánh giá</Button>
+            </Box>
+        </Box>
+    );
+};
+
+// ReviewItem
+const ReviewItem = ({ reviewData }) => {
+    return (
+        <Box sx={{ my: 2, borderBottom: '1px solid', borderColor: 'secondary.main' }}>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
-                    <Avatar alt={reviewData.fullName} src={reviewData.avatar}/>
+                    <Avatar alt={reviewData.fullName} src={reviewData.avatar} />
                 </Grid>
                 <Grid item xs={11} direction="column">
                     <Typography>{reviewData.fullName}</Typography>
@@ -180,15 +223,84 @@ const ReviewItem = (props: IReview) => {
                         name="read-only"
                         value={reviewData.rating}
                         readOnly
-                        sx={{fontSize: 15,}}
+                        sx={{ fontSize: 15 }}
                     />
-                    <Typography sx={{fontSize: 10,color: grey[500]}}>{reviewData.created_at}</Typography>
-                    <Typography sx={{mt:1, mb:3}}>{reviewData.contents}</Typography>
+                    <Typography sx={{ fontSize: 10, color: grey[500] }}>{reviewData.created_at}</Typography>
+                    <Typography sx={{ mt: 1, mb: 3 }}>{reviewData.contents}</Typography>
                 </Grid>
             </Grid>
         </Box>
+    );
+};
+
+const RatingOverview = () => {
+    return (
+       <Box my={3} class="rating-overview">
+           <Typography sx={{ fontWeight: 'bold'}}>ĐÁNH GIÁ SẢN PHẨM</Typography>
+           <Box
+               className="product-meta-border"
+               padding={3}
+               sx={{backgroundColor: "#eff8f8"}}
+           >
+               <Grid container direction="row">
+                   <Grid
+                       item
+                       xs={3}
+                       container
+                       direction="column"
+                       justifyContent="center"
+                       alignItems="center"
+                       style={{ height: '100%', }}
+                   >
+                       <Stack direction="row" spacing={1} alignItems="center">
+                           <Typography sx={{ fontSize: 30 }}>4.9</Typography>
+                           <Typography>trên 5</Typography>
+                       </Stack>
+                       <Rating
+                           name="half-read-only"
+                           defaultValue={0}
+                           value={4.9}
+                           precision={0.25}
+                           readOnly
+                           sx={{ fontSize: 25 }}
+                       />
+                   </Grid>
+                   <Grid item xs={9} className="size-12">
+                       <Stack spacing={2} direction="row">
+                           <Button variant="outlined" size="small">Tất cả</Button>
+                           <Button variant="outlined" size="small">1 sao</Button>
+                           <Button variant="outlined" size="small">2 sao</Button>
+                           <Button variant="outlined" size="small">3 sao</Button>
+                           <Button variant="outlined" size="small">4 sao</Button>
+                           <Button variant="outlined" size="small">5 sao</Button>
+                       </Stack>
+                   </Grid>
+               </Grid>
+           </Box>
+       </Box>
     )
 }
+
+const Review = ({ reviewList }) => {
+    const [reviews, setReviews] = useState(reviewList);
+
+    const handleNewReview = (newReview) => {
+        setReviews([newReview, ...reviews]);
+    };
+
+    return (
+        <div>
+            <ReviewForm onSubmit={handleNewReview} />
+            <Box>
+                <RatingOverview/>
+            </Box>
+
+            {reviews.map((reviewData, index) => (
+                <ReviewItem key={index} reviewData={reviewData} />
+            ))}
+        </div>
+    );
+};
 
 /*
 * Component thông tin bổ sung cho sản phẩm
@@ -196,43 +308,34 @@ const ReviewItem = (props: IReview) => {
 const DescriptionProduct = () => {
     const [value, setValue] = React.useState(0);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    // render các title
-    const showTitleTab: JSX.Element[] = productDescription.map((item: ProductDescription) => {
-            return (<Tab label={item.title}></Tab>)
-        }
-    )
-    // render nội dung các tab
-    const showContentTab = productDescription.map((description: ProductDescription, index: number) => {
+    const showTitleTab = productDescription.map((item, index) => (
+        <Tab key={index} label={item.title} />
+    ));
+
+    const showContentTab = productDescription.map((description, index) => {
         let content;
-        content = description.descriptions.map((item, i) => {
-            if (index === 2) {
-                return (
-                    <ReviewItem reviewData={item}/>
-                );
-            } else {
-
-                return (
-                    <Typography variant="subtitle2">{item}</Typography>
-                );
-            }
-
-        } )
+        if (index === 2) {
+            content = <Review reviewList={description.descriptions} />;
+        } else {
+            content = description.descriptions.map((item, i) => (
+                <Typography key={i} variant="subtitle2">{item}</Typography>
+            ));
+        }
 
         return (
-            <CustomTabPanel index={index} value={value}>
+            <CustomTabPanel key={index} index={index} value={value}>
                 {content}
             </CustomTabPanel>
         );
-
     });
 
     return (
-        <Box sx={{width: '100%', paddingX: 10}}>
-            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+        <Box sx={{ width: '100%', paddingX: 10 }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange}>
                     {showTitleTab}
                 </Tabs>
