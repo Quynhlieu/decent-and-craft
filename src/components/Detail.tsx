@@ -1,5 +1,5 @@
 import {Avatar, Box, Button, colors, Grid, Rating, Stack, Tab, Tabs, Typography} from "@mui/material";
-import {grey} from "@mui/material/colors";
+import {grey, red} from "@mui/material/colors";
 import '@splidejs/splide/dist/css/splide.min.css';
 import React from "react";
 import MySplideSlider from "./MySplideSlider.tsx";
@@ -10,6 +10,8 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import {productDescription} from "../data/productDescription.ts"
 import {ProductDescription, IReview} from "../interfaces/IProductDescription.ts";
 import "../assets/product-detail.css"
+import ProductList from "./ProductList.tsx";
+import {hotProducts} from "../data/products.ts";
 
 const Slider: React.FC = () => {
     const mainImages = [
@@ -188,24 +190,6 @@ const ReviewItem = (props: IReview) => {
     )
 }
 
-// Component Review
-// const Review = (props: IReview[]) => {
-//     const {reviewList} = props;
-//     const showList = reviewList.map((reviewData: IReview) => {
-//         return (
-//             <ReviewItem reviewData={reviewData}></ReviewItem>
-//         )
-//     })
-//
-//     return (
-//         <div>
-//             <h1>Giao diện Review</h1>
-//             {showList}
-//         </div>
-//     )
-// }
-
-
 /*
 * Component thông tin bổ sung cho sản phẩm
 * */
@@ -213,7 +197,6 @@ const DescriptionProduct = () => {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        console.log("value: ",value)
         setValue(newValue);
     };
 
@@ -225,8 +208,6 @@ const DescriptionProduct = () => {
     // render nội dung các tab
     const showContentTab = productDescription.map((description: ProductDescription, index: number) => {
         let content;
-        console.log("index:", index)
-
         content = description.descriptions.map((item, i) => {
             if (index === 2) {
                 return (
@@ -235,7 +216,7 @@ const DescriptionProduct = () => {
             } else {
 
                 return (
-                    <Typography key={i} variant="subtitle2">{item}</Typography>
+                    <Typography variant="subtitle2">{item}</Typography>
                 );
             }
 
@@ -262,11 +243,32 @@ const DescriptionProduct = () => {
 };
 /* End Description Tab*/
 
+/*
+* Similar product list
+* */
+const SimilarProductList = () => {
+    const data = hotProducts;
+    const productListSX = {
+        '.MuiBox-root': {
+            background: 'red',
+        },
+        '.MuiGrid-item': {
+            padding: 0, // Tắt padding cho tất cả các item trong ProductList
+        },
+    };
+    return (
+        <Box sx={{ my: 5, pt: 2 }} className="product-meta">
+            <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM TƯƠNG TỰ</Typography>
+            <ProductList products={data} sx={{backgroundColor:'#ffff'}} />
+        </Box>
+    );
+}
+
 // Chi tiet san pham
 const Detail = () => {
     return (
         <Box>
-            <Grid container spacing={5} paddingX={10}>
+            <Grid container spacing={5} >
                 <Grid item xs={4}>
                     <Slider/>
                 </Grid>
@@ -277,7 +279,7 @@ const Detail = () => {
                     <DescriptionProduct/>
                 </Grid>
             </Grid>
-
+            <SimilarProductList/>
         </Box>
     )
 }

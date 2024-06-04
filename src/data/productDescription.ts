@@ -1,6 +1,4 @@
 import {ProductDescription} from "../interfaces/IProductDescription.ts";
-import avatar from "../assets/react.svg"
-
 export const productDescription: ProductDescription[] = [
     {
         productId: 1,
