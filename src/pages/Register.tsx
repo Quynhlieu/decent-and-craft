@@ -35,8 +35,6 @@ export default function Register() {
     const handleGoogleLogin = () => {
         console.log('Logging in with Google');
     };
-
-
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -86,6 +84,7 @@ export default function Register() {
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
+                                    type="email"
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -97,6 +96,17 @@ export default function Register() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="confirmPassword"
+                                    label="Confirm password"
+                                    type="password"
+                                    id="confirmPassword"
+                                    autoComplete="confirmPassword"
                                 />
                             </Grid>
                         </Grid>
