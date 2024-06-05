@@ -8,7 +8,7 @@ export const hotProducts: Product[] = [
     },
     {
         id: 2,
-        name: "Set Qua Protrail2",
+        name: "Set Qua Protrail2 dsdsdsdsds",
         price: 1000000,
         thumb: "https://fairycorner.vn/wp-content/uploads/2022/02/MG_9303-300x300.jpg"
     },

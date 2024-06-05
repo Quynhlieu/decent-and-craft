@@ -130,7 +130,7 @@ export default function Register() {
                         </Box>
                         <Grid container justifyContent="flex-end">
                                 <Grid item>
-                                    <Link href="#" variant="body2">
+                                    <Link href="/login" variant="body2">
                                         Bạn đã có tài khoản? Đăng nhập
                                     </Link>
                                 </Grid>
