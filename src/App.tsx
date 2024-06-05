@@ -7,6 +7,7 @@ import Header from './components/Header';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './pages/Layout.tsx';
 import Cart from './pages/Cart.tsx';
+import WishList from './pages/WishList.tsx';
 const theme = createTheme({
   palette: {
     primary: {
@@ -33,6 +34,7 @@ function App() {
             <Route path="user" element={<User />} />
             <Route path="product-detail" element={<ProductDetail />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="wishlist" element={<WishList />} />
           </Route>
         </Routes>
       </BrowserRouter>
