@@ -1,5 +1,5 @@
-import { AppBar, Box, Button, Divider, Stack, Toolbar, Typography } from '@mui/material'
-import React from 'react'
+import {AppBar, Box, Button, Divider, Popover, Stack, Toolbar, Typography} from '@mui/material'
+import React, {useState} from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -49,6 +49,19 @@ const NavBar = () => {
 }
 
 const Header = () => {
+
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
     return (
         <Box sx={{
             padding: 0,
@@ -67,16 +80,55 @@ const Header = () => {
                         <LocalPhoneIcon />
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
-                    <Stack sx={{ marginX: 2}} spacing={3} direction="row">
-                        <Link to="user">
-                            <Button sx={{
-                                height: 30,
-                                width: 200,
-                                borderRadius: 10,
-                                fontWeight: "bold"
-                            }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>
-                        </Link>
-                        <Divider orientation='vertical' flexItem />
+                    <Stack sx={{marginX: 2}} spacing={3} direction="row">
+                        {/*<Link to="user">*/}
+                        {/*    <Button sx={{*/}
+                        {/*        height: 30,*/}
+                        {/*        width: 200,*/}
+                        {/*        borderRadius: 10,*/}
+                        {/*        fontWeight: "bold"*/}
+                        {/*    }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>*/}
+                        {/*</Link>*/}
+                        <div
+                            onMouseEnter={handlePopoverOpen}
+                            onMouseLeave={handlePopoverClose}
+                        >
+                            <Button
+                                sx={{
+                                    height: 30,
+                                    width: 200,
+                                    borderRadius: 10,
+                                    fontWeight: "bold"
+                                }}
+                                variant='contained'
+                            >
+                                ĐĂNG NHẬP/ĐĂNG KÝ
+                            </Button>
+                            <Popover sx={{mt:1}}
+                                open={open}
+                                anchorEl={anchorEl} //xác định vị trí xuất hiện của Popover.
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                }}
+                                onClose={handlePopoverClose}
+                                disableRestoreFocus
+                            >
+                                <Stack direction="column" spacing={1} sx={{p: 2}}>
+                                    <Link to="/login">
+                                        <Button variant='contained' sx={{width: '100%'}}>Đăng Nhập</Button>
+                                    </Link>
+                                    <Link to="/register">
+                                        <Button variant='contained' sx={{width: '100%'}}>Đăng Ký</Button>
+                                    </Link>
+                                </Stack>
+                            </Popover>
+                        </div>
+                        <Divider orientation='vertical' flexItem/>
                         <Button
                             sx={{
                                 height: 30,
@@ -84,12 +136,12 @@ const Header = () => {
                                 textTransform: "none"
                             }}
                             variant='contained'
-                            endIcon={<ShoppingCartIcon />}>
+                            endIcon={<ShoppingCartIcon/>}>
                             0đ
                         </Button>
                     </Stack>
                 </Toolbar>
-                <NavBar />
+                <NavBar/>
             </AppBar>
         </Box>
     )
