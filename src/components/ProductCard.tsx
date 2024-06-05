@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { cartItemAdd } from '../features/cart/cartSlice';
 import { ToastContainer, toast } from 'react-toastify';
-export const VNDNumericFormat = (prop: { price: number }) => {
+export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
-        <NumericFormat  value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
+        <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
     )
 }
 const ProductCard = (product: { data: Product }) => {
@@ -50,7 +50,7 @@ const ProductCard = (product: { data: Product }) => {
                             product: product.data,
                             quantity: 1
                         }))
-                        toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000,position:"bottom-left" })
+                        toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" })
                     }}
                 >
                     Thêm vào giỏ
