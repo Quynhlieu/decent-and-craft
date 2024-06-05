@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { cartItemAdd } from '../features/cart/cartSlice';
 import { ToastContainer, toast } from 'react-toastify';
-export const VNDNumericFormat = (prop: { price: number }) => {
+export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
-        <NumericFormat  value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
+        <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
     )
 }
 const ProductCard = (product: { data: Product }) => {
@@ -25,9 +25,15 @@ const ProductCard = (product: { data: Product }) => {
                     component="img"
                     height="140"
                     image={thumb}
+                    sx={{
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                            transform: "rotate(15deg) scale(0.8)",
+                        }
+                    }}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography sx={{ minHeight: 60 }} gutterBottom variant="h6" component="div">
                         {name}
                     </Typography>
                     <Typography fontWeight="bold" variant="h6" component="div">
@@ -50,7 +56,7 @@ const ProductCard = (product: { data: Product }) => {
                             product: product.data,
                             quantity: 1
                         }))
-                        toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000,position:"bottom-left" })
+                        toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" })
                     }}
                 >
                     Thêm vào giỏ

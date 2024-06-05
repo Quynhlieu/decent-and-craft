@@ -6,6 +6,7 @@ import { VNDNumericFormat } from '../ProductCard'
 import { CartItem, cartItemRemove, getTotalPrice } from '../../features/cart/cartSlice'
 import CancelIcon from '@mui/icons-material/Cancel';
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 type CartItemListType = {
     cartItems: CartItem[];
 }
@@ -19,7 +20,7 @@ const CartItemComponent = (prop: { cartItem: CartItem }) => {
                 pb: 2
             }} >
             <img width={50} height={50} src={cartItem.product.thumb} />
-            <Box>
+            <Box textAlign="left" minWidth={250}>
                 <Typography>
                     <strong>
                         {cartItem.product.name}
@@ -52,6 +53,7 @@ const CartItemList = (prop: CartItemListType) => {
 const CartContainer = (prop: { showCart: boolean, onMouseOut: any }) => {
     const { showCart } = prop;
     const cart = useSelector((state: RootState) => state.cart)
+    const navigate = useNavigate();
     return (
         <Paper
             onMouseOut={prop.onMouseOut}
@@ -68,7 +70,7 @@ const CartContainer = (prop: { showCart: boolean, onMouseOut: any }) => {
             {cart.length ? <Stack spacing={2} >
                 <CartItemList cartItems={cart} />
                 <Typography>Tong tien: <strong><VNDNumericFormat price={getTotalPrice(cart)} /></strong></Typography>
-                <Button variant='contained'>Xem gio hang</Button>
+                <Button onClick={() => { navigate("cart") }} variant='contained'>Xem gio hang</Button>
                 <Button color="error" variant='contained'>Thanh Toan</Button>
             </Stack> : <Typography>
                 Chưa có sản phẩm trong giỏ hàng
@@ -78,7 +80,3 @@ const CartContainer = (prop: { showCart: boolean, onMouseOut: any }) => {
 }
 
 export default CartContainer
-
-function state(state: unknown): unknown {
-    throw new Error('Function not implemented.')
-}
