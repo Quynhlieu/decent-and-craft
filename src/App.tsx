@@ -33,6 +33,8 @@ function App() {
             <Route index element={<Home />} />
             <Route path="user" element={<User />} />
             <Route path="product-detail" element={<ProductDetail />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
           </Route>
         </Routes>
       </BrowserRouter>

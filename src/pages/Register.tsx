@@ -53,7 +53,7 @@ export default function Register() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Đăng kí
+                        Đăng ký
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
@@ -106,7 +106,7 @@ export default function Register() {
                             variant="contained"
                             sx={{ mt: 3, mb: 1 , backgroundColor: "rgb(77 182 172)" }}
                         >
-                            Đăng kí
+                            Đăng ký
                         </Button>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginY: 2 }}>
                             <Button
@@ -129,13 +129,11 @@ export default function Register() {
                             </Button>
                         </Box>
                         <Grid container justifyContent="flex-end">
-                            <Link href="#login">
                                 <Grid item>
                                     <Link href="#" variant="body2">
                                         Bạn đã có tài khoản? Đăng nhập
                                     </Link>
                                 </Grid>
-                            </Link>
                         </Grid>
                     </Box>
                 </Box>
