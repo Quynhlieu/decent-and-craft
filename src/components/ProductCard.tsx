@@ -1,12 +1,15 @@
 import React from 'react'
 import { Product } from '../interfaces/Product'
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { NumericFormat } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { cartItemAdd } from '../features/cart/cartSlice';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { wishlistAdd } from '../features/wishlist/wishlistSlice';
 export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
         <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
@@ -61,6 +64,11 @@ const ProductCard = (product: { data: Product }) => {
                 >
                     Thêm vào giỏ
                 </Button>
+                <IconButton onClick={() => {
+                    dispatch(wishlistAdd(product.data))
+                }} >
+                    <FavoriteBorderIcon color="error" />
+                </IconButton>
             </CardActions>
         </Card>
     )
