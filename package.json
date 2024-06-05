@@ -26,7 +26,9 @@
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.5",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "sweetalert2": "^11.11.1",
+    "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
     "@mui/x-data-grid": "^6.20.0",

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { getCount, getTotalPrice } from '../features/cart/cartSlice';
@@ -55,7 +55,6 @@ const NavBar = () => {
 const Header = () => {
     const cart = useSelector((state: RootState) => state.cart);
     const [showCart, setShowCart] = useState<boolean>(false);
-    const navigate = useNavigate();
     return (
         <Box sx={{
             padding: 0,

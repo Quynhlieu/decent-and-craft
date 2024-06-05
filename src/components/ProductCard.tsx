@@ -25,9 +25,15 @@ const ProductCard = (product: { data: Product }) => {
                     component="img"
                     height="140"
                     image={thumb}
+                    sx={{
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                            transform: "rotate(15deg) scale(0.8)",
+                        }
+                    }}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography sx={{ minHeight: 60 }} gutterBottom variant="h6" component="div">
                         {name}
                     </Typography>
                     <Typography fontWeight="bold" variant="h6" component="div">

@@ -20,7 +20,7 @@ const CartItemComponent = (prop: { cartItem: CartItem }) => {
                 pb: 2
             }} >
             <img width={50} height={50} src={cartItem.product.thumb} />
-            <Box>
+            <Box textAlign="left" minWidth={250}>
                 <Typography>
                     <strong>
                         {cartItem.product.name}
