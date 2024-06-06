@@ -9,6 +9,7 @@ import Layout from './pages/Layout.tsx';
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
+import WishList from './pages/WishList.tsx';
 const theme = createTheme({
   palette: {
     primary: {
@@ -37,6 +38,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="wishlist" element={<WishList />} />
           </Route>
         </Routes>
       </BrowserRouter>

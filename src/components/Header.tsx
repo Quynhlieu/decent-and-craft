@@ -1,4 +1,4 @@
-import {AppBar, Badge, Box, Button, Divider, Popover, Stack, Toolbar, Tooltip, Typography} from '@mui/material'
+import { AppBar, Badge, Box, Button, Divider, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { getCount, getTotalPrice } from '../features/cart/cartSlice';
 import { VNDNumericFormat } from './ProductCard';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import CartContainer from './Cart/CartContainer';
 interface NavItemProps {
     active?: boolean,
@@ -54,7 +55,9 @@ const NavBar = () => {
 
 const Header = () => {
     const cart = useSelector((state: RootState) => state.cart);
+    const wishlist = useSelector((state: RootState) => state.wishlist);
     const [showCart, setShowCart] = useState<boolean>(false);
+
     return (
         <Box sx={{
             padding: 0,
@@ -73,11 +76,11 @@ const Header = () => {
                         <LocalPhoneIcon />
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
-                    <Stack sx={{marginX: 2}} spacing={3} direction="row">
+                    <Stack sx={{ marginX: 2 }} spacing={3} direction="row">
                         <Button
                             sx={{
                                 height: 30,
-                                width: 200,
+                                width: 130,
                                 borderRadius: 10,
                                 position: "relative",
                                 fontWeight: "bold"
@@ -85,27 +88,42 @@ const Header = () => {
                             variant='contained'
                         >
                             <Tooltip
+                                color='white'
                                 title={
                                     <Stack direction="column" spacing={1}>
-                                        <Link to="/login">
-                                            <Button variant='contained' sx={{ width: '100%' }}>Đăng Nhập</Button>
-                                        </Link>
                                         <Link to="/register">
                                             <Button variant='contained' sx={{ width: '100%' }}>Đăng Ký</Button>
                                         </Link>
                                     </Stack>
                                 }
                                 arrow
-                                sx={{
-                                    bgcolor: 'white',
-                                    color: 'black',
+                                componentsProps={{
+                                    tooltip: {
+                                        sx: {
+                                            bgcolor: "white"
+                                        }
+                                    }
                                 }}
                             >
-                                <span>ĐĂNG NHẬP/ĐĂNG KÝ</span>
+                                <Link
+                                    style={{
+                                        color: "white",
+                                        textDecoration: "none"
+                                    }} to={'/login'} >
+                                    <Typography>
+                                        ĐĂNG NHẬP
+                                    </Typography>
+                                </Link>
                             </Tooltip>
                         </Button>
-
-                        <Divider orientation='vertical' flexItem/>
+                        <Divider orientation='vertical' flexItem />
+                        <Badge color='error' badgeContent={wishlist.length} >
+                            <Link to={"wishlist"}>
+                                <IconButton>
+                                    <FavoriteIcon color="primary" />
+                                </IconButton>
+                            </Link>
+                        </Badge>
                         <Button
                             onMouseOver={() => {
                                 setShowCart(true);
@@ -121,16 +139,16 @@ const Header = () => {
                             }}
                             variant='contained'
                             endIcon={<Badge color='error' badgeContent={getCount(cart)}>
-                                <ShoppingCartIcon/>
+                                <ShoppingCartIcon />
                             </Badge>}>
-                            <VNDNumericFormat price={getTotalPrice(cart)}/>
+                            <VNDNumericFormat price={getTotalPrice(cart)} />
                             <CartContainer onMouseOut={() => {
                                 setShowCart(false);
-                            }} showCart={showCart}/>
+                            }} showCart={showCart} />
                         </Button>
                     </Stack>
                 </Toolbar>
-                <NavBar/>
+                <NavBar />
             </AppBar>
         </Box>
     )

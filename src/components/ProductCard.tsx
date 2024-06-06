@@ -1,12 +1,16 @@
 import React from 'react'
 import { Product } from '../interfaces/Product'
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
+import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography } from '@mui/material'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { NumericFormat } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { cartItemAdd } from '../features/cart/cartSlice';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { wishlistAdd, wishlistRemove } from '../features/wishlist/wishlistSlice';
+import { RootState } from '../app/store';
 export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
         <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
@@ -14,6 +18,8 @@ export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProper
 }
 const ProductCard = (product: { data: Product }) => {
     const { id, name, price, thumb } = product.data;
+    const wishlist = useSelector((state: RootState) => state.wishlist);
+    const isInWishList = wishlist.some(p => p.id === id);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     return (
@@ -61,6 +67,19 @@ const ProductCard = (product: { data: Product }) => {
                 >
                     Thêm vào giỏ
                 </Button>
+                <IconButton onClick={() => {
+                    !isInWishList ? dispatch(wishlistAdd(product.data))
+                        : dispatch(wishlistRemove(product.data))
+                    const message = isInWishList
+                        ? "Xóa khỏi wishlist thành công"
+                        : "Thêm vào wishlist thành công"
+                    toast.success(message, { autoClose: 1000, position: "bottom-left" })
+
+                }} >
+                    {isInWishList
+                        ? <FavoriteIcon color="error" />
+                        : <FavoriteBorderIcon color="error" />}
+                </IconButton>
             </CardActions>
         </Card>
     )
