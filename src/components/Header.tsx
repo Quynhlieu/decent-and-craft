@@ -1,4 +1,4 @@
-import { AppBar, Badge, Box, Button, Divider, Stack, Toolbar, Typography } from '@mui/material'
+import { AppBar, Badge, Box, Button, Divider, IconButton, Stack, Toolbar, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { getCount, getTotalPrice } from '../features/cart/cartSlice';
 import { VNDNumericFormat } from './ProductCard';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import CartContainer from './Cart/CartContainer';
 interface NavItemProps {
     active?: boolean,
@@ -54,7 +55,9 @@ const NavBar = () => {
 
 const Header = () => {
     const cart = useSelector((state: RootState) => state.cart);
+    const wishlist = useSelector((state: RootState) => state.wishlist);
     const [showCart, setShowCart] = useState<boolean>(false);
+
     return (
         <Box sx={{
             padding: 0,
@@ -77,12 +80,19 @@ const Header = () => {
                         <Link to="user">
                             <Button sx={{
                                 height: 30,
-                                width: 200,
+                                width: 130,
                                 borderRadius: 10,
                                 fontWeight: "bold"
-                            }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>
+                            }} variant='contained' >ĐĂNG NHẬP</Button>
                         </Link>
                         <Divider orientation='vertical' flexItem />
+                        <Badge color='error' badgeContent={wishlist.length} >
+                            <Link to={"wishlist"}>
+                                <IconButton>
+                                    <FavoriteIcon color="primary" />
+                                </IconButton>
+                            </Link>
+                        </Badge>
                         <Button
                             onMouseOver={() => {
                                 setShowCart(true);

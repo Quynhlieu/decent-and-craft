@@ -4,12 +4,13 @@ import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Icon
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { NumericFormat } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { cartItemAdd } from '../features/cart/cartSlice';
 import { toast } from 'react-toastify';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { wishlistAdd } from '../features/wishlist/wishlistSlice';
+import { wishlistAdd, wishlistRemove } from '../features/wishlist/wishlistSlice';
+import { RootState } from '../app/store';
 export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
         <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
@@ -17,6 +18,8 @@ export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProper
 }
 const ProductCard = (product: { data: Product }) => {
     const { id, name, price, thumb } = product.data;
+    const wishlist = useSelector((state: RootState) => state.wishlist);
+    const isInWishList = wishlist.some(p => p.id === id);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     return (
@@ -65,9 +68,12 @@ const ProductCard = (product: { data: Product }) => {
                     Thêm vào giỏ
                 </Button>
                 <IconButton onClick={() => {
-                    dispatch(wishlistAdd(product.data))
+                    !isInWishList ? dispatch(wishlistAdd(product.data))
+                        : dispatch(wishlistRemove(product.data))
                 }} >
-                    <FavoriteBorderIcon color="error" />
+                    {isInWishList
+                        ? <FavoriteIcon color="error" />
+                        : <FavoriteBorderIcon color="error" />}
                 </IconButton>
             </CardActions>
         </Card>
