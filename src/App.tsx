@@ -6,6 +6,8 @@ import User from "./pages/User";
 import Header from './components/Header';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './pages/Layout.tsx';
+import Login from "./pages/Login.tsx";
+import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
 const theme = createTheme({
   palette: {
@@ -32,6 +34,8 @@ function App() {
             <Route index element={<Home />} />
             <Route path="user" element={<User />} />
             <Route path="product-detail" element={<ProductDetail />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
             <Route path="cart" element={<Cart />} />
           </Route>
         </Routes>

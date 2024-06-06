@@ -1,4 +1,4 @@
-import { AppBar, Badge, Box, Button, Divider, Stack, Toolbar, Typography } from '@mui/material'
+import {AppBar, Badge, Box, Button, Divider, Popover, Stack, Toolbar, Tooltip, Typography} from '@mui/material'
 import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -73,16 +73,39 @@ const Header = () => {
                         <LocalPhoneIcon />
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
-                    <Stack sx={{ marginX: 2 }} spacing={3} direction="row">
-                        <Link to="user">
-                            <Button sx={{
+                    <Stack sx={{marginX: 2}} spacing={3} direction="row">
+                        <Button
+                            sx={{
                                 height: 30,
                                 width: 200,
                                 borderRadius: 10,
+                                position: "relative",
                                 fontWeight: "bold"
-                            }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>
-                        </Link>
-                        <Divider orientation='vertical' flexItem />
+                            }}
+                            variant='contained'
+                        >
+                            <Tooltip
+                                title={
+                                    <Stack direction="column" spacing={1}>
+                                        <Link to="/login">
+                                            <Button variant='contained' sx={{ width: '100%' }}>Đăng Nhập</Button>
+                                        </Link>
+                                        <Link to="/register">
+                                            <Button variant='contained' sx={{ width: '100%' }}>Đăng Ký</Button>
+                                        </Link>
+                                    </Stack>
+                                }
+                                arrow
+                                sx={{
+                                    bgcolor: 'white',
+                                    color: 'black',
+                                }}
+                            >
+                                <span>ĐĂNG NHẬP/ĐĂNG KÝ</span>
+                            </Tooltip>
+                        </Button>
+
+                        <Divider orientation='vertical' flexItem/>
                         <Button
                             onMouseOver={() => {
                                 setShowCart(true);
@@ -98,16 +121,16 @@ const Header = () => {
                             }}
                             variant='contained'
                             endIcon={<Badge color='error' badgeContent={getCount(cart)}>
-                                <ShoppingCartIcon />
+                                <ShoppingCartIcon/>
                             </Badge>}>
-                            <VNDNumericFormat price={getTotalPrice(cart)} />
+                            <VNDNumericFormat price={getTotalPrice(cart)}/>
                             <CartContainer onMouseOut={() => {
                                 setShowCart(false);
-                            }} showCart={showCart} />
+                            }} showCart={showCart}/>
                         </Button>
                     </Stack>
                 </Toolbar>
-                <NavBar />
+                <NavBar/>
             </AppBar>
         </Box>
     )
