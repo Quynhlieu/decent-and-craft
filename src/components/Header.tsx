@@ -1,4 +1,4 @@
-import { AppBar, Badge, Box, Button, Divider, IconButton, Stack, Toolbar, Typography } from '@mui/material'
+import { AppBar, Badge, Box, Button, Divider, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -77,14 +77,45 @@ const Header = () => {
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
                     <Stack sx={{ marginX: 2 }} spacing={3} direction="row">
-                        <Link to="user">
-                            <Button sx={{
+                        <Button
+                            sx={{
                                 height: 30,
                                 width: 130,
                                 borderRadius: 10,
+                                position: "relative",
                                 fontWeight: "bold"
-                            }} variant='contained' >ĐĂNG NHẬP</Button>
-                        </Link>
+                            }}
+                            variant='contained'
+                        >
+                            <Tooltip
+                                color='white'
+                                title={
+                                    <Stack direction="column" spacing={1}>
+                                        <Link to="/register">
+                                            <Button variant='contained' sx={{ width: '100%' }}>Đăng Ký</Button>
+                                        </Link>
+                                    </Stack>
+                                }
+                                arrow
+                                componentsProps={{
+                                    tooltip: {
+                                        sx: {
+                                            bgcolor: "white"
+                                        }
+                                    }
+                                }}
+                            >
+                                <Link
+                                    style={{
+                                        color: "white",
+                                        textDecoration: "none"
+                                    }} to={'/login'} >
+                                    <Typography>
+                                        ĐĂNG NHẬP
+                                    </Typography>
+                                </Link>
+                            </Tooltip>
+                        </Button>
                         <Divider orientation='vertical' flexItem />
                         <Badge color='error' badgeContent={wishlist.length} >
                             <Link to={"wishlist"}>

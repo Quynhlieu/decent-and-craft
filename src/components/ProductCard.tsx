@@ -70,6 +70,11 @@ const ProductCard = (product: { data: Product }) => {
                 <IconButton onClick={() => {
                     !isInWishList ? dispatch(wishlistAdd(product.data))
                         : dispatch(wishlistRemove(product.data))
+                    const message = isInWishList
+                        ? "Xóa khỏi wishlist thành công"
+                        : "Thêm vào wishlist thành công"
+                    toast.success(message, { autoClose: 1000, position: "bottom-left" })
+
                 }} >
                     {isInWishList
                         ? <FavoriteIcon color="error" />
