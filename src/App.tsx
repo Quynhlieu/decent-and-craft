@@ -10,6 +10,8 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
 import WishList from './pages/WishList.tsx';
+import Blogs from './pages/Blogs.tsx';
+import BlogDetail from './components/BlogDetail.tsx';
 const theme = createTheme({
   palette: {
     primary: {
@@ -38,7 +40,11 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="cart" element={<Cart />} />
-            <Route path="wishlist" element={<WishList />} />
+            <Route path="blogs"  >
+              <Route path=":blogId" element={<BlogDetail />} />
+              <Route index element={<Blogs />} />
+              <Route path="category/:blogCategoryId" element={<Blogs />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
