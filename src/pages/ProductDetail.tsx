@@ -13,7 +13,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import {hotProducts} from "../data/products.ts";
 import ProductList from "../components/ProductList.tsx";
-import Review from "../components/Review.txs.tsx";
+import Review from "../components/Review.tsx";
 import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
 
 
@@ -39,19 +39,6 @@ const Slider: React.FC = () => {
         </div>
     );
 };
-
-
-// Product Name
-// const Title = () => {
-//     const style = {
-//         color: colors.grey[700],
-//         fontSize: 25,
-//         fontWeight: "bold",
-//     }
-//     return (
-//         <Typography sx={style}>Sáp thơm hoa khô Elayne Orange & Sandalwood</Typography>
-//     )
-// }
 
 // Line icon
 const LineIcon = () => {
@@ -165,44 +152,38 @@ function CustomTabPanel(props: TabPanelProps) {
 * */
 const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
     const [value, setValue] = React.useState(0);
-    const productDescriptions = getProductDescriptions(productId);
+    const productDetail = useSelector((state: RootState) => state.productDetail);
+    const product = productDetail.find(i => i.id === productId);
+    const productDescriptions = product && product.productDescriptions;
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
     };
 
-    if (!productDescriptions) {
-        return <Typography variant="h6">Product not found</Typography>;
+    // Show mô tả sản phẩm
+    const showDescriptionTab = () => {
+        return <Typography variant="subtitle2">{productDescriptions}</Typography>
     }
-
-    const showTitleTab = productDescriptions.map((item, index) => (
-        <Tab key={index} label={item.title}/>
-    ));
-
-    const showContentTab = productDescriptions.map((description, index) => {
-        let content;
-        if (description.title == "Đánh giá sản phẩm") {
-            content = <Review productId={productId}/>;
-        } else {
-            content = (description.descriptions as string[]).map((item, i) => (
-                <Typography key={i} variant="subtitle2">{item}</Typography>
-            ));
-        }
-
+    // Show Review
+    const showReviewTab = () => {
+        const content = <Review productId={productId}/>;
         return (
-            <CustomTabPanel key={index} index={index} value={value}>
+            <CustomTabPanel index={1} value={value}>
                 {content}
             </CustomTabPanel>
         );
-    });
+    };
+
 
     return (
         <Box sx={{width: '100%', paddingX: 10}}>
             <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange}>
-                    {showTitleTab}
+                    <Tab key={0} label="MÔ TẢ"/>
+                    <Tab key={1} label="ĐÁNH GIÁ SẢN PHẨM"/>
                 </Tabs>
             </Box>
-            {showContentTab}
+            {showDescriptionTab()}
+            {showReviewTab()}
         </Box>
     );
 };

@@ -21,7 +21,7 @@ export const productDetails: IProductDetail[] = [
                     id: 1,
                     fullName: "Du Ban Teo"
                 },
-                rating: 5,
+                rating: 4,
                 contents: "Sản phẩm này rất tốt!",
                 created_at: "06/02/2024",
             },

@@ -6,9 +6,9 @@ export interface ProductDescription {
 }
 
 export interface IReview {
-    customer: Customer;
+    customer?: Customer;
     rating: number;
-    contents: string;
+    contents?: string;
     created_at: string;
 }
 export interface Image{

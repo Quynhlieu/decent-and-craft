@@ -2,8 +2,6 @@ import {productDetails} from "../../data/productDetail.ts"
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Image, IReview} from "../../interfaces/IProductDescription.ts";
 import {Product} from "../../interfaces/Product.ts";
-import {useSelector} from "react-redux";
-import {RootState} from "../../app/store.ts";
 
 export interface IProductDetail extends Product {
     discount: number;
@@ -22,14 +20,18 @@ const productDetailSlice = createSlice({
         reviewAdd(state, action: PayloadAction<{ productId: number, review: IReview }>) {
             const {productId, review} = action.payload;
             const product = state.find(i => i.id === productId);
-            product && product.reviewList.push(review);
-        },
-        // reviewUpdate(state, action: PayloadAction<{ productId: number, review: IReview }>) {
-        //     const {productId, review} = action.payload;
-        //     const product = state.find(i => i.id === productId);
-        //     product.reviewList.find(i.)
-        //
-        // },
+            const isExist:boolean|undefined = product?.reviewList.some(review=>review.customer?.id==review.customer?.id);
+            if(isExist){
+                const currentReview = product?.reviewList.find(r=>r.customer?.id==review.customer?.id);
+                if(currentReview){
+                    currentReview.contents=review.contents;
+                    currentReview.rating=review.rating;
+                }
+            }
+            else{
+                product && product.reviewList.push(review);
+            }
+        }
     },
 });
 
