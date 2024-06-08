@@ -1,13 +1,17 @@
+import {Customer} from "./Customer.ts";
+
 export interface ProductDescription {
-    productId: number,
     title: string,
     descriptions: (string | IReview)[],
 }
 
 export interface IReview {
-    avatar: string;
-    fullName: string;
+    customer: Customer;
     rating: number;
     contents: string;
     created_at: string;
+}
+export interface Image{
+    id: number;
+    src: string;
 }
