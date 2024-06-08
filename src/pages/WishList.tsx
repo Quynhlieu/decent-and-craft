@@ -18,14 +18,14 @@ const WishList = () => {
         headCells: {
             style: {
                 fontSize: '16px', // override the cell padding for head cells
-                fontWeight: "bold"
+                fontWeight: "bold",
             },
         },
         rows: {
             style: {
                 padding: "10px 0"
             }
-        }
+        },
     }
     const columns = [
         {
@@ -55,7 +55,10 @@ const WishList = () => {
         {
             name: "CHỨC NĂNG",
             cell: (row: any) =>
-                <Stack direction="row" spacing={3} >
+                <Stack
+                    direction="row"
+                    width="100%"
+                    spacing={3} >
                     <Button
                         onClick={() => {
                             dispatch(cartItemAdd({ product: row, quantity: 1 }))

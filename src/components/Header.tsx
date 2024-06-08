@@ -37,7 +37,7 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
 
 const NavBar = () => {
     return (
-        <Stack direction="row" spacing={8} sx={{ padding: 0, mt: 3 }} >
+        <Stack direction="row" spacing={0} sx={{ padding: 0, mt: 3 }} >
             <Link to="/"  >
                 <NavItem active={true} >Trang chủ</NavItem>
             </Link>
@@ -47,8 +47,9 @@ const NavBar = () => {
             <NavItem >Quà tặng</NavItem>
             <NavItem >Thiệp</NavItem>
             <NavItem >Nguyên liệu</NavItem>
-            <NavItem >Blogs</NavItem>
-
+            <Link to={'/blogs'}>
+                <NavItem >Blogs</NavItem>
+            </Link>
         </Stack>
     )
 }
@@ -61,7 +62,7 @@ const Header = () => {
     return (
         <Box sx={{
             padding: 0,
-            margin: 0
+            margin: 0,
         }} >
             <AppBar position='static' sx={{ boxShadow: "none" }} color='transparent'>
                 <Toolbar sx={{
@@ -76,7 +77,7 @@ const Header = () => {
                         <LocalPhoneIcon />
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
-                    <Stack sx={{ marginX: 2 }} spacing={3} direction="row">
+                    <Stack sx={{ marginX: 2 }} spacing={2} direction="row">
                         <Button
                             sx={{
                                 height: 30,

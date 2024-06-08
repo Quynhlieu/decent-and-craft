@@ -5,12 +5,14 @@ import ProductDetail from "./pages/ProductDetail.tsx";
 import User from "./pages/User";
 import Header from './components/Header';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Layout from './pages/Layout.tsx';
+import Layout, { ScrollToTop } from './pages/Layout.tsx';
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
 import WishList from './pages/WishList.tsx';
 import ForgotPassword from "./pages/ForgotPassword.tsx";
+import Blogs from './pages/Blogs.tsx';
+import BlogDetail from './components/BlogDetail.tsx';
 const theme = createTheme({
   palette: {
     primary: {
@@ -31,6 +33,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
+        <ScrollToTop/>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -40,7 +43,11 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="forgotPassword" element={<ForgotPassword />} />
             <Route path="cart" element={<Cart />} />
-            <Route path="wishlist" element={<WishList />} />
+            <Route path="blogs"  >
+              <Route path=":blogId" element={<BlogDetail />} />
+              <Route index element={<Blogs />} />
+              <Route path="category/:blogCategoryId" element={<Blogs />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
