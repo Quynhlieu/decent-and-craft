@@ -15,7 +15,7 @@ const SeachBar = () => {
             alignItems: "center"
         }} >
             <SearchIcon sx={{ mr: 2 }} />
-            <InputBase sx={{ width: 400 }} placeholder='Bạn cần tìm gì?' />
+            <InputBase sx={{ width: 300 }} placeholder='Bạn cần tìm gì?' />
         </Box>
     )
 }

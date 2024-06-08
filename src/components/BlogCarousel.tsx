@@ -7,13 +7,14 @@ import Slider from 'react-slick';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useState } from 'react';
-import zIndex from '@mui/material/styles/zIndex';
+import BlogCategory from '../interfaces/IBlogCategory';
 type BlogItemProps = {
     tag?: string,
     title: string,
     date: string,
     thumb?: string,
-    show?: boolean
+    show?: boolean,
+    categories?: BlogCategory[]
 }
 const PrevArrow = (props: any) => {
     const { className, style, onClick, show } = props;
@@ -99,7 +100,7 @@ const StyledLink = styled(Link)<any>(({ theme }) => ({
 
 }));
 const BlogItem = (props: BlogItemProps) => {
-    const { tag, title, date } = props;
+    const { title, date } = props;
     return (
         <Box>
             <StyledLink>
@@ -114,14 +115,14 @@ const BlogItem = (props: BlogItemProps) => {
     )
 }
 const BlogCarouselItem = (props: BlogItemProps) => {
-    const { tag, title, date, show,thumb } = props;
+    const { title, date, show, thumb, categories } = props;
     return (
         <div className='p-relative'  >
             <div className="carousel-thumb" style={{
                 backgroundImage: `url(${thumb})`,
                 height: 300,
-                backgroundRepeat:"no-repeat",
-                backgroundSize:"cover",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
                 filter: show ? "blur(12px)" : "blur(0)"
             }}
             >
@@ -146,7 +147,10 @@ const BlogCarouselItem = (props: BlogItemProps) => {
                         borderRadius: 1,
                         transition: "all 0.3s ease",
                     }}>
-                        {tag}
+                        <Stack direction="row" spacing={1}>
+                            {categories && categories
+                                .map((c: BlogCategory) => <Typography><strong>{c.name}</strong></Typography>)}
+                        </Stack>
                     </Typography >
                     <Typography sx={{
                         color: "white",
@@ -186,7 +190,7 @@ const BlogCarousel = () => {
                     setShow(false);
                 }}  >
                     <Slider   {...setting} >
-                        {blogs.map(blog => <BlogCarouselItem thumb={blog.thumb}  date={blog.date} show={show} title={blog.title} tag={blog.tag} />)}
+                        {blogs.map(blog => <BlogCarouselItem categories={blog.categories} thumb={blog.thumb} date={blog.date} show={show} title={blog.title}  />)}
                     </Slider>
                 </Box>
             </Grid>
@@ -195,7 +199,7 @@ const BlogCarousel = () => {
                 <Box>
                     <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
                     <Stack sx={{ ml: 2 }} spacing={1}>
-                        {blogs.map(blog => <BlogItem  date={blog.date} title={blog.title} />)}
+                        {blogs.map(blog => <BlogItem date={blog.date} title={blog.title} categories={[]} />)}
                     </Stack>
                 </Box>
             </Grid>
