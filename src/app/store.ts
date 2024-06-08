@@ -4,7 +4,7 @@ import wishlistReducer from "../features/wishlist/wishlistSlice"
 export const store = configureStore({
     reducer: {
         cart: cartReducer,
-        wishlist: wishlistReducer
+        wishlist: wishlistReducer,
     }
 })
 export type RootState = ReturnType<typeof store.getState>

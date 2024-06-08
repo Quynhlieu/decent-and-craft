@@ -6,7 +6,9 @@ import PasswordIcon from '@mui/icons-material/Password';
 import FemaleIcon from '@mui/icons-material/Female';
 import React from "react";
 
+import {users} from "../data/user.ts";
 const UserProfile  = () => {
+    const user = users[0];
     return (
         <Box  sx={{ height: 320, width: 800}}>
             <Typography variant='h3'  sx={{
@@ -26,7 +28,7 @@ const UserProfile  = () => {
                             <AccountCircleIcon />
                         </ListItemIcon>
                         <ListItemText primary="Số điện thoại:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="(+84) 123 456 789" />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary= {user.phoneNumber} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -35,7 +37,7 @@ const UserProfile  = () => {
                             <AssignmentIcon />
                         </ListItemIcon>
                         <ListItemText primary="Email:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="example@example.com" />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user.email} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -44,7 +46,7 @@ const UserProfile  = () => {
                             <FemaleIcon />
                         </ListItemIcon>
                         <ListItemText primary="Giới tính:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="Nữ" />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user.sex} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -53,7 +55,7 @@ const UserProfile  = () => {
                             <LocationOnIcon />
                         </ListItemIcon>
                         <ListItemText primary="Địa chỉ:" />
-                        <ListItemText sx={{ textAlign: 'right' }} primary="236 5th SE Avenue, New York NY10000, United States" />
+                        <ListItemText sx={{ textAlign: 'right' }} primary={user.address} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>

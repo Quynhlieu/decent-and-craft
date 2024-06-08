@@ -13,23 +13,40 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
+import {useEffect, useState} from "react";
 
 
 const defaultTheme = createTheme();
 
 export default function Register() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
+
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName :'',
+        email: '',
+        password: '',
+        confirmPassword: '',
+
+    })
+    const [error, setError] = useState({
+        password: '',
+        confirmPassword: '',
+    });
+    const onChangeHandle = (e) =>{
+        setFormData({...formData, [e.target.id]: e.target.value})
+    }
+    useEffect(() =>{
+        console.log(formData)
+    })
     const handleFacebookLogin = () => {
         console.log('Logging in with Facebook');
+
     };
 
+    const onSubmitHandle = (e) =>{
+        e.preventDefault();
+
+    }
     const handleGoogleLogin = () => {
         console.log('Logging in with Google');
     };
@@ -51,7 +68,12 @@ export default function Register() {
                     <Typography component="h1" variant="h5">
                         Đăng ký
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    {error && (
+                        <Typography color="error" sx={{ m: 1 }}>
+                            {error}
+                        </Typography>
+                    )}
+                    <Box component="form" onSubmit={onSubmitHandle} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -62,6 +84,7 @@ export default function Register() {
                                     id="firstName"
                                     label="First Name"
                                     autoFocus
+                                    onChange={onChangeHandle}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -72,6 +95,7 @@ export default function Register() {
                                     label="Last Name"
                                     name="lastName"
                                     autoComplete="family-name"
+                                    onChange={onChangeHandle}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -83,6 +107,7 @@ export default function Register() {
                                     name="email"
                                     autoComplete="email"
                                     type="email"
+                                    onChange={onChangeHandle}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -94,6 +119,7 @@ export default function Register() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                    onChange={onChangeHandle}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -105,6 +131,7 @@ export default function Register() {
                                     type="password"
                                     id="confirmPassword"
                                     autoComplete="confirmPassword"
+                                    onChange={onChangeHandle}
                                 />
                             </Grid>
                         </Grid>
