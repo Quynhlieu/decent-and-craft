@@ -70,7 +70,7 @@ export default function Register() {
                     </Typography>
                     {error && (
                         <Typography color="error" sx={{ m: 1 }}>
-                            {error}
+                            {/*{error}*/}
                         </Typography>
                     )}
                     <Box component="form" onSubmit={onSubmitHandle} sx={{ mt: 3 }}>
