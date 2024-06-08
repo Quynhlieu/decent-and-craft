@@ -43,12 +43,16 @@ export const blogs: Blog[] = [
         id: 2,
         title: "6 ý tưởng để Scrapbooking với Washi Tape ( Băng keo trang trí ).",
         date: "15/05/2024",
+        header: "Trong bài viết này, chúng tôi sẽ chia sẻ với bạn sáu ý tưởng sáng tạo để sử dụng washi tape trong scrapbooking. Tận dụng sức mạnh của băng keo trang trí này, bạn có thể tạo ra những trang scrapbook độc đáo và thú vị",
+        author: "Chúc Ngân",
         categories: [blogCategory_1],
         thumb: "https://fairycorner.vn/wp-content/uploads/2016/11/IMG_11762588.jpg"
     },
     {
         id: 3,
         title: "Những sản phẩm thủ công bằng giấy sáng tạo cho trang trí nhà cửa",
+        header: "Trang trí nhà cửa là một nghệ thuật, và việc sử dụng sản phẩm thủ công từ giấy có thể làm cho không gian sống của bạn trở nên sống động và độc đáo hơn bao giờ hết. Từ những chiếc hoa giấy tinh tế đến những bức tranh quilling đầy màu sắc",
+        author: "Diễm Quỳnh",
         date: "20/04/2024",
         categories: [blogCategory_3],
         thumb: "https://fairycorner.vn/wp-content/uploads/2015/05/Fairy-Corner-Trang-tri-dam-cuoi-handmade-11.jpg"
@@ -57,6 +61,8 @@ export const blogs: Blog[] = [
         id: 4,
         title: "Hướng dẫn cơ bản về scrapbook",
         date: "05/03/2024",
+        header: "Trong cuộc sống hàng ngày, có rất nhiều khoảnh khắc đáng nhớ và giá trị mà chúng ta muốn ghi lại và chia sẻ với người thân và bạn bè.Scrapbooking không chỉ là một cách thú vị để làm điều đó, mà còn là một nghệ thuật sáng tạo để thể hiện sự cá nhân hóa và tình yêu với việc lưu giữ kỷ niệm.",
+        author:"Dư Thành Minh",
         categories: [blogCategory_4],
         thumb: "https://fairycorner.vn/wp-content/uploads/2018/01/IMG_4922_01-1067x800.jpg"
     },

@@ -1,9 +1,10 @@
-import { Grid, Stack, Typography } from '@mui/material'
+import { Box, Breadcrumbs, Grid, Link, Stack, Typography } from '@mui/material'
 import parse from 'html-react-parser';
 import React from 'react'
 import Blog from '../interfaces/IBlog';
 import { useParams } from 'react-router-dom';
 import { blogs } from "../data/blogs";
+import { CategoryBlogs, LastestBlogs } from '../pages/Blogs';
 const BlogBody = (prop: { blog: Blog }) => {
     const { blog } = prop;
     return (
@@ -36,16 +37,32 @@ const BlogDetail = () => {
     const isError = (isNaN(blogIdNumber) || blogIdNumber <= 0);
     const blog = blogs.find((blog: Blog) => blog.id == blogIdNumber);
     return (
-        <Grid container sx={{ mt: 5 }}>
-            <Grid xs={10} item>
-                {(!isError && blog)
-                    ? <BlogBody blog={blog} />
-                    : <Typography>Không tìm thấy bài viết này</Typography>}
+        <Box>
+            <Breadcrumbs>
+                <Link underline='hover' color="inherit" href="/" >
+                    Trang chủ
+                </Link>
+                <Link underline='hover' color="inherit" href="/" >
+                Blogs
+                </Link>
+                <Typography color="text.primary" >
+                   {blog?.title}
+                </Typography>
+            </Breadcrumbs>
+            <Grid container spacing={2} sx={{ mt: 5 }}>
+                <Grid xs={9} item>
+                    {(!isError && blog)
+                        ? <BlogBody blog={blog} />
+                        : <Typography>Không tìm thấy bài viết này</Typography>}
+                </Grid>
+                <Grid xs={3} item>
+                    <Stack spacing={2}>
+                        <LastestBlogs />
+                        <CategoryBlogs />
+                    </Stack>
+                </Grid>
             </Grid>
-            <Grid xs={2} item>
-
-            </Grid>
-        </Grid>
+        </Box>
     )
 }
 

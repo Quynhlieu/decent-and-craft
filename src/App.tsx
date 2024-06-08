@@ -5,7 +5,7 @@ import ProductDetail from "./pages/ProductDetail.tsx";
 import User from "./pages/User";
 import Header from './components/Header';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Layout from './pages/Layout.tsx';
+import Layout, { ScrollToTop } from './pages/Layout.tsx';
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
@@ -32,6 +32,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
+        <ScrollToTop/>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
