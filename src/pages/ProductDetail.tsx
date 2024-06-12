@@ -76,7 +76,8 @@ const Price = (prop: { price: number, discount: number }) => {
 
     return (
         <Stack spacing={2} direction="row" sx={baseSx}>
-            <Typography sx={priceSx}>{price}</Typography>
+            <Typography sx={priceSx}>{price}</Typography> 
+            <Typography sx={discountSx}>{price*discount}</Typography>
         </Stack>
     );
 }
@@ -162,7 +163,11 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
 
     // Show mô tả sản phẩm
     const showDescriptionTab = () => {
-        return <Typography variant="subtitle2">{productDescriptions}</Typography>
+        return (
+            <CustomTabPanel index={0} value={value}>
+                <Typography variant="subtitle2" mt={2}>{productDescriptions}</Typography>
+            </CustomTabPanel>
+        )
     }
     // Show Review
     const showReviewTab = () => {
@@ -209,10 +214,10 @@ const Detail = (prop: { product: IProductDetail }) => {
     return (
         <Box>
             <Grid container spacing={5}>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                     <Slider/>
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={7}>
                     <InformationProduct name={product.name} overview={product.overview} price={product.price}
                                         discount={product.discount}/>
                 </Grid>

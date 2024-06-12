@@ -40,7 +40,7 @@ export const {reviewAdd} = productDetailSlice.actions;
 export default productDetailSlice.reducer
 
 // Số lượt review
-export const getTotalReview = (reviews: IReview[]) => {
+export const getTotalReview = (reviews: IReview[]):number => {
     return reviews.length;
 }
 

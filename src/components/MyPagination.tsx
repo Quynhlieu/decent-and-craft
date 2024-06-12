@@ -1,8 +1,7 @@
-import {Avatar, Box, Grid, Pagination, Rating, Stack, Typography} from "@mui/material";
-import React, {useState} from "react";
-import {grey} from "@mui/material/colors";
-import {ReviewItem} from "./Review.tsx";
-import {IReview} from "../interfaces/IProductDescription.ts";
+import { Box, Pagination, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { ReviewItem } from "./Review.tsx";
+import { IReview } from "../interfaces/IProductDescription.ts";
 
 interface Pagination {
     count: number;
@@ -28,7 +27,7 @@ export const usePagination = (data:IReview[], itemsPerPage:number) => {
 
     function jump(page:number) {
         const pageNumber = Math.max(1, page);
-        setCurrentPage((currentPage) => Math.min(pageNumber, maxPage));
+        setCurrentPage(() => Math.min(pageNumber, maxPage));
     }
 
     return {next, prev, jump, currentData, currentPage, maxPage};
@@ -43,19 +42,36 @@ export default function MyPagination(prop: { data:IReview[] }) {
     const _DATA = usePagination(data, PER_PAGE);
 
     // current page
-    const handleChange = (e, p) => {
+    const handleChange = (e, p:number) => {
         setPage(p);
         _DATA.jump(p)
     }
+    
+    const showNoResult = () => {
+
+        return (
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" my={10}>
+                <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/shoprating/7d900d4dc402db5304b2.png" />
+                <Typography>Chưa có đánh giá</Typography>
+            </Box>
+        );
+    }
+console.log("check",data);
 
     return (
         <Box>
-            {_DATA.currentData().map((reviewData:IReview, index:number) => (
-                <ReviewItem key={index} reviewData={reviewData}/>
-            ))}
-            <Stack alignItems="center" spacing={2}>
-                <Pagination count={count} page={page} variant="outlined" shape="rounded" onChange={handleChange}/>
-            </Stack>
+             {_DATA.currentData().length === 0 ? (
+                showNoResult()
+            ) : (
+                <>
+                    {_DATA.currentData().map((reviewData: IReview, index: number) => (
+                        <ReviewItem key={index} reviewData={reviewData} />
+                    ))}
+                    <Stack alignItems="center" spacing={2}>
+                        <Pagination count={count} page={page} variant="outlined" shape="rounded" onChange={handleChange} />
+                    </Stack>
+                </>
+            )}
         </Box>
 
     );
