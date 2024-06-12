@@ -1,9 +1,8 @@
-import { Box, Button, Grid, Icon, Input, Stack, TextField, Typography } from '@mui/material'
+import {Box, Button, Grid, Stack, TextField, Typography} from '@mui/material'
 import React from 'react'
 import facebookIcon from "../assets/icons/facebook.png";
 import intaIcon from "../assets/icons/Instagram_icon.png";
 import youtubeIcon from "../assets/icons/youtube.png";
-import { Image } from '@mui/icons-material';
 
 const IconImage = (props: any) => {
     return (

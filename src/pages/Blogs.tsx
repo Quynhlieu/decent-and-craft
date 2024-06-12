@@ -32,7 +32,7 @@ const BlogItem = (prop: { blog: Blog }) => {
                             </strong>
                         </Typography>
                     </VLink>
-                    <Typography color="secondary" variant='body2'>
+                       <Typography color="secondary" variant='body2'>
                         Ngày:{blog.date}
                     </Typography>
                     <Typography flex={6} sx={{
