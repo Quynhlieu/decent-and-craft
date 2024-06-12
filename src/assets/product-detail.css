@@ -115,3 +115,52 @@
 .rating-overview button{
     background-color: white;
 }
+
+.slider-container{
+    margin-bottom: 15%;
+}
+
+.slick-dots {
+    bottom: -90px;
+
+}
+
+.img-main {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+}
+
+
+.slick-prev:hover, .slick-next:hover {
+    background-color: #0056b3; /* Màu khi hover */
+}
+
+.slick-prev:before, .slick-next:before {
+    font-size: 20px;
+    color: white; /* Màu biểu tượng mũi tên */
+}
+
+.slick-dots li {
+    width: auto;
+}
+
+/* .btn-arrow{
+    display: 'flex';
+    align-items: 'center';
+    justify-content: 'center';
+    position: 'absolute'
+}
+.btn-next {
+    right: '10px'!important;
+    z-index: 1;
+    top: '48%'!important;
+}
+.btn-prev {
+    left: '10px'!important;
+    z-index: 1;
+    top: '48%'!important;
+} */
+
+
