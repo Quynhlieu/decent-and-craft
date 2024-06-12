@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+import {Link, useNavigate} from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from '@mui/icons-material/Google';
-import {useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -22,14 +22,14 @@ import InputAdornment from "@mui/material/InputAdornment";
 import {IconButton} from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../app/store.ts";
+import {login} from "../features/user/userSlice.ts";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Login() {
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -37,11 +37,42 @@ export default function Login() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    const handleLogin = async () => {
+    const loginState = useSelector((state:RootState)=>state.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    })
+    const onChangeHandle = useCallback((e) => {
+        if (e.target.name === 'password' && e.target.value === '') {
+            return;
+        }
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [e.target.id]: e.target.value,
+        }));
+    }, []);
+
+    useEffect(() =>{
+        console.log(formData)
+    })
+
+    const handleLogin = async (event:any) => {
         event.preventDefault();
+        dispatch(login(formData));
+        if(loginState.user){
+            sessionStorage.setItem('user', JSON.stringify(loginState.user));
+            navigate("/user")
+        }
 
     };
-
+    // useEffect(() => {
+    //     if (loginState.user) {
+    //         sessionStorage.setItem('user', JSON.stringify(loginState.user));
+    //         navigate("/user")
+    //     }
+    // }, [loginState.user, navigate]);
     const handleFacebookLogin = () => {
         console.log('Logging in with Facebook');
     };
@@ -68,6 +99,7 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         Đăng nhập
                     </Typography>
+                    <Typography color="red" >{loginState.error}</Typography>
                     <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
@@ -78,15 +110,16 @@ export default function Login() {
                             name="email"
                             autoComplete="email"
                             type="email"
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
+                            // value={email}
+                            // onChange={(event) => setEmail(event.target.value)}
                             autoFocus
+                            onChange={onChangeHandle}
                         />
 
                         <FormControl sx={{ width: '100%' ,mt: 1 }} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
+                                id="password"
                                 type={showPassword ? 'text' : 'password'}
                                 endAdornment={
                                     <InputAdornment position="end">
@@ -101,9 +134,9 @@ export default function Login() {
                                     </InputAdornment>
                                 }
                                 label="Password"
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-
+                                // value={password}
+                                onChange={onChangeHandle}
+                                // onChange={(event) => setPassword(event.target.value)}
                             />
                         </FormControl>
                         <FormControlLabel
@@ -114,11 +147,13 @@ export default function Login() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            disabled={email && password ? false : true}
+                            disabled={!formData.email && !formData.password}
                             sx={{ mt: 3, mb: 1, backgroundColor: "rgb(77 182 172)" }}
                         >
                             Đăng nhập
                         </Button>
+
+
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginY: 2 }}>
                             <Button
                                 variant="contained"
@@ -141,18 +176,19 @@ export default function Login() {
                         </Box>
                         <Grid container>
                             <Grid item xs>
-                                <Link href="/forgotPassword" variant="body2">
+                                <Link to="/forgotPassword">
                                     Quên mật khẩu?
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="/register" variant="body2">
+                                <Link to="/register" >
                                     {"Bạn chưa có tài khoản? Đăng ký"}
                                 </Link>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
+
             </Container>
         </ThemeProvider>
     );

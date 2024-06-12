@@ -4,4 +4,5 @@ export default interface Address{
     district: string;
     ward: string;
     description?:string;
+    isDefault: boolean
 }

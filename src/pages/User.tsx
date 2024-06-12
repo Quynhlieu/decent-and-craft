@@ -22,9 +22,9 @@ const User = () => {
                     </Box>
                     <Box sx={{ flex: 10, padding: '10px' }}>
                         {selectedComponent === 'UserProfile' && <UserProfile />}
-                        {selectedComponent === 'MyAddress' && <MyAddress />}
-                        {selectedComponent === 'MyOrder' && <MyOrder />}
-                        {selectedComponent === 'ChangePassword' && <ChangePassword />}
+                        {/*{selectedComponent === 'MyAddress' && <MyAddress  />}*/}
+                        {/*{selectedComponent === 'MyOrder' && <MyOrder />}*/}
+                        {/*{selectedComponent === 'ChangePassword' && <ChangePassword />}*/}
                     </Box>
                 </Box>
 
