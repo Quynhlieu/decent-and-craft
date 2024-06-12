@@ -56,8 +56,6 @@ export default function MyPagination(prop: { data:IReview[] }) {
             </Box>
         );
     }
-console.log("check",data);
-
     return (
         <Box>
              {_DATA.currentData().length === 0 ? (

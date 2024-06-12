@@ -5,7 +5,6 @@ import BreadcrumbFooter from "../components/BreadcrumbFooter.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "../app/store.ts";
 import React from "react";
-import MySplideSlider from "../components/MySplideSlider.tsx";
 import {grey} from "@mui/material/colors";
 import QuantityButton from "../components/QuantityButton.tsx";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -16,28 +15,27 @@ import ProductList from "../components/ProductList.tsx";
 import Review from "../components/Review.tsx";
 import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
 import { Outlet } from "react-router-dom";
+import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
 
 
-const Slider: React.FC = () => {
+const Slider = () => {
     const mainImages = [
-        'https://via.placeholder.com/800x400?text=Image+1',
-        'https://via.placeholder.com/800x400?text=Image+2',
-        'https://via.placeholder.com/800x400?text=Image+3',
-        'https://via.placeholder.com/800x400?text=Image+4',
+        'https://fairycorner.vn/wp-content/uploads/2021/10/Orange-Woods-2.jpg',
+        'https://fairycorner.vn/wp-content/uploads/2021/10/14.png',
+        'https://fairycorner.vn/wp-content/uploads/2021/10/15.png',
+        'https://fairycorner.vn/wp-content/uploads/2021/10/16.png',
     ];
 
-    const thumbnails = [
-        'https://via.placeholder.com/100x64?text=Thumbnail+1',
-        'https://via.placeholder.com/100x64?text=Thumbnail+2',
-        'https://via.placeholder.com/100x64?text=Thumbnail+3',
-        'https://via.placeholder.com/100x64?text=Thumbnail+4',
-    ];
-
+    // return (
+    //     <div className="App">
+    //         <h1>Splide Slider with Thumbnails</h1>
+    //         <MySplideSlider mainImages={mainImages} thumbnails={thumbnails}/>
+    //     </div>
+    // );
     return (
-        <div className="App">
-            <h1>Splide Slider with Thumbnails</h1>
-            <MySplideSlider mainImages={mainImages} thumbnails={thumbnails}/>
-        </div>
+        <Box  >
+            <MySclickCarousel mainImages={mainImages}/>
+        </Box>
     );
 };
 

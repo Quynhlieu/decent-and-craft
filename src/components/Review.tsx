@@ -78,6 +78,7 @@ export const ReviewForm = () => {
                 { autoClose: 1000, position: "top-right" });
             return;
         }
+        // IReview
         const newReview: IReview = {
             customer,
             rating: reviewFormState.rating,
@@ -235,14 +236,16 @@ const Review = (prop: { productId: number }) => {
     const product = productDetail.find(i => i.id === productId);
     const reviewList = product && product.reviewList;
     const [filterReviewList, setFilterReviewList] = useState<IReview[]>(reviewList ? reviewList : []);
+    useEffect(() => {
+        setFilterReviewList(reviewList);
+    }, [reviewList]);
     const reviewFilterByStar = (rating: number) => {
         if (rating === 0) {
             (reviewList && setFilterReviewList(reviewList));
             return;
-        }
+        }        
         (reviewList && setFilterReviewList(reviewList.filter(r => r.rating === rating)));
     }
-    // Kiem tra form
     return (
         <div>
             <ReviewForm />
