@@ -10,6 +10,7 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
 import WishList from './pages/WishList.tsx';
+import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Blogs from './pages/Blogs.tsx';
 import BlogDetail from './components/BlogDetail.tsx';
 import { ReviewForm } from './components/Review.tsx';
@@ -43,6 +44,7 @@ function App() {
             </Route>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="forgotPassword" element={<ForgotPassword />} />
             <Route path="cart" element={<Cart />} />
             <Route path="blogs"  >
               <Route path=":blogId" element={<BlogDetail />} />

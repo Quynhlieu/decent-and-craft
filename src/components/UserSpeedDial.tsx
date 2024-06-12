@@ -7,6 +7,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PasswordIcon from '@mui/icons-material/Password';
 import '../assets/user.css';
+import {useNavigate} from "react-router-dom";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
@@ -15,7 +16,7 @@ interface UserSpeedDialProps {
 const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile'); // Thay đổi ở đây
-
+    const navigate = useNavigate();
     useEffect(() => {
         onComponentChange(selectedComponent);
     }, [selectedComponent, onComponentChange]);
@@ -27,7 +28,11 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const handleItemClick = (componentName: string) => {
         setSelectedComponent(componentName);
     };
-
+    console.log(sessionStorage.getItem("user"))
+    const handleLogout = () => {
+        sessionStorage.removeItem("user");
+        navigate("/login");
+    };
     return (
         <Box className="UserProfile">
             <div className="left">
@@ -114,8 +119,8 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                     <Divider />
                     <nav aria-label="secondary mailbox folders">
                         <List>
-                            <ListItem disablePadding>
-                                <ListItemButton>
+                            <ListItem>
+                                <ListItemButton  onClick={handleLogout}>
                                     <ListItemText primary="Đăng xuất" />
                                 </ListItemButton>
                             </ListItem>

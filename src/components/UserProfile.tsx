@@ -4,9 +4,19 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PasswordIcon from '@mui/icons-material/Password';
 import FemaleIcon from '@mui/icons-material/Female';
-import React from "react";
+import React, {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 
 const UserProfile  = () => {
+    const userFromSessionStorage = sessionStorage.getItem('user');
+    const user = JSON.parse(userFromSessionStorage)
+    console.log(sessionStorage.getItem("user"))
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(!user?.id){
+            navigate("/login");
+        }
+    },[])
     return (
         <Box  sx={{ height: 320, width: 800}}>
             <Typography variant='h3'  sx={{
@@ -26,7 +36,7 @@ const UserProfile  = () => {
                             <AccountCircleIcon />
                         </ListItemIcon>
                         <ListItemText primary="Số điện thoại:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="(+84) 123 456 789" />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.phone || 'N/A'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -35,7 +45,7 @@ const UserProfile  = () => {
                             <AssignmentIcon />
                         </ListItemIcon>
                         <ListItemText primary="Email:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="example@example.com" />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.email} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -44,7 +54,7 @@ const UserProfile  = () => {
                             <FemaleIcon />
                         </ListItemIcon>
                         <ListItemText primary="Giới tính:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="Nữ" />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.sex || 'N/A'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -53,7 +63,7 @@ const UserProfile  = () => {
                             <LocationOnIcon />
                         </ListItemIcon>
                         <ListItemText primary="Địa chỉ:" />
-                        <ListItemText sx={{ textAlign: 'right' }} primary="236 5th SE Avenue, New York NY10000, United States" />
+                        <ListItemText sx={{ textAlign: 'right' }} primary={user?.address && user.address.length > 0 ? user.address[0].description : 'N/A'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
