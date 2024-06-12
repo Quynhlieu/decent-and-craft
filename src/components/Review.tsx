@@ -12,18 +12,22 @@ import {RootState} from "../app/store.ts";
 import EditIcon from '@mui/icons-material/Edit';
 import { Customer } from "../interfaces/Customer.ts";
 import { setContents, setRating } from "../features/review/reviewSlice.ts";
+import { useNavigate } from "react-router-dom";
+
 export const ReviewItem = (prop:{reviewData:IReview}) => {
     const {reviewData} =prop;
     const dispatch = useDispatch();
+    const navigate = useNavigate(); 
     const handleEdit = ()=>{
         dispatch(setContents(reviewData.contents??""));
         dispatch(setRating(reviewData.rating));
+        navigate('/review-form'); 
     }
     return (
         <Box sx={{my: 2, borderBottom: '1px solid', borderColor: ' #e0e0e0'}}>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
-                    <Avatar sx={{marginLeft: 5}} alt={(reviewData.customer) && reviewData.customer.fullName}/>
+                    <Avatar sx={{marginLeft: "20%", width:50, height:50}} alt={(reviewData.customer) && reviewData.customer.fullName}/>
                 </Grid>
                 <Grid item xs={10} direction="column">
                     <Stack direction="row" sx={{justifyContent:"space-between"}}>
@@ -47,7 +51,7 @@ export const ReviewItem = (prop:{reviewData:IReview}) => {
 };
 
 // Review form
-const ReviewForm = () => {
+export const ReviewForm = () => {
     const reviewFormState = useSelector((state:RootState)=>state.review);
     const dispatch = useDispatch();
     const handleSubmit = (event:React.FormEvent<HTMLInputElement>) => {
@@ -69,7 +73,7 @@ const ReviewForm = () => {
             <Box component="form" onSubmit={handleSubmit} className="product-meta-border review-form">
                 <Rating
                     name="rating"
-                    value={reviewFormState.rating}
+                    value={(reviewFormState.rating) && reviewFormState.rating || dispatch(setRating(5))}
                     onChange={(e, newValue) => dispatch(setRating(newValue?newValue:0))}
                     sx={{mb: 2}}
                     size="large"
@@ -88,11 +92,11 @@ const ReviewForm = () => {
     );
 };
 
-
-const RatingOverview = (prop: { productId: number,handleFilter:any }) => {
-    const {productId,handleFilter} = prop;
+const RatingOverview = (prop: { productId: number, handleFilter: any }) => {
+    const { productId, handleFilter } = prop;
     const productDetail = useSelector((state: RootState) => state.productDetail);
     const product = productDetail.find(i => i.id === productId);
+
     const calculateAverageRating = (reviews: IReview[]) => {
         const totalRatings = reviews.reduce((total, item) => {
             if (typeof item !== 'string') {
@@ -105,17 +109,32 @@ const RatingOverview = (prop: { productId: number,handleFilter:any }) => {
     };
 
     const [rating, setRating] = useState(calculateAverageRating((product) && product.reviewList || []));
-    
+    const [selectedRating, setSelectedRating] = useState<number | null>(0);
+
     useEffect(() => {
         setRating(calculateAverageRating((product) && product.reviewList || []));
     }, [product, productDetail, productId]);
+
+    const handleRatingChange = (event: React.MouseEvent<HTMLElement>, newRating: number | null) => {
+        setSelectedRating(newRating);
+        handleFilter(newRating);
+    };
+
+    const btnSx = {
+        '&.Mui-selected':{
+            backgroundColor: 'white',
+            color: "primary.main",
+            borderColor:  "primary.main",
+        }
+    }
+
     return (
         <Box my={3} className="rating-overview">
-            <Typography sx={{fontWeight: 'bold'}}>ĐÁNH GIÁ SẢN PHẨM</Typography>
+            <Typography sx={{ fontWeight: 'bold' }}>ĐÁNH GIÁ SẢN PHẨM</Typography>
             <Box
                 className="product-meta-border"
                 padding={3}
-                sx={{backgroundColor: "#eff8f8"}}
+                sx={{ backgroundColor: "#eff8f8" }}
             >
                 <Grid container direction="row">
                     <Grid
@@ -125,10 +144,10 @@ const RatingOverview = (prop: { productId: number,handleFilter:any }) => {
                         direction="column"
                         justifyContent="center"
                         alignItems="center"
-                        style={{height: '100%',}}
+                        style={{ height: '100%' }}
                     >
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography sx={{fontSize: 30}}>{rating}</Typography>
+                            <Typography sx={{ fontSize: 30 }}>{rating}</Typography>
                             <Typography>trên 5</Typography>
                         </Stack>
                         <Rating
@@ -137,39 +156,45 @@ const RatingOverview = (prop: { productId: number,handleFilter:any }) => {
                             value={parseFloat(rating)}
                             precision={0.25}
                             readOnly
-                            sx={{fontSize: 25}}
+                            sx={{ fontSize: 25 }}
                         />
                     </Grid>
                     <Grid item xs={9} className="size-12">
-                        <ToggleButtonGroup value=''
+                    
+                    <ToggleButtonGroup
+                            value={selectedRating}
                             exclusive
-                            onChange={handleFilter}
-                            aria-label="text alignment">
-                            <ToggleButton  onClick={()=>{
-                                handleFilter(0);
-                            }} variant="outlined" size="small">Tất cả</ToggleButton >
-                            <ToggleButton onClick={()=>{
-                               handleFilter(1);
-                            }} variant="outlined" size  ="small">1 sao</ToggleButton>
-                            <ToggleButton onClick={()=>{
-                                 handleFilter(2);
-                            }} variant="outlined" size="small">2 sao</ToggleButton>
-                            <ToggleButton onClick={()=>{
-                                 handleFilter(3);
-                            }} variant="outlined" size="small">3 sao</ToggleButton>
-                            <ToggleButton onClick={()=>{
-                                 handleFilter(4);
-                            }} variant="outlined" size="small">4 sao</ToggleButton>
-                            <ToggleButton onClick={()=>{
-                              handleFilter(5);
-                            }} variant="outlined" size="small">5 sao</ToggleButton>
+                            onChange={handleRatingChange}
+                            size="small"
+                        >
+                            <Stack spacing={5} direction="row">
+                            <ToggleButton value={0} sx={btnSx}>
+                                Tất cả
+                            </ToggleButton>
+                            <ToggleButton value={1} sx={btnSx} >
+                                1 sao
+                            </ToggleButton>
+                            <ToggleButton value={2} sx={btnSx}>
+                                2 sao
+                            </ToggleButton>
+                            <ToggleButton value={3} sx={btnSx}>
+                                3 sao
+                            </ToggleButton>
+                            <ToggleButton value={4} sx={btnSx}>
+                                4 sao
+                            </ToggleButton>
+                            <ToggleButton value={5} sx={btnSx}>
+                                5 sao
+                            </ToggleButton>
+                            </Stack>
                         </ToggleButtonGroup>
+                    
                     </Grid>
                 </Grid>
             </Box>
         </Box>
     )
-}
+};
 
 const Review = (prop: { productId: number }) => {
     const {productId} = prop;
@@ -184,6 +209,7 @@ const Review = (prop: { productId: number }) => {
         }
         (reviewList&& setFilterReviewList(reviewList.filter(r=>r.rating===rating)));
     } 
+    // Kiem tra form
     return (
         <div>
             <ReviewForm />

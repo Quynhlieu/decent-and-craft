@@ -15,6 +15,7 @@ import {hotProducts} from "../data/products.ts";
 import ProductList from "../components/ProductList.tsx";
 import Review from "../components/Review.tsx";
 import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
+import { Outlet } from "react-router-dom";
 
 
 const Slider: React.FC = () => {
@@ -234,6 +235,7 @@ const ProductDetail = (prop: { productId: number }) => {
             {product && <Detail product={product}/>}
             <ProductSection/>
             <BreadcrumbFooter/>
+            <Outlet /> 
         </Box>
     )
 }
