@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
-import UserProfile from "../components/UserProfile.tsx";
+import {useState} from 'react'
+import UserProfile from "../components/User/UserProfile.tsx";
 import { Box } from "@mui/material";
-import UserSpeedDial from "../components/UserSpeedDial.tsx";
+import UserSpeedDial from "../components/User/UserSpeedDial.tsx";
 import ProductSection from "../components/ProductSection.tsx";
-import MyOrder from "../components/MyOrder.tsx";
-import MyAddress from "../components/MyAddress.tsx";
-import ChangePassword from "../components/ChangePassrord.tsx";
+import MyOrder from "../components/User/MyOrder.tsx";
+import MyAddress from "../components/User/MyAddress.tsx";
+import ChangePassword from "../components/User/ChangePassrord.tsx";
 
 const User = () => {
     const [selectedComponent, setSelectedComponent] = useState('UserProfile');
@@ -22,9 +22,9 @@ const User = () => {
                     </Box>
                     <Box sx={{ flex: 10, padding: '10px' }}>
                         {selectedComponent === 'UserProfile' && <UserProfile />}
-                        {/*{selectedComponent === 'MyAddress' && <MyAddress  />}*/}
-                        {/*{selectedComponent === 'MyOrder' && <MyOrder />}*/}
-                        {/*{selectedComponent === 'ChangePassword' && <ChangePassword />}*/}
+                        {selectedComponent === 'MyAddress' && <MyAddress  />}
+                        {selectedComponent === 'MyOrder' && <MyOrder />}
+                        {selectedComponent === 'ChangePassword' && <ChangePassword />}
                     </Box>
                 </Box>
 

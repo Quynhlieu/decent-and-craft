@@ -1,15 +1,26 @@
 import React from 'react';
 import { Box, Typography } from "@mui/material";
-import DataTable from 'react-data-table-component';
+import DataTable, {TableColumn} from 'react-data-table-component';
 import styled, { keyframes } from 'styled-components';
-import carouse1 from "../assets/carousels/carousel1.jpg";
-import InfoIcon from '@mui/icons-material/Info';
+import carouse1 from "../../assets/carousels/carousel1.jpg";
+
+
+interface Order {
+    id: number;
+    productName: string;
+    quantity: number;
+    price: number;
+    total: number;
+    status: string;
+    orderDate: string;
+    image: string;
+}
+
 // Khai báo keyframe cho spinner
 const rotate360 = keyframes`
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }
@@ -31,11 +42,11 @@ const Spinner = styled.div`
 `;
 
 // Cột mới: Tên sản phẩm
-const productNameColumn = {
+const productNameColumn: TableColumn<Order> = {
     name: 'Tên sản phẩm',
-    selector: 'productName',
+    selector: (row) => row.productName,
     sortable: true,
-    cell: row => (
+    cell: (row) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <img
                 src={row.image}
@@ -48,35 +59,35 @@ const productNameColumn = {
 };
 
 // Cột mới: Số lượng
-const quantityColumn = {
+const quantityColumn:TableColumn<Order> = {
     name: 'Số lượng',
     selector: row => row.quantity,
     sortable: true,
 };
 
 // Cột mới: Giá
-const priceColumn = {
+const priceColumn:TableColumn<Order> = {
     name: 'Giá',
     selector: row => row.price,
     sortable: true,
 };
 
 // Cột mới: Tổng tiền
-const totalColumn = {
+const totalColumn:TableColumn<Order> = {
     name: 'Tổng tiền',
     selector: row => row.total,
     sortable: true,
 };
 
 // Cột mới: Trạng thái đơn hàng
-const statusColumn = {
+const statusColumn:TableColumn<Order> = {
     name: 'Trạng thái đơn hàng',
     selector: row => row.status,
     sortable: true,
 };
 
 // Cột mới: Ngày đặt hàng
-const orderDateColumn = {
+const orderDateColumn:TableColumn<Order> = {
     name: 'Ngày đặt hàng',
     selector: row => row.orderDate,
     sortable: true,
@@ -112,7 +123,7 @@ const data = [
 
 const MyOrder = () => {
     const [pending, setPending] = React.useState(true);
-    const [rows, setRows] = React.useState([]);
+    const [rows, setRows] = React.useState<Order[]>([]);
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {

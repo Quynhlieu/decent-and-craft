@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, {MouseEvent, useState} from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
-import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const ChangePassword = () => {
+const ChangePassword:React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -18,12 +17,11 @@ const ChangePassword = () => {
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const handleMouseDownPassword = (event) => {
+    const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = () => {
         if (oldPassword === newPassword) {
             setError("Mật khẩu mới không được trùng với mật khẩu cũ");
         } else if (newPassword !== confirmPassword) {

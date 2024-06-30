@@ -3,16 +3,14 @@ import { ThemeProvider, colors, createTheme } from '@mui/material'
 import Home from './pages/Home'
 import ProductDetail from "./pages/ProductDetail.tsx";
 import User from "./pages/User";
-import Header from './components/Header';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout, { ScrollToTop } from './pages/Layout.tsx';
 import Login from "./pages/Login.tsx";
-import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
-import WishList from './pages/WishList.tsx';
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Blogs from './pages/Blogs.tsx';
 import BlogDetail from './components/BlogDetail.tsx';
+import Register from "./pages/Register.tsx";
 const theme = createTheme({
   palette: {
     primary: {
