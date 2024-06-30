@@ -5,7 +5,7 @@ import UserSpeedDial from "../components/User/UserSpeedDial.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import MyOrder from "../components/User/MyOrder.tsx";
 import MyAddress from "../components/User/MyAddress.tsx";
-import ChangePassword from "../components/User/ChangePassrord.tsx";
+import ChangePassword from "../components/User/ChangePassword.tsx";
 
 const User = () => {
     const [selectedComponent, setSelectedComponent] = useState('UserProfile');

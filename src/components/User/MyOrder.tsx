@@ -1,9 +1,11 @@
 import React from 'react';
-import { Box, Typography } from "@mui/material";
+import {Box, IconButton, Typography} from "@mui/material";
 import DataTable, {TableColumn} from 'react-data-table-component';
 import styled, { keyframes } from 'styled-components';
 import carouse1 from "../../assets/carousels/carousel1.jpg";
-
+import InfoIcon from '@mui/icons-material/Info';
+import MyOrderDetail from "./MyOrderDetail.tsx";
+import OrderDetail from "../../interfaces/IOrderDetail.ts";
 
 interface Order {
     id: number;
@@ -14,6 +16,7 @@ interface Order {
     status: string;
     orderDate: string;
     image: string;
+    orderDetail: OrderDetail[];
 }
 
 // Khai báo keyframe cho spinner
@@ -92,6 +95,9 @@ const orderDateColumn:TableColumn<Order> = {
     selector: row => row.orderDate,
     sortable: true,
 };
+
+// Cột mới: Chức năng
+
 const CustomLoader = () => (
     <div style={{ padding: '24px' }}>
         <Spinner />
@@ -108,6 +114,7 @@ const data = [
         status: 'Đang xử lý',
         orderDate: '2024-06-04',
         image: carouse1,
+        orderDetail:
     },
     {
         id: 2,
@@ -124,6 +131,18 @@ const data = [
 const MyOrder = () => {
     const [pending, setPending] = React.useState(true);
     const [rows, setRows] = React.useState<Order[]>([]);
+    const [openDetail, setOpenDetail] = React.useState(false);
+    const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
+
+    const handleClickOpen = (order: Order) => {
+        setSelectedOrder(order);
+        setOpenDetail(true);
+    };
+
+    const handleCloseDetail = () => {
+        setOpenDetail(false);
+        setSelectedOrder(null);
+    };
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {
@@ -132,7 +151,20 @@ const MyOrder = () => {
         }, 2000);
         return () => clearTimeout(timeout);
     }, []);
-
+    const orderFeatureColumn: TableColumn<Order> = {
+        name: 'Chức năng',
+        cell:(row)  => (
+            <IconButton aria-label="info" onClick={() =>
+                {
+                    handleClickOpen(row)
+                }}>
+                <InfoIcon />
+            </IconButton>
+        ),
+        ignoreRowClick: true,  // Sự kiện click không được truyền đến hàng
+        allowOverflow: true,   // Cho phép nội dung tràn ra ngoài cell nếu cần thiết
+        button: true,
+    };
     return (
         <Box sx={{ height: 500, width: 800 }}>
             <Typography variant='h3' sx={{
@@ -150,13 +182,18 @@ const MyOrder = () => {
                     totalColumn,
                     statusColumn,
                     orderDateColumn,
+                    orderFeatureColumn,
                 ]}
                 data={rows}
                 progressPending={pending}
                 progressComponent={<CustomLoader />}
                 pagination
             />
+            <MyOrderDetail open={openDetail}
+                           onClose={handleCloseDetail}
+                           order={selectedOrder}/>
         </Box>
+
     );
 }
 
