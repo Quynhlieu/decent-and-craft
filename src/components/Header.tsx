@@ -1,9 +1,15 @@
-import { AppBar, Box, Button, Divider, Stack, Toolbar, Typography } from '@mui/material'
-import React from 'react'
+import { AppBar, Badge, Box, Button, Divider, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import { getCount, getTotalPrice } from '../features/cart/cartSlice';
+import { VNDNumericFormat } from './ProductCard';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CartContainer from './Cart/CartContainer';
 interface NavItemProps {
     active?: boolean,
     children: React.ReactNode
@@ -13,7 +19,7 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
     const baseSx = {
         textTransform: "none",
         color: "secondary",
-        fontSize: 22
+        fontSize: 20,
     }
     const activeSx = active ? {
         fontWeight: "bold",
@@ -25,31 +31,44 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
         <Button
             size='large'
             color={active ? "primary" : "secondary"}
-            sx={style}> {children} </Button >
+            sx={style} style={{ marginLeft: '43px' }}> {children} </Button >
     )
 }
 
 const NavBar = () => {
     return (
-        <Stack direction="row" spacing={8} sx={{ paddingX: 10, mt: 5 }} >
-            <NavItem active={true} >Trang chủ</NavItem>
-            <NavItem  >Gift Sets</NavItem>
-            <NavItem  >Album</NavItem>
-            <NavItem  >Khung hình</NavItem>
-            <NavItem  >Quà tặng</NavItem>
-            <NavItem  >Thiệp</NavItem>
-            <NavItem  >Nguyên liệu</NavItem>
-            <NavItem  >Blogs</NavItem>
-
+        <Stack direction="row" spacing={0} sx={{ padding: 0, mt: 3 }} >
+            <Link to="/"  >
+                <NavItem active={true} >Trang chủ</NavItem>
+            </Link>
+            <NavItem >Gift Sets</NavItem>
+            <NavItem >Album</NavItem>
+            <NavItem >Khung hình</NavItem>
+            <NavItem >Quà tặng</NavItem>
+            <NavItem >Thiệp</NavItem>
+            <NavItem >Nguyên liệu</NavItem>
+            <Link to={'/blogs'}>
+                <NavItem >Blogs</NavItem>
+            </Link>
         </Stack>
     )
 }
 
 const Header = () => {
+    const cart = useSelector((state: RootState) => state.cart);
+    const wishlist = useSelector((state: RootState) => state.wishlist);
+    const [showCart, setShowCart] = useState<boolean>(false);
+
     return (
-        <Box>
-            <AppBar  position='static' sx={{boxShadow:"none"}} color='transparent'>
-                <Toolbar  >
+        <Box sx={{
+            padding: 0,
+            margin: 0,
+        }} >
+            <AppBar position='static' sx={{ boxShadow: "none" }} color='transparent'>
+                <Toolbar sx={{
+                    padding: 0,
+                    margin: 0,
+                }} >
                     <Typography variant='h4'>
                         Decent&Craft
                     </Typography>
@@ -58,20 +77,75 @@ const Header = () => {
                         <LocalPhoneIcon />
                         <Typography variant='body1'>0925821477</Typography>
                     </Stack>
-                    <Stack sx={{ marginX: 3 }} spacing={3} direction="row">
-                        <Button sx={{
-                            borderRadius: 10,
-                            fontWeight: "bold"
-                        }} variant='contained' >ĐĂNG NHẬP/ĐĂNG KÝ</Button>
-                        <Divider orientation='vertical' flexItem />
+                    <Stack sx={{ marginX: 2 }} spacing={2} direction="row">
                         <Button
                             sx={{
+                                height: 30,
+                                width: 130,
                                 borderRadius: 10,
-                                textTransform: "none"
+                                position: "relative",
+                                fontWeight: "bold"
                             }}
                             variant='contained'
-                            endIcon={<ShoppingCartIcon />}>
-                            0đ
+                        >
+                            <Tooltip
+                                color='white'
+                                title={
+                                    <Stack direction="column" spacing={1}>
+                                        <Link to="/register">
+                                            <Button variant='contained' sx={{ width: '100%' }}>Đăng Ký</Button>
+                                        </Link>
+                                    </Stack>
+                                }
+                                arrow
+                                componentsProps={{
+                                    tooltip: {
+                                        sx: {
+                                            bgcolor: "white"
+                                        }
+                                    }
+                                }}
+                            >
+                                <Link
+                                    style={{
+                                        color: "white",
+                                        textDecoration: "none"
+                                    }} to={'/login'} >
+                                    <Typography>
+                                        ĐĂNG NHẬP
+                                    </Typography>
+                                </Link>
+                            </Tooltip>
+                        </Button>
+                        <Divider orientation='vertical' flexItem />
+                        <Badge color='error' badgeContent={wishlist.length} >
+                            <Link to={"wishlist"}>
+                                <IconButton>
+                                    <FavoriteIcon color="primary" />
+                                </IconButton>
+                            </Link>
+                        </Badge>
+                        <Button
+                            onMouseOver={() => {
+                                setShowCart(true);
+                            }}
+                            onMouseOut={() => {
+                                setShowCart(false);
+                            }}
+                            sx={{
+                                height: 30,
+                                borderRadius: 10,
+                                textTransform: "none",
+                                position: "relative"
+                            }}
+                            variant='contained'
+                            endIcon={<Badge color='error' badgeContent={getCount(cart)}>
+                                <ShoppingCartIcon />
+                            </Badge>}>
+                            <VNDNumericFormat price={getTotalPrice(cart)} />
+                            <CartContainer onMouseOut={() => {
+                                setShowCart(false);
+                            }} showCart={showCart} />
                         </Button>
                     </Stack>
                 </Toolbar>

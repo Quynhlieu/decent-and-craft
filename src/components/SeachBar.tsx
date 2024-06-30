@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 const SeachBar = () => {
     return (
         <Box sx={{
-            marginX: 8,
+            marginX: 3,
             border: "1px solid rgba(0,0,0,0.3)",
             borderRadius: 2,
             paddingX: 2,
@@ -15,7 +15,7 @@ const SeachBar = () => {
             alignItems: "center"
         }} >
             <SearchIcon sx={{ mr: 2 }} />
-            <InputBase sx={{ width: 600 }} placeholder='Bạn cần tìm gì?' />
+            <InputBase sx={{ width: 300 }} placeholder='Bạn cần tìm gì?' />
         </Box>
     )
 }

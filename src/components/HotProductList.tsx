@@ -7,7 +7,7 @@ import {hotProducts} from "../data/products";
 const HotProductList = () => {
     const data = hotProducts;
     return (
-        <Box sx={{ mt: 5 }}>
+        <Box sx={{ my: 5 }}>
             <TitleBar title='SẢN PHẨM HOT' />
             <ProductList products={data} />
         </Box>

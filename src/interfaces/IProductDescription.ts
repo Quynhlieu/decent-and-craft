@@ -1,6 +1,17 @@
-export interface IProductDescription {
-    id: number,
-    productId: number,
+import {Customer} from "./Customer.ts";
+
+export interface ProductDescription {
     title: string,
-    description: string[]
+    descriptions: (string | IReview)[],
+}
+
+export interface IReview {
+    customer?: Customer;
+    rating: number;
+    contents?: string;
+    created_at: string;
+}
+export interface Image{
+    id: number;
+    src: string;
 }

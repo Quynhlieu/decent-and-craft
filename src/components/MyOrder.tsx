@@ -1,35 +1,129 @@
-import React from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { Box, Typography, Avatar } from "@mui/material";
-import "../assets/user.css"
+import React from 'react';
+import { Box, Typography } from "@mui/material";
+import DataTable from 'react-data-table-component';
+import styled, { keyframes } from 'styled-components';
+import carouse1 from "../assets/carousels/carousel1.jpg";
+import InfoIcon from '@mui/icons-material/Info';
+// Khai báo keyframe cho spinner
+const rotate360 = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
 
-const columns = [
-    { field: 'id', headerName: 'ID', width: 70 , headerClassName: 'custom-header'},
-    { field: 'product', headerName: 'Sản phẩm', width: 310,
-        headerClassName: 'custom-header',
-        renderCell: (params) => (
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Avatar sx={{ mr: 2 }} src={`/path/to/${params.row.product}.jpg`} alt={params.row.product} />
-                <Typography>{params.row.product}</Typography>
-            </Box>
-        )
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+// Styled component cho Spinner
+const Spinner = styled.div`
+	margin: 16px;
+	animation: ${rotate360} 1s linear infinite;
+	transform: translateZ(0);
+	border-top: 2px solid grey;
+	border-right: 2px solid grey;
+	border-bottom: 2px solid grey;
+	border-left: 4px solid black;
+	background: transparent;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+`;
+
+// Cột mới: Tên sản phẩm
+const productNameColumn = {
+    name: 'Tên sản phẩm',
+    selector: 'productName',
+    sortable: true,
+    cell: row => (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+                src={row.image}
+                alt={row.productName}
+                style={{ marginRight: '10px', width: '40px', height: '40px', borderRadius: 50 }}
+            />
+            <span>{row.productName}</span>
+        </div>
+    ),
+};
+
+// Cột mới: Số lượng
+const quantityColumn = {
+    name: 'Số lượng',
+    selector: row => row.quantity,
+    sortable: true,
+};
+
+// Cột mới: Giá
+const priceColumn = {
+    name: 'Giá',
+    selector: row => row.price,
+    sortable: true,
+};
+
+// Cột mới: Tổng tiền
+const totalColumn = {
+    name: 'Tổng tiền',
+    selector: row => row.total,
+    sortable: true,
+};
+
+// Cột mới: Trạng thái đơn hàng
+const statusColumn = {
+    name: 'Trạng thái đơn hàng',
+    selector: row => row.status,
+    sortable: true,
+};
+
+// Cột mới: Ngày đặt hàng
+const orderDateColumn = {
+    name: 'Ngày đặt hàng',
+    selector: row => row.orderDate,
+    sortable: true,
+};
+const CustomLoader = () => (
+    <div style={{ padding: '24px' }}>
+        <Spinner />
+        <div>Fancy Loader...</div>
+    </div>
+);
+const data = [
+    {
+        id: 1,
+        productName: 'Áo phông',
+        quantity: 2,
+        price: 250000,
+        total: 500000,
+        status: 'Đang xử lý',
+        orderDate: '2024-06-04',
+        image: carouse1,
     },
-    { field: 'quantity', headerName: 'Số lượng', type: 'number', width: 150, headerClassName: 'custom-header' },
-    { field: 'price', headerName: 'Giá', type: 'number', width: 150 , headerClassName: 'custom-header'},
-    { field: 'total', headerName: 'Tổng tiền', type: 'number', width: 180 , headerClassName: 'custom-header'},
-];
-
-const rows = [
-    { id: 1, product: 'Áo thun', quantity: 2, price: 10, total: 20 },
-    { id: 2, product: 'Quần jeans', quantity: 1, price: 25, total: 25 },
-    { id: 3, product: 'Giày sneakers', quantity: 1, price: 30, total: 30 },
-    { id: 4, product: 'Mũ snapback', quantity: 3, price: 15, total: 45 },
-    { id: 5, product: 'Balo đựng laptop', quantity: 1, price: 50, total: 50 },
+    {
+        id: 2,
+        productName: 'Quần jean',
+        quantity: 1,
+        price: 350000,
+        total: 350000,
+        status: 'Đã giao hàng',
+        orderDate: '2024-06-02',
+        image: carouse1,
+    },
 ];
 
 const MyOrder = () => {
+    const [pending, setPending] = React.useState(true);
+    const [rows, setRows] = React.useState([]);
+
+    React.useEffect(() => {
+        const timeout = setTimeout(() => {
+            setRows(data);
+            setPending(false);
+        }, 2000);
+        return () => clearTimeout(timeout);
+    }, []);
+
     return (
-        <Box sx={{ height: 500, width: 950 }}>
+        <Box sx={{ height: 500, width: 800 }}>
             <Typography variant='h3' sx={{
                 textAlign: 'center',
                 position: 'relative',
@@ -37,21 +131,20 @@ const MyOrder = () => {
             }}>
                 Đơn hàng của bạn
             </Typography>
-            <div style={{ width: '100%' }}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
-                        },
-                    }}
-                    pageSizeOptions={[5, 10]}
-                    autoHeight
-                    checkboxSelection
-                    headerClassName="custom-header"
-                />
-            </div>
+            <DataTable
+                columns={[
+                    productNameColumn,
+                    quantityColumn,
+                    priceColumn,
+                    totalColumn,
+                    statusColumn,
+                    orderDateColumn,
+                ]}
+                data={rows}
+                progressPending={pending}
+                progressComponent={<CustomLoader />}
+                pagination
+            />
         </Box>
     );
 }

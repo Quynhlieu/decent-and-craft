@@ -2,16 +2,16 @@
 import { Avatar, Box, Button, Grid, IconButton, Rating, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import React, { useEffect, useRef, useState } from "react";
-import { getTotalReview, reviewAdd } from "../features/productDetail/productDetailSlice.ts";
-import { IReview } from "../interfaces/IProductDescription.ts";
-import MyPagination from "./MyPagination.tsx";
+import { getTotalReview, reviewAdd } from "../../features/productDetail/productDetailSlice.ts";
+import { IReview } from "../../interfaces/IProductDescription.ts";
+import MyPagination from "../MyPagination.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import SendIcon from "@mui/icons-material/Send";
-import { findCustomerById } from "../data/productDetail.ts";
-import { RootState } from "../app/store.ts";
+import { findCustomerById } from "../../data/productDetail.ts";
+import { RootState } from "../../app/store.ts";
 import EditIcon from '@mui/icons-material/Edit';
-import { Customer } from "../interfaces/Customer.ts";
-import { setContents, setIsShow, setRating } from "../features/review/reviewSlice.ts";
+import { Customer } from "../../interfaces/Customer.ts";
+import { setContents, setIsShow, setRating } from "../../features/review/reviewSlice.ts";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -158,9 +158,9 @@ const RatingOverview = (prop: { productId: number, handleFilter: any }) => {
     };
 
     const getQuantityReview = (rating: number): number => {
-        const reviews: IReview[] = product?.reviewList.filter(r => r.rating === rating) ?? [];
+        const reviews: (IReview[] | undefined) = product?.reviewList.filter(r => r.rating === rating);
         return getTotalReview(reviews);
-    };
+    }
 
     const btnSx = {
         '&.Mui-selected': {
@@ -238,12 +238,13 @@ const Review = (prop: { productId: number }) => {
     const [filterReviewList, setFilterReviewList] = useState<IReview[]>(reviewList ? reviewList : []);
     useEffect(() => {
         (reviewList && setFilterReviewList(reviewList));
+        setFilterReviewList(reviewList);
     }, [reviewList]);
     const reviewFilterByStar = (rating: number) => {
         if (rating === 0) {
             (reviewList && setFilterReviewList(reviewList));
             return;
-        }
+        }        
         (reviewList && setFilterReviewList(reviewList.filter(r => r.rating === rating)));
     }
     return (
