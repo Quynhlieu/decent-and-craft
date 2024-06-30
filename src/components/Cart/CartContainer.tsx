@@ -1,5 +1,4 @@
 import {Box, Button, Paper, Stack, Typography} from '@mui/material'
-import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../app/store'
 import {VNDNumericFormat} from '../ProductCard'
@@ -51,7 +50,7 @@ const CartItemList = (prop: CartItemListType) => {
     )
 
 }
-const CartContainer = (prop: { showCart: boolean, onMouseOut: any }) => {
+const CartContainer = (prop: { showCart: boolean, onMouseOut: never }) => {
     const { showCart } = prop;
     const cart = useSelector((state: RootState) => state.cart)
     const navigate = useNavigate();

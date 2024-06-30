@@ -1,5 +1,4 @@
 import { Box } from '@mui/material'
-import React from 'react'
 import TitleBar from './TitleBar'
 import ProductList from './ProductList'
 import {hotProducts} from "../data/products";

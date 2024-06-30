@@ -1,10 +1,10 @@
 // ReviewItem
 import { Avatar, Box, Button, Grid, IconButton, Rating, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import React, { useEffect, useRef, useState } from "react";
-import { getTotalReview, reviewAdd } from "../../features/productDetail/productDetailSlice.ts";
+import React, { useEffect, useRef, useState} from "react";
+import {  reviewAdd } from "../../features/productDetail/productDetailSlice.ts";
 import { IReview } from "../../interfaces/IProductDescription.ts";
-import MyPagination from "../MyPagination.tsx";
+import MyPagination from "./MyPagination.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import SendIcon from "@mui/icons-material/Send";
 import { findCustomerById } from "../../data/productDetail.ts";
@@ -94,7 +94,7 @@ export const ReviewForm = () => {
     // Kiểm tra người dùng có review chưa?
     // Sử dụng productId = 1
     const isExist = () => {
-        return reviewListState.find(i => i.id === 1)?.reviewList.some(r => r.customer && (r.customer.id === customer?.id));
+        return reviewListState.find(i => i.product.id === 1)?.reviewList.some(r => r.customer && (r.customer.id === customer?.id));
     }
 
     useEffect(() => {
@@ -111,7 +111,7 @@ export const ReviewForm = () => {
                 <Rating
                     name="rating"
                     value={(reviewFormState.rating) && reviewFormState.rating}
-                    onChange={(e, newValue) => dispatch(setRating(newValue ? newValue : 0))}
+                    onChange={(_event:React.SyntheticEvent<Element, Event>, newValue:number|null) => dispatch(setRating(newValue ? newValue : 0))}
                     sx={{ mb: 2 }}
                     size="large"
                 />
@@ -129,10 +129,10 @@ export const ReviewForm = () => {
     );
 };
 
-const RatingOverview = (prop: { productId: number, handleFilter: any }) => {
+const RatingOverview = (prop: { productId: number, handleFilter: unknown }) => {
     const { productId, handleFilter } = prop;
     const productDetail = useSelector((state: RootState) => state.productDetail);
-    const product = productDetail.find(i => i.id === productId);
+    const product = productDetail.find(i => i.product.id === productId);
 
     const calculateAverageRating = (reviews: IReview[]) => {
         const totalRatings = reviews.reduce((total, item) => {
@@ -152,14 +152,15 @@ const RatingOverview = (prop: { productId: number, handleFilter: any }) => {
         setRating(calculateAverageRating((product) && product.reviewList || []));
     }, [product, productDetail, productId]);
 
-    const handleRatingChange = (event: React.MouseEvent<HTMLElement>, newRating: number | null) => {
+    const handleRatingChange = (_event: React.MouseEvent<HTMLElement>, newRating: number | null) => {
         setSelectedRating(newRating);
         handleFilter(newRating);
     };
 
     const getQuantityReview = (rating: number): number => {
         const reviews: (IReview[] | undefined) = product?.reviewList.filter(r => r.rating === rating);
-        return getTotalReview(reviews);
+        if(reviews) return reviews.length;
+        return 0;
     }
 
     const btnSx = {
@@ -233,12 +234,12 @@ const RatingOverview = (prop: { productId: number, handleFilter: any }) => {
 const Review = (prop: { productId: number }) => {
     const { productId } = prop;
     const productDetail = useSelector((state: RootState) => state.productDetail);
-    const product = productDetail.find(i => i.id === productId);
+    const product = productDetail.find(i => i.product.id === productId);
     const reviewList = product && product.reviewList;
     const [filterReviewList, setFilterReviewList] = useState<IReview[]>(reviewList ? reviewList : []);
     useEffect(() => {
         (reviewList && setFilterReviewList(reviewList));
-        setFilterReviewList(reviewList);
+        reviewList && setFilterReviewList(reviewList);
     }, [reviewList]);
     const reviewFilterByStar = (rating: number) => {
         if (rating === 0) {
