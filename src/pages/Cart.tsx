@@ -1,21 +1,22 @@
-import { Box, Button, Divider, Grid, Input, Stack, TextField, Typography } from '@mui/material'
-import React, { ChangeEventHandler, useState } from 'react'
+import {Box, Button, Divider, Grid, Stack, TextField, Typography} from '@mui/material'
+import React, {useState} from 'react'
 import DataTable from 'react-data-table-component'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../app/store'
+import {useDispatch, useSelector} from 'react-redux'
+import {RootState} from '../app/store'
 import CancelIcon from '@mui/icons-material/Cancel';
-import { CartItem, cartItemRemove, cartUpdate, getTotalPrice } from '../features/cart/cartSlice'
-import { toast } from 'react-toastify'
-import { VNDNumericFormat } from '../components/ProductCard'
-import { grey } from '@mui/material/colors'
+import {CartItem, cartItemRemove, cartUpdate, getTotalPrice} from '../features/cart/cartSlice'
+import {toast} from 'react-toastify'
+import {VNDNumericFormat} from '../components/ProductCard'
+import {grey} from '@mui/material/colors'
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import SellIcon from '@mui/icons-material/Sell';
-import { useNavigate } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+
 const QuantityButton = (prop: { cartItem: CartItem }) => {
     const { cartItem } = prop;
     const dispatch = useDispatch();

@@ -1,6 +1,4 @@
 import OrderDetail from "../interfaces/IOrderDetail.ts";
-import {address} from "./address.ts";
-const [address_1, address_2, address_3,address_4, address_5, address_6 ] = address;
 const orderDetails: OrderDetail] = [
     {
         productId: 101,
