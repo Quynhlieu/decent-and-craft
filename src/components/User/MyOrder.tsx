@@ -2,21 +2,17 @@ import React from 'react';
 import {Box, IconButton, Typography} from "@mui/material";
 import DataTable, {TableColumn} from 'react-data-table-component';
 import styled, { keyframes } from 'styled-components';
-import carouse1 from "../../assets/carousels/carousel1.jpg";
 import InfoIcon from '@mui/icons-material/Info';
 import MyOrderDetail from "./MyOrderDetail.tsx";
 import OrderDetail from "../../interfaces/IOrderDetail.ts";
-
+import Voucher from "../../interfaces/IVoucher.ts";
+import {orders} from "../../data/order.ts";
 interface Order {
     id: number;
-    productName: string;
-    quantity: number;
-    price: number;
-    total: number;
+    orderDetail: OrderDetail[];
+    voucher?: Voucher;
     status: string;
     orderDate: string;
-    image: string;
-    orderDetail: OrderDetail[];
 }
 
 // Khai báo keyframe cho spinner
@@ -47,38 +43,47 @@ const Spinner = styled.div`
 // Cột mới: Tên sản phẩm
 const productNameColumn: TableColumn<Order> = {
     name: 'Tên sản phẩm',
-    selector: (row) => row.productName,
+    selector: (row) => row.orderDetail[0].product.name,
     sortable: true,
     cell: (row) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
             <img
-                src={row.image}
-                alt={row.productName}
-                style={{ marginRight: '10px', width: '40px', height: '40px', borderRadius: 50 }}
+                src={row.orderDetail[0]?.product.thumb || ''}
+                alt={row.orderDetail[0]?.product.name || ''}
+                style={{marginRight: '10px', width: '40px', height: '40px', borderRadius: 50}}
             />
-            <span>{row.productName}</span>
+            <span style={{
+                display: 'inline-block',
+                maxWidth: '250px',  // Đặt kích thước tối đa cho tên sản phẩm
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+            }}>
+                {row.orderDetail[0]?.product.name || ''}
+            </span>
         </div>
     ),
+    width: '300px',
 };
 
-// Cột mới: Số lượng
-const quantityColumn:TableColumn<Order> = {
-    name: 'Số lượng',
-    selector: row => row.quantity,
-    sortable: true,
-};
-
-// Cột mới: Giá
-const priceColumn:TableColumn<Order> = {
-    name: 'Giá',
-    selector: row => row.price,
-    sortable: true,
-};
+// // Cột mới: Số lượng
+// const quantityColumn: TableColumn<Order> = {
+//     name: 'Số lượng',
+//     selector: row => row.orderDetail[0].quantity,
+//     sortable: true,
+// };
+//
+// // Cột mới: Giá
+// const priceColumn: TableColumn<Order> = {
+//     name: 'Giá',
+//     selector: row => row.orderDetail[0].price,
+//     sortable: true,
+// };
 
 // Cột mới: Tổng tiền
 const totalColumn:TableColumn<Order> = {
     name: 'Tổng tiền',
-    selector: row => row.total,
+    selector: row => row.orderDetail[0]?.price * row.orderDetail[0]?.quantity || 0,
     sortable: true,
 };
 
@@ -86,7 +91,7 @@ const totalColumn:TableColumn<Order> = {
 const statusColumn:TableColumn<Order> = {
     name: 'Trạng thái đơn hàng',
     selector: row => row.status,
-    sortable: true,
+    sortable: true
 };
 
 // Cột mới: Ngày đặt hàng
@@ -104,29 +109,6 @@ const CustomLoader = () => (
         <div>Fancy Loader...</div>
     </div>
 );
-const data = [
-    {
-        id: 1,
-        productName: 'Áo phông',
-        quantity: 2,
-        price: 250000,
-        total: 500000,
-        status: 'Đang xử lý',
-        orderDate: '2024-06-04',
-        image: carouse1,
-        orderDetail:
-    },
-    {
-        id: 2,
-        productName: 'Quần jean',
-        quantity: 1,
-        price: 350000,
-        total: 350000,
-        status: 'Đã giao hàng',
-        orderDate: '2024-06-02',
-        image: carouse1,
-    },
-];
 
 const MyOrder = () => {
     const [pending, setPending] = React.useState(true);
@@ -146,7 +128,7 @@ const MyOrder = () => {
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {
-            setRows(data);
+            setRows(orders);
             setPending(false);
         }, 2000);
         return () => clearTimeout(timeout);
@@ -162,8 +144,8 @@ const MyOrder = () => {
             </IconButton>
         ),
         ignoreRowClick: true,  // Sự kiện click không được truyền đến hàng
-        allowOverflow: true,   // Cho phép nội dung tràn ra ngoài cell nếu cần thiết
-        button: true,
+        // allowOverflow: true,   // Cho phép nội dung tràn ra ngoài cell nếu cần thiết
+        // button: true,
     };
     return (
         <Box sx={{ height: 500, width: 800 }}>
@@ -177,8 +159,8 @@ const MyOrder = () => {
             <DataTable
                 columns={[
                     productNameColumn,
-                    quantityColumn,
-                    priceColumn,
+                    // quantityColumn,
+                    // priceColumn,
                     totalColumn,
                     statusColumn,
                     orderDateColumn,
@@ -191,7 +173,8 @@ const MyOrder = () => {
             />
             <MyOrderDetail open={openDetail}
                            onClose={handleCloseDetail}
-                           order={selectedOrder}/>
+                           order={selectedOrder}
+            />
         </Box>
 
     );

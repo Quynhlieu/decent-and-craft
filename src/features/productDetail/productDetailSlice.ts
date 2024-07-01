@@ -3,7 +3,8 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Image, IReview} from "../../interfaces/IProductDescription.ts";
 import {Product} from "../../interfaces/Product.ts";
 
-export interface IProductDetail extends Product {
+export interface IProductDetail {
+    product: Product;
     discount: number;
     images: Image[];
     overview: string;
@@ -19,7 +20,7 @@ const productDetailSlice = createSlice({
     reducers: {
         reviewAdd(state, action: PayloadAction<{ productId: number, review: IReview }>) {
             const {productId, review} = action.payload;
-            const product = state.find(i => i.id === productId);
+            const product = state.find(i => i.product.id === productId);
             const isExist:boolean|undefined = product?.reviewList.some(review=>review.customer?.id==review.customer?.id);
             if(isExist){
                 const currentReview = product?.reviewList.find(r=>r.customer?.id==review.customer?.id);
@@ -41,7 +42,7 @@ export default productDetailSlice.reducer
 
 // Số lượt review
 export const getTotalReview = (reviews: IReview[]):number => {
-    return reviews.length;
+    return reviews && reviews.length;
 }
 
 

@@ -5,13 +5,12 @@ import Divider from "@mui/material/Divider";
 import HorizontalNonLinearStepper from "./HorizontalNonLinearStepper.tsx";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Box, Stack, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import {Product} from "../../interfaces/Product.ts";
 
 interface OrderDetail {
-    id: number;
-    productId: number;
+    product: Product;
+    quantity: number;
     price: number;
-    quantity: string;
-    order: Order;
 }
 
 interface MyOrderDetailProps {
@@ -22,7 +21,7 @@ interface MyOrderDetailProps {
 
 const BackBtn: React.FC = () => {
     return (
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} alignItems="center" sx={{paddingLeft: 3}}>
             <ArrowBackIosIcon />
             <Typography sx={{ backgroundColor: "#f3f0f0" }} component="div">
                 Trở lại
@@ -32,15 +31,15 @@ const BackBtn: React.FC = () => {
 };
 
 const ProductCodeAndStatus: React.FC<{ order: Order | null }> = ({ order }) => {
-    if (!order) return null;
+
     return (
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} alignItems="center" sx={{paddingRight: 3}}>
             <Typography sx={{ backgroundColor: "#f3f0f0"}} component="div">
-                Mã đơn hàng: 1234435
+                Mã đơn hàng: {order ? order.id : ''}
             </Typography>
             <Divider orientation="vertical" flexItem />
             <Typography sx={{ backgroundColor: "#f3f0f0", color:"red" }} component="div">
-                Đã giao hàng thành công
+                Trạng thái: {order ? order.status : ''}
             </Typography>
         </Stack>
     );
@@ -48,7 +47,7 @@ const ProductCodeAndStatus: React.FC<{ order: Order | null }> = ({ order }) => {
 
 const BackAndStatus: React.FC<{ order: Order | null }> = ({ order }) => {
     return (
-        <Box sx={{ width: 800 , backgroundColor: "#f3f0f0", padding: 2, borderRadius: '8px'}}>
+        <Box sx={{ width: "100%" , backgroundColor: "#f3f0f0", paddingY: 2, borderRadius: '8px'}}>
             <Stack direction="row" spacing={4} justifyContent="space-between">
                 <BackBtn />
                 <ProductCodeAndStatus  order={order}/>
@@ -59,12 +58,12 @@ const BackAndStatus: React.FC<{ order: Order | null }> = ({ order }) => {
 
 const MyOrderDetail: React.FC<MyOrderDetailProps> = ({ open, onClose, order }) => {
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+        <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
             <DialogTitle>Chi tiết đơn hàng</DialogTitle>
             <DialogContent>
                 <Box sx={{ minHeight: 500 }}>
                     <BackAndStatus order={order} />
-                    <HorizontalNonLinearStepper />
+                    <HorizontalNonLinearStepper order={order} />
                 </Box>
             </DialogContent>
             <DialogActions >

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Product } from '../interfaces/Product'
 import { Grid } from '@mui/material'
 import ProductCard from './ProductCard'
