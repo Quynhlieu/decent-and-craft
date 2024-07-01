@@ -18,7 +18,7 @@ import {VNDNumericFormat} from "../components/ProductCard.tsx";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import {CartItem, cartItemAdd, cartUpdate} from "../features/cart/cartSlice.ts";
-import React from "react";
+import React, {useState} from "react";
 import {toast} from "react-toastify";
 
 const Slider = () => {
@@ -77,8 +77,7 @@ const Price = (prop: { price: number, discount: number }) => {
 }
 
 /* Quantity button*/
-const QuantityButton = (prop: { cartItem: CartItem }) => {
-    const {cartItem} = prop;
+const QuantityButton: React.FC<{ cartItem: CartItem }> = ({ cartItem }) => {
     const dispatch = useDispatch();
 
     const baseSx = {
@@ -97,24 +96,23 @@ const QuantityButton = (prop: { cartItem: CartItem }) => {
                         productId: cartItem.product.id,
                         value: -1
                     }))
-                }} endIcon={<RemoveIcon/>}/>
+                }} endIcon={<RemoveIcon />} />
                 <TextField
                     className="text-field"
                     type="tel"
-                    sx={{width: 10}}
-                    // onChange={handleQuantity}
+                    sx={{ width: 10 }}
                     value={cartItem.quantity}
+                    disabled
                 />
                 <Button className="btn btn-quantity" onClick={() => {
                     dispatch(cartUpdate({
                         productId: cartItem.product.id,
                         value: 1
                     }))
-                }} startIcon={<AddIcon/>}/>
+                }} startIcon={<AddIcon />} />
             </Stack>
         </Box>
-
-    )
+    );
 }
 /* End quantity button*/
 
@@ -128,6 +126,7 @@ const InformationProduct = (prop: { productDetail: IProductDetail }) => {
         fontSize: 25,
         fontWeight: "bold",
     }
+   const [quantity, setQuantity] = useState(1);
     const cartItem = {product: productDetail.product, quantity: 1}
     return (
         <Box flexDirection="column" letterSpacing={10}>
@@ -142,7 +141,7 @@ const InformationProduct = (prop: { productDetail: IProductDetail }) => {
                 <Button className="btn btn-cart" variant='contained' onClick={() => {
                     dispatch(cartItemAdd({
                         product: productDetail.product,
-                        quantity: 1
+                        quantity: quantity
                     }))
                     toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" })
                 }}>THÊM VÀO GIỎ</Button>
