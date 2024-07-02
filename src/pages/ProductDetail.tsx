@@ -36,7 +36,7 @@ const Slider = () => {
 };
 
 // Line icon
-const LineIcon = () => {
+export const LineIcon = () => {
     const style = {
         background: grey[400],
         width: 40,

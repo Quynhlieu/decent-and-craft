@@ -14,6 +14,7 @@ import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Blogs from './pages/Blogs.tsx';
 import BlogDetail from './components/BlogDetail.tsx';
 import { ReviewForm } from './components/ProductDetail/Review.tsx';
+import SearchPage from "./pages/SearchPage.tsx";
 const theme = createTheme({
   palette: {
     primary: {
@@ -51,6 +52,7 @@ function App() {
               <Route index element={<Blogs />} />
               <Route path="category/:blogCategoryId" element={<Blogs />} />
             </Route>
+            <Route path="search" element={<SearchPage/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
