@@ -7,8 +7,14 @@ import MyOrderDetail from "./MyOrderDetail.tsx";
 import OrderDetail from "../../interfaces/IOrderDetail.ts";
 import Voucher from "../../interfaces/IVoucher.ts";
 import {orders} from "../../data/order.ts";
+import User from "../../interfaces/IUser.ts";
+import Address from "../../interfaces/IAddess.ts";
 interface Order {
     id: number;
+    user: User;
+    paymentMethod: string;
+    shippingFee: number;
+    address: Address;
     orderDetail: OrderDetail[];
     voucher?: Voucher;
     status: string;
@@ -83,7 +89,12 @@ const productNameColumn: TableColumn<Order> = {
 // Cột mới: Tổng tiền
 const totalColumn:TableColumn<Order> = {
     name: 'Tổng tiền',
-    selector: row => row.orderDetail[0]?.price * row.orderDetail[0]?.quantity || 0,
+    selector: row => {
+        const totalOrderDetail = row.orderDetail.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        const discount = row.voucher?.discount ?? 0;
+        const shippingFee = row.shippingFee ?? 0;
+        return totalOrderDetail - discount - shippingFee;
+    },
     sortable: true,
 };
 

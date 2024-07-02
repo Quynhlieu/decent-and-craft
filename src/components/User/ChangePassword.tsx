@@ -48,6 +48,7 @@ const ChangePassword:React.FC = () => {
                         <InputLabel htmlFor="old-password">Mật khẩu cũ</InputLabel>
                         <OutlinedInput
                             id="old-password"
+                            required
                             type={showPassword ? 'text' : 'password'}
                             value={oldPassword}
                             onChange={(e) => setOldPassword(e.target.value)}
@@ -70,6 +71,7 @@ const ChangePassword:React.FC = () => {
                         <InputLabel htmlFor="new-password">Mật khẩu mới</InputLabel>
                         <OutlinedInput
                             id="new-password"
+                            required
                             type={showPassword ? 'text' : 'password'}
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
@@ -92,6 +94,7 @@ const ChangePassword:React.FC = () => {
                         <InputLabel htmlFor="confirm-password">Xác nhận mật khẩu mới</InputLabel>
                         <OutlinedInput
                             id="confirm-password"
+                            required
                             type={showPassword ? 'text' : 'password'}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -115,9 +118,7 @@ const ChangePassword:React.FC = () => {
                         <Button type="submit" variant="contained" color="primary" sx={{ marginRight: 2 }}>
                             Đổi mật khẩu
                         </Button>
-                        <Button variant="outlined" color="secondary">
-                            Hủy
-                        </Button>
+
                     </Box>
                 </form>
             </Box>

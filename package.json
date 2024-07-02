@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@google-pay/button-react": "^3.1.0",
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
     "@reduxjs/toolkit": "^2.2.5",
@@ -27,6 +28,7 @@
     "react-router-dom": "^6.23.1",
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.5",
+    "semantic-ui-react": "^2.1.5",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.11",
     "sweetalert2": "^11.11.1",

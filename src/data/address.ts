@@ -3,10 +3,10 @@ import Address from "../interfaces/IAddess.ts";
 export const address: Address[] = [
     {
         id: 1,
-        province: "New York",
-        district: "New York",
-        ward: "Manhattan",
-        description: "236 5th SE Avenue",
+        province: "Thành phố Hồ Chí Minh",
+        district: "Quận 1",
+        ward: "Phường Bến Nghé",
+        description: "123 Nguyễn Huệ, Tầng 10",
         isDefault: true
     },
     {
