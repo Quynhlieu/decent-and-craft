@@ -3,9 +3,9 @@ import UserProfile from "../components/User/UserProfile.tsx";
 import { Box } from "@mui/material";
 import UserSpeedDial from "../components/User/UserSpeedDial.tsx";
 import ProductSection from "../components/ProductSection.tsx";
-import MyOrder from "../components/User/MyOrder.tsx";
 import MyAddress from "../components/User/MyAddress.tsx";
 import ChangePassword from "../components/User/ChangePassword.tsx";
+import MyOrder from "../components/User/MyOrder.tsx";
 
 const User = () => {
     const [selectedComponent, setSelectedComponent] = useState('UserProfile');

@@ -1,9 +1,7 @@
 import GooglePayButton from "@google-pay/button-react";
-import {Box, Typography} from "@mui/material";
-import CheckoutForm from "./CheckoutForm.tsx";
-import React from "react";
-const PayGgBtn = () =>{
-    return(
+
+const GooglePayBtn = () => {
+    return (
         <GooglePayButton
             environment="TEST"
             paymentRequest={{
@@ -43,20 +41,5 @@ const PayGgBtn = () =>{
         />
     );
 }
-const Pay = () =>{
-    return(
-       <Box>
-           <Typography variant='h3' sx={{
-               textAlign: 'center',
-               position: 'relative',
-               marginBottom: '20px',
-           }}>
-               Thông tin khách hàng
-           </Typography>
-           <CheckoutForm />
-           <PayGgBtn />
-       </Box>
-    );
-}
 
-export default Pay
+export default GooglePayBtn

@@ -10,6 +10,7 @@ import { getCount, getTotalPrice } from '../features/cart/cartSlice';
 import { VNDNumericFormat } from './ProductCard';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CartContainer from './Cart/CartContainer';
+import IUser from "../interfaces/IUser.ts";
 interface NavItemProps {
     active?: boolean,
     children: React.ReactNode
@@ -54,6 +55,9 @@ const NavBar = () => {
     )
 }
 
+const userFromSessionStorage = sessionStorage.getItem('user');
+const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
+
 const Header = () => {
     const cart = useSelector((state: RootState) => state.cart);
     const wishlist = useSelector((state: RootState) => state.wishlist);
@@ -92,8 +96,8 @@ const Header = () => {
                                 color='white'
                                 title={
                                     <Stack direction="column" spacing={1}>
-                                        <Link to="/register">
-                                            <Button variant='contained' sx={{ width: '100%' }}>Đăng Ký</Button>
+                                        <Link to={user ? '/home' : '/register'}>
+                                            <Button variant='contained' sx={{ width: '100%' }}>{user ? 'Đăng xuất' : 'Đăng Ký'}</Button>
                                         </Link>
                                     </Stack>
                                 }
@@ -110,9 +114,9 @@ const Header = () => {
                                     style={{
                                         color: "white",
                                         textDecoration: "none"
-                                    }} to={'/login'} >
+                                    }}   to={user ? '/user' : '/login'}>
                                     <Typography>
-                                        ĐĂNG NHẬP
+                                        {user ? 'Tài khoản' : 'Đăng nhập'}
                                     </Typography>
                                 </Link>
                             </Tooltip>

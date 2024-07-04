@@ -3,12 +3,15 @@ import React from "react";
 import SmsIcon from '@mui/icons-material/Sms';
 import InfoIcon from '@mui/icons-material/Info';
 import Order from "../../interfaces/IOrder.ts";
+import OrderDetail from "../../interfaces/IOrderDetail.ts";
 
 interface ListProductOfOrderProps {
     order: Order | null;
 }
-
-const CardProduct = ({ detail }) => (
+interface CardProductProps {
+    detail: OrderDetail;
+}
+const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
     <Card sx={{ marginBottom: 2 }}> {/* Add marginBottom to create space */}
         <CardActionArea>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -69,6 +72,7 @@ const ListProductOfOrder: React.FC<ListProductOfOrderProps> = ({ order }) => (
                             Chat
                         </Button>
                     </Box>
+                    
                     <InfoIcon />
                 </Box>
             </Grid>

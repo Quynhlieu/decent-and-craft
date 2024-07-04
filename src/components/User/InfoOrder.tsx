@@ -35,6 +35,10 @@ const InfoOrder: React.FC<InfoOrderProps>  = ({order}) => {
             name: "Thành tiền",
             value: formatCurrency(finalPrice),
         },
+        {
+            name: "Phương thức thanh toán: ",
+            value: order.paymentMethod,
+        },
     ];
 
     return (
@@ -47,7 +51,9 @@ const InfoOrder: React.FC<InfoOrderProps>  = ({order}) => {
                                 <TableCell component="th" scope="row">
                                     {row.name}
                                 </TableCell>
-                                <TableCell align="right">{row.value}</TableCell>
+                                <TableCell align="right" sx={row.name === "Thành tiền" ? { color: "red", fontWeight: 'bold', fontSize: '20px' } : {}}>
+                                    {row.value}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

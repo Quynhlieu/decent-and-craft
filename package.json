@@ -13,7 +13,9 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@google-pay/button-react": "^3.1.0",
+    "@hookform/resolvers": "^3.7.0",
     "@mui/icons-material": "^5.15.18",
+    "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.18",
     "@reduxjs/toolkit": "^2.2.5",
     "@splidejs/react-splide": "^0.7.12",
@@ -32,7 +34,8 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.11",
     "sweetalert2": "^11.11.1",
-    "sweetalert2-react-content": "^5.0.7"
+    "sweetalert2-react-content": "^5.0.7",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@mui/x-data-grid": "^6.20.0",

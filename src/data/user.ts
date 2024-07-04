@@ -20,7 +20,7 @@ const users: IUser[] = [
         password: "123",
         phone: "0987 654 321",
         sex: "Nữ",
-        address: [address_2],
+        address: [address_2, address_6, address_3],
     },
     {
         id: 3,
