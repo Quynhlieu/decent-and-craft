@@ -1,4 +1,4 @@
-import {Box, Button, colors, Grid, Stack, Tab, Tabs, TextField, Typography} from "@mui/material";
+import {Box, Button, colors, Divider, Grid, Stack, Tab, Tabs, TextField, Typography} from "@mui/material";
 import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
@@ -37,14 +37,8 @@ const Slider = () => {
 
 // Line icon
 export const LineIcon = () => {
-    const style = {
-        background: grey[400],
-        width: 40,
-        height: 2,
-        marginY: 2,
-    }
     return (
-        <Box sx={style}></Box>
+        <Box my={1}><Divider orientation="horizontal"  flexItem sx={{ height: '2px', width: '10%', background: grey[400] }}/></Box>
     )
 }
 

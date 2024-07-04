@@ -23,7 +23,7 @@ const ProductCard = (product: { data: Product }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     return (
-        <Card sx={{ minWidth: 280 }}>
+        <Card sx={{ minWidth: 210 }}>
             <CardActionArea onClick={() => {
                 navigate("product-detail");
             }}>
@@ -52,9 +52,10 @@ const ProductCard = (product: { data: Product }) => {
                     variant='contained'
                     sx={{
                         fontWeight: "bold",
-                        borderRadius: 5
+                        borderRadius: 5,
+                        fontSize: 11,
                     }}
-                    size="large"
+                    // size="large"
                     color="primary"
                     endIcon={<AddShoppingCartIcon />}
                     onClick={() => {
