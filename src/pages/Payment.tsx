@@ -1,12 +1,12 @@
 import {Badge, Box, Card, CardContent, CardMedia, Divider, Grid, TextField, Typography} from '@mui/material';
 import React from "react";
-import PurchaseInformation from "./PurchaseInformation.tsx";
-import Transport from "./Transport.tsx";
-import PaymentType from "./PaymentType.tsx";
-import { orders } from "../../data/order.ts";
-import PaymentBtn from "./PaymentBtn.tsx";
-import OrderDetail from "../../interfaces/IOrderDetail.ts";
+import PurchaseInformation from "../components/Payment/PurchaseInformation.tsx";
+import Transport from "../components/Payment/Transport.tsx";
+import PaymentType from "../components/Payment/PaymentType.tsx";
+import { orders } from "../data/order.ts";
+import OrderDetail from "../interfaces/IOrderDetail.ts";
 import Button from "@mui/material/Button";
+import PaymentBtn from "../components/Payment/PaymentBtn.tsx";
 
 interface CardProductProps {
     detail: OrderDetail;
@@ -53,7 +53,6 @@ const CardProductList: React.FC<CardProductListProps> = ({orderDetail}) => {
     );
 };
 
-
 const Payment: React.FC = () => {
     return (
         <Box sx={{ padding: 2 }}>
@@ -78,6 +77,7 @@ const Payment: React.FC = () => {
                             {orders.map((order, index) => (
                                 <CardProductList key={index} orderDetail={order.orderDetail} />
                             ))}
+
                             <Divider orientation="horizontal" flexItem />
                             <Box sx={{ padding: 2}}>
                                 <Grid container spacing={2} alignItems="center">
@@ -134,10 +134,9 @@ const Payment: React.FC = () => {
                             <Typography variant="h6" sx={{ marginTop: 2 }}>
                                 Tổng thanh toán: 90000
                             </Typography>
-
-                           <PaymentBtn />
-
+                            <PaymentBtn />
                         </CardContent>
+
                     </Card>
                 </Grid>
             </Grid>

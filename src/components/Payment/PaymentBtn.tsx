@@ -2,6 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import { Box, Link, Typography, Button } from '@mui/material';
 
+
 const PaymentBtn = () =>{
     return (
         <Box sx={{display: "flex" , justifyContent: "space-between"}}>
@@ -14,6 +15,8 @@ const PaymentBtn = () =>{
             <Button
                 type="submit"
                 variant="contained"
+                component={RouterLink}
+                to="/bill"
                 sx={{ mt: 3, mb: 1, backgroundColor: "rgb(77 182 172)" }}
             >
                 Thanh toán

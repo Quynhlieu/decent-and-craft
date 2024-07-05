@@ -11,7 +11,8 @@ import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Blogs from './pages/Blogs.tsx';
 import BlogDetail from './components/BlogDetail.tsx';
 import Register from "./pages/Register.tsx";
-import Payment from "./components/Payment/Payment.tsx";
+import Payment from "./pages/Payment.tsx";
+import Bill from "./pages/Bill.tsx";
 const theme = createTheme({
   palette: {
     primary: {
@@ -50,6 +51,7 @@ function App() {
               <Route path="category/:blogCategoryId" element={<Blogs />} />
             </Route>
             <Route path ="pay" element={<Payment />}/>
+            <Route path="bill" element={<Bill InvoiceNumber="INV-001" discount={10} date="2024-07-06" />} />
           </Route>
         </Routes>
       </BrowserRouter>
