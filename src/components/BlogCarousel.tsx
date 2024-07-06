@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Stack, Typography, TypographyTypeMap, duration } from '@mui/material'
+import { Box,  Grid, Stack, Typography } from '@mui/material'
 import TitleBar from './TitleBar'
 import { blogs } from "../data/blogs";
 import { Link } from 'react-router-dom';
@@ -86,7 +86,7 @@ const NextArrow = (props: any) => {
     )
 }
 
-const BlogTitle = styled(Typography)<any>(({ theme }) => ({
+const BlogTitle = styled(Typography)<any>(() => ({
     fontWeight: "bold",
     fontSize: 20,
     textDecoration: "none",
@@ -94,7 +94,7 @@ const BlogTitle = styled(Typography)<any>(({ theme }) => ({
         textDecoration: "underline",
     }
 }));
-const StyledLink = styled(Link)<any>(({ theme }) => ({
+const StyledLink = styled(Link)<any>(() => ({
     textDecoration: "none",
     color: "black",
 
@@ -149,7 +149,7 @@ const BlogCarouselItem = (props: BlogItemProps) => {
                     }}>
                         <Stack direction="row" spacing={1}>
                             {categories && categories
-                                .map((c: BlogCategory) => <Typography><strong>{c.name}</strong></Typography>)}
+                                .map((c: BlogCategory) => <Typography   key={c.id}><strong>{c.name}</strong></Typography>)}
                         </Stack>
                     </Typography >
                     <Typography sx={{
@@ -190,7 +190,7 @@ const BlogCarousel = () => {
                     setShow(false);
                 }}  >
                     <Slider   {...setting} >
-                        {blogs.map(blog => <BlogCarouselItem categories={blog.categories} thumb={blog.thumb} date={blog.date} show={show} title={blog.title}  />)}
+                        {blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumb} date={blog.date} show={show} title={blog.title}  />)}
                     </Slider>
                 </Box>
             </Grid>
@@ -199,7 +199,7 @@ const BlogCarousel = () => {
                 <Box>
                     <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
                     <Stack sx={{ ml: 2 }} spacing={1}>
-                        {blogs.map(blog => <BlogItem date={blog.date} title={blog.title} categories={[]} />)}
+                        {blogs.map(blog => <BlogItem  key={blog.author} date={blog.date} title={blog.title} categories={[]} />)}
                     </Stack>
                 </Box>
             </Grid>
