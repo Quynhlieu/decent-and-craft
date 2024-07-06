@@ -1,5 +1,4 @@
 import { Box, Button, Stack, Typography } from '@mui/material'
-import React, { useState } from 'react'
 import { RootState } from '../app/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { Product } from '../interfaces/Product'

@@ -1,15 +1,17 @@
 import { Box } from '@mui/material'
-import React from 'react'
 import TitleBar from './TitleBar'
-import ProductList from './ProductList'
-import {hotProducts} from "../data/products";
+import { useGetAllProductQuery } from '../api/productApi';
+import ProductList from './ProductList';
 
 const HotProductList = () => {
-    const data = hotProducts;
+    const {data,isLoading}  = useGetAllProductQuery() 
     return (
         <Box sx={{ my: 5 }}>
             <TitleBar title='SẢN PHẨM HOT' />
-            <ProductList products={data} />
+            {isLoading
+            ?  <h1>Loading</h1>
+            : <ProductList products={data}  />
+        }    
         </Box>
     )
 }
