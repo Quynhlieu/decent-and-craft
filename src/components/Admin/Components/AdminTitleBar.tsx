@@ -4,12 +4,11 @@ import React from 'react'
 type AdminTitleBarProps = {
     title: String
 }
-const AdminTitleBar = (prop: AdminTitleBarProps {
-}) => {
+const AdminTitleBar = (prop: AdminTitleBarProps) => {
     return (
         <Stack direction="row" >
             <Typography variant='h4'>
-                ${prop.title}
+                {prop.title}
             </Typography>
         </Stack>
     )

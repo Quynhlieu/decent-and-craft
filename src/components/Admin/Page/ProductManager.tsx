@@ -1,6 +1,7 @@
 import { Box, Button, Stack } from '@mui/material'
 import React from 'react'
 import AdminTitleBar from '../Components/AdminTitleBar'
+import { Link } from 'react-router-dom'
 
 const ProductFunctionBar = () => {
     return (
@@ -8,9 +9,11 @@ const ProductFunctionBar = () => {
             <Button>
                 Thêm sản phẩm
             </Button>
-            <Button>
-                Quản lý danh mục
-            </Button>
+            <Link to={"create"} >
+                <Button variant='contained'>
+                    Thêm sản phẩm
+                </Button>
+            </Link>
         </Stack>
     )
 }
