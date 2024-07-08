@@ -1,5 +1,5 @@
 import {
-    Box, Button, ButtonGroup, Divider,
+    Box, Button,
     FormControlLabel,
     FormGroup,
     Grid,
@@ -99,6 +99,11 @@ export default function SearchPage() {
         alignItems: "center",
         justifyContent: "end"
     }
+    const productListStyle = {
+        '.css-6kn84p-MuiGrid-root>.MuiGrid-item': {
+            paddingTop: "0",
+        }
+    }
     const [rangePrice, setRangePrice] = useState<{ from: number | null, to: number | null }>({
         from: null, to: null
     });
@@ -120,11 +125,11 @@ export default function SearchPage() {
     return (
         <Grid container spacing={5}>
             <Grid item xs={9}>
-                <Stack direction="row" spacing="auto">
+                <Stack direction="row" spacing="auto" alignItems="center">
                     <BreadcrumbHeader/>
-                    <Typography sx={resultText}>Hiển thị 0-24 của {hotProducts.length} kết quả</Typography>
+                    <Typography sx={resultText}>Hiển thị 0-8 của {hotProducts.length} kết quả</Typography>
                 </Stack>
-                <ProductList products={data}/>
+                <ProductList sx={productListStyle} products={data}/>
             </Grid>
             <Grid item container xs={3} spacing={2} direction="column" paddingLeft={5}>
                 <Grid item>

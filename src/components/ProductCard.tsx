@@ -47,7 +47,7 @@ const ProductCard = (product: { data: Product }) => {
                     </Typography>
                 </CardContent>
             </CardActionArea >
-            <CardActions sx={{ paddingY: 2 }}>
+            <CardActions sx={{ paddingY: 2}}>
                 <Button
                     variant='contained'
                     sx={{
