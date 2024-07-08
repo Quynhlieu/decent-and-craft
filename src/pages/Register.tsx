@@ -224,8 +224,6 @@ function RegisterWithFbOrGg() {
 
 export default function Register() {
     const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
-    // const registerState = useSelector((state: RootState) => state.users);
-    // const dispatch = useDispatch();
     const [registerUser, { data, isLoading,isError, error }] = useRegisterMutation();
     const navigate = useNavigate();
 
