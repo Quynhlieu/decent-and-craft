@@ -10,6 +10,7 @@ import Cart from './pages/Cart.tsx';
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Blogs from './pages/Blogs.tsx';
 import BlogDetail from './components/BlogDetail.tsx';
+import SearchPage from "./pages/SearchPage.tsx";
 import Register from "./pages/Register.tsx";
 import Payment from "./pages/Payment.tsx";
 import WishList from "./pages/WishList.tsx";
@@ -58,6 +59,7 @@ function App() {
               <Route index element={<Blogs />} />
               <Route path="category/:blogCategoryId" element={<Blogs />} />
             </Route>
+            <Route path="search" element={<SearchPage/>}/>
             <Route path ="pay" element={<Payment />}/>
             <Route path="bill" element={<Bill />} />
           </Route>

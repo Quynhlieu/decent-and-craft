@@ -1,15 +1,43 @@
 import {productDetails} from "../../data/productDetail.ts"
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Image, IReview} from "../../interfaces/IProductDescription.ts";
-import {Product} from "../../interfaces/Product.ts";
 
 export interface IProductDetail {
+    id: number;
     product: Product;
-    discount: number;
-    images: Image[];
-    overview: string;
-    reviewList: IReview[];
-    productDescriptions: string;
+    imageList: ImageList[];
+    categoryList: CategoryList[];
+    productBlog: ProductBlog;
+    views: number;
+}
+interface ProductBlog {
+    id: number;
+    content: string;
+}
+interface CategoryList {
+    id: number;
+    name: string;
+}
+interface ImageList {
+    id: number;
+    url: string;
+}
+interface Product {
+    createdDate: string;
+    modifiedDate: string;
+    id: number;
+    name: string;
+    thumbnail: string;
+    price: number;
+    origin: number;
+    status: string;
+    unitInStock: number;
+}
+interface IReview {
+    createdDate: string;
+    modifiedDate: string;
+    id: number;
+    comments: string;
+    rating: number;
 }
 
 const initialState: IProductDetail[] = productDetails;// danh sach san pham
