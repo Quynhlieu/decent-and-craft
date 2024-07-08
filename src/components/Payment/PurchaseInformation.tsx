@@ -16,7 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import { Link } from "react-router-dom";
 import IUser from "../../interfaces/IUser";
 import users from "../../data/user";
-import Address from "../../interfaces/IAddess.ts";
+import Address from "../../interfaces/IAddress.ts";
 import { SelectChangeEvent } from '@mui/material';
 import LocationSelector from "./LocationSelector.tsx";
 import MinHeightTextarea from "./MinHeightTextarea.tsx";

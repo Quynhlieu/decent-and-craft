@@ -5,7 +5,7 @@ import React from "react";
 import {orders} from "../../data/order.ts";
 import InfoIcon from "@mui/icons-material/Info";
 import User from "../../interfaces/IUser.ts";
-import Address from "../../interfaces/IAddess.ts";
+import Address from "../../interfaces/IAddress.ts";
 import OrderDetail from "../../interfaces/IOrderDetail.ts";
 import Voucher from "../../interfaces/IVoucher.ts";
 import styled, {keyframes} from "styled-components";

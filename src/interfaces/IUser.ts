@@ -1,5 +1,5 @@
 
-export enum UserStatus {
+enum UserStatus {
     HOAT_DONG,
     BI_KHOA
 }
@@ -11,5 +11,4 @@ export default interface IUser {
     password: string;
     phone?: string;
     status: UserStatus;
-
 }

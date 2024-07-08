@@ -1,4 +1,4 @@
-import Address from "../interfaces/IAddess.ts";
+import Address from "../interfaces/IAddress.ts";
 
 export const address: Address[] = [
     {
