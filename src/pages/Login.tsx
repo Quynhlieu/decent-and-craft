@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from '@mui/icons-material/Google';
-import { useState} from "react";
+import {useEffect, useState} from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -21,9 +21,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import {IconButton} from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../app/store.ts";
-import {login} from "../features/user/userSlice.ts";
+import {useLoginMutation} from "../api/userApi.ts";
+import {OrbitProgress} from "react-loading-indicators";
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const FacebookGoogleBtns=()=>{
@@ -79,20 +78,36 @@ export default function Login() {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const loginState = useSelector((state: RootState) => state.user);
     const[email,setEmail] = useState<string>("");
     const[password,setPassword] = useState<string>("");
-
-    const dispatch = useDispatch();
+    const [loginUser, { data, isLoading,isError, error }] = useLoginMutation();
     const navigate = useNavigate();
-    if (loginState.user) {
-        sessionStorage.setItem('user', JSON.stringify(loginState.user));
-        navigate("/user")
+
+    const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const loginData = { email, password };
+        try {
+            await loginUser(loginData).unwrap();
+        } catch (error) {
+            console.error('Login error:', error);
+        }
     }
 
-    const handleLogin= ()=> {
-        dispatch(login({email:email,password:password}));
-    };
+    useEffect(() => {
+        if (data) {
+            sessionStorage.setItem('user', JSON.stringify(data));
+            navigate('/user');
+        }
+    }, [data, navigate]);
+
+    let displayError: string | undefined;
+    if (isError) {
+        if ('status' in error) {
+            displayError = 'An error occurred while registering.';
+        } else {
+            displayError = error.message;
+        }
+    }
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
@@ -107,10 +122,12 @@ export default function Login() {
                 <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
                     <LockOutlinedIcon/>
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                <Typography  component="h1" variant="h5">
                     Đăng nhập
                 </Typography>
-                <Typography color="red">{loginState.error}</Typography>
+                    <Typography color="error">
+                       {displayError}
+                    </Typography>
                 <Box component="form" onSubmit={handleLogin} sx={{mt: 1}}>
                     <TextField
                         margin="normal"
@@ -157,8 +174,9 @@ export default function Login() {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        disabled={!email && !password}
+                        // disabled={!email && !password}
                         sx={{mt: 3, mb: 1, backgroundColor: "rgb(77 182 172)"}}
+                        disabled={isLoading}
                     >
                         Đăng nhập
                     </Button>
@@ -166,6 +184,23 @@ export default function Login() {
                     <ForgotPasswordRegisterBtns/>
                 </Box>
             </Box>
+            {isLoading && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(5px)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                }}>
+                    <OrbitProgress color="primary.main" size="medium" text="" textColor="" />
+                </Box>
+            )}
         </Container>
     );
 }

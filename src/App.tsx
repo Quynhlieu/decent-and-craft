@@ -18,6 +18,7 @@ import Bill from "./pages/Bill.tsx";
 import AdminLayout from './components/Admin/Page/AdminLayout.tsx';
 import ProductManager from './components/Admin/Page/ProductManager.tsx';
 import CreateProduct from './components/Admin/Page/CreateProduct.tsx';
+import Page404 from "./pages/Page404.tsx";
 
 const theme = createTheme({
   palette: {
@@ -68,6 +69,7 @@ function App() {
               <Route path="create" element={<CreateProduct/>} />
             </Route>
           </Route>
+          <Route path="page404" element={<Page404 />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

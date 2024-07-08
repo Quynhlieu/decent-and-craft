@@ -16,16 +16,22 @@ import { useEffect } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import {useForm, UseFormRegister, FieldErrors, SubmitHandler} from "react-hook-form";
 import {useRegisterMutation} from "../api/userApi.ts";
+import {OrbitProgress} from "react-loading-indicators";
 
 const TitleAndMessage = ({ error }: { error: string | undefined }) => {
     return (
-        <Box>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+        }}>
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                 <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
                 Đăng ký
             </Typography>
+
             <Typography color="red">{error}</Typography>
         </Box>
     );
@@ -224,8 +230,6 @@ function RegisterWithFbOrGg() {
 
 export default function Register() {
     const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
-    // const registerState = useSelector((state: RootState) => state.users);
-    // const dispatch = useDispatch();
     const [registerUser, { data, isLoading,isError, error }] = useRegisterMutation();
     const navigate = useNavigate();
 
@@ -293,6 +297,23 @@ export default function Register() {
                     <ForgotPasswordRegisterBtns />
                 </Box>
             </Box>
+            {isLoading && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(5px)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                }}>
+                    <OrbitProgress color="color.primary.main" size="medium" text="" textColor="" />
+                </Box>
+            )}
         </Container>
     );
 }
