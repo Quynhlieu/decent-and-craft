@@ -12,27 +12,43 @@ export interface UserLogin {
     email: string
     password: string
 }
+
+interface UserChangePassword {
+    userId: number;
+    currentPassword: string,
+    newPassword: string
+}
+
 export const userApi = createApi({
     reducerPath: 'userApi',
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_URL,
     }),
-    endpoints: (builder) => ({
-        register: builder.mutation<IUser, UserRegister>({
-            query: (userRegister) => ({
-                url: 'users/register',
-                method: 'POST',
-                body: userRegister,
+    endpoints: (builder) => {
+        return ({
+            register: builder.mutation<IUser, UserRegister>({
+                query: (userRegister) => ({
+                    url: 'users/register',
+                    method: 'POST',
+                    body: userRegister,
+                }),
             }),
-        }),
-        login: builder.mutation<IUser, UserLogin>({
-            query: (userLogin) =>({
-                url: 'users/login',
-                method: 'POST',
-                body: userLogin,
-            })
-        })
-    }),
+            login: builder.mutation<IUser, UserLogin>({
+                query: (userLogin) => ({
+                    url: 'users/login',
+                    method: 'POST',
+                    body: userLogin,
+                })
+            }),
+            changePassword: builder.mutation<IUser, UserChangePassword>({
+                query: (userChangePassword) =>({
+                    url: 'users/{userChangePassword.userId}/change-password',
+                    method: "PUT",
+                    body: userChangePassword,
+                })
+            }),
+        });
+    },
 });
 
-export const { useRegisterMutation, useLoginMutation } = userApi;
+export const { useRegisterMutation, useLoginMutation, useChangePasswordMutation } = userApi;

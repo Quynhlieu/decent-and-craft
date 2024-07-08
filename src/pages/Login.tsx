@@ -22,6 +22,7 @@ import {IconButton} from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import {useLoginMutation} from "../api/userApi.ts";
+import {OrbitProgress} from "react-loading-indicators";
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const FacebookGoogleBtns=()=>{
@@ -84,9 +85,13 @@ export default function Login() {
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-            const loginData = { email, password };
+        const loginData = { email, password };
+        try {
             await loginUser(loginData).unwrap();
-    };
+        } catch (error) {
+            console.error('Login error:', error);
+        }
+    }
 
     useEffect(() => {
         if (data) {
@@ -94,6 +99,7 @@ export default function Login() {
             navigate('/user');
         }
     }, [data, navigate]);
+
     let displayError: string | undefined;
     if (isError) {
         if ('status' in error) {
@@ -178,6 +184,23 @@ export default function Login() {
                     <ForgotPasswordRegisterBtns/>
                 </Box>
             </Box>
+            {isLoading && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(5px)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                }}>
+                    <OrbitProgress color="primary.main" size="medium" text="" textColor="" />
+                </Box>
+            )}
         </Container>
     );
 }

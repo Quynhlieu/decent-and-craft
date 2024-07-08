@@ -9,23 +9,16 @@ import PasswordIcon from '@mui/icons-material/Password';
 import '../../assets/user.css';
 import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
+import IUser from "../../interfaces/IUser.ts";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
 }
 
-interface IUser {
-    id: number;
-    email: string;
-    fullName: string;
-    password: string;
-}
-
 const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
-    const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile'); // Thay đổi ở đây
+    const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile');
     const navigate = useNavigate();
-    console.log(sessionStorage.getItem("user"))
 
     const userFromSessionStorage = sessionStorage.getItem('user');
     const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
@@ -40,7 +33,6 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const handleItemClick = (componentName: string) => {
         setSelectedComponent(componentName);
     };
-    console.log(sessionStorage.getItem("user"))
     const handleLogout = () => {
         sessionStorage.removeItem("user");
         navigate("/login");

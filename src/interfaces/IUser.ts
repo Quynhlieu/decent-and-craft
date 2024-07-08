@@ -1,14 +1,15 @@
+
 export enum UserStatus {
     HOAT_DONG,
     BI_KHOA
 }
 
-
-export default interface IUser{
+export default interface IUser {
     id: number;
     fullName: string;
     email: string;
-    password:string;
+    password: string;
     phone?: string;
-    status: UserStatus
+    status: UserStatus;
+
 }
