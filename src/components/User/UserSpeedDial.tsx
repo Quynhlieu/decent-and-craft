@@ -6,17 +6,29 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PasswordIcon from '@mui/icons-material/Password';
-import '../assets/user.css';
+import '../../assets/user.css';
 import {useNavigate} from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
+}
+
+interface IUser {
+    id: number;
+    email: string;
+    fullName: string;
+    password: string;
 }
 
 const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile'); // Thay đổi ở đây
     const navigate = useNavigate();
+    console.log(sessionStorage.getItem("user"))
+
+    const userFromSessionStorage = sessionStorage.getItem('user');
+    const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
     useEffect(() => {
         onComponentChange(selectedComponent);
     }, [selectedComponent, onComponentChange]);
@@ -42,6 +54,11 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                 <Box className={isExpanded ? 'expanded' : 'collapsed'} sx={{ width: '100%', bgcolor: 'background.paper' }} style={{ display: isExpanded ? 'block' : 'none' }}>
                     <nav aria-label="main mailbox folders">
                         <List>
+                            <ListItem disablePadding sx={{my: 2}}>
+                                Xin chào
+                                <Typography sx={{mx:1, color: "red"}}>{user?.fullName} !</Typography>
+                            </ListItem>
+
                             <ListItem disablePadding>
                                 <ListItemButton
                                     onClick={() => handleItemClick('UserProfile')}

@@ -8,7 +8,7 @@ import {
     Stack, TextField, ToggleButton, ToggleButtonGroup,
     Typography
 } from "@mui/material";
-import {hotProducts} from "../data/products";
+import {hotProducts} from "../data/product.ts";
 import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
 import {LineIcon} from "./ProductDetail.tsx";
 import {categories, priceFilters, relateFilters} from "../data/filterData.ts"
@@ -129,7 +129,7 @@ export default function SearchPage() {
                     <BreadcrumbHeader/>
                     <Typography sx={resultText}>Hiển thị 0-8 của {hotProducts.length} kết quả</Typography>
                 </Stack>
-                <ProductList sx={productListStyle} products={data}/>
+                <ProductList  products={data}/>
             </Grid>
             <Grid item container xs={3} spacing={2} direction="column" paddingLeft={5}>
                 <Grid item>

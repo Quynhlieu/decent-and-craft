@@ -17,7 +17,7 @@ export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProper
     )
 }
 const ProductCard = (product: { data: Product }) => {
-    const { id, name, price, thumb } = product.data;
+    const { id, name, price, thumbnail } = product.data;
     const wishlist = useSelector((state: RootState) => state.wishlist);
     const isInWishList = wishlist.some(p => p.id === id);
     const dispatch = useDispatch();
@@ -25,12 +25,12 @@ const ProductCard = (product: { data: Product }) => {
     return (
         <Card sx={{ minWidth: 210 }}>
             <CardActionArea onClick={() => {
-                navigate("product-detail");
+                navigate(`product/${id}`);
             }}>
                 <CardMedia
                     component="img"
                     height="140"
-                    image={thumb}
+                    image={thumbnail}
                     sx={{
                         transition: "all 0.5s ease",
                         "&:hover": {

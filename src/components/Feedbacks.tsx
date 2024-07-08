@@ -60,7 +60,7 @@ const Feedbacks = () => {
             <Box sx={{ mt: 3 }}>
                 <Slider  {...setting} >
                     {feedbacks.map(f => {
-                        return <FeedbackItem feedback={f} />
+                        return <FeedbackItem key={f.author} feedback={f} />
                     })}
                 </Slider>
             </Box>

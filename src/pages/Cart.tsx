@@ -137,6 +137,7 @@ const VoucherItem = () => {
         </Button>
     )
 }
+
 const Cart = () => {
     const MySwal = withReactContent(Swal)
 
@@ -217,7 +218,7 @@ const Cart = () => {
                         Áp dụng
                     </Button>
                     <Divider sx={{ mt: 1, borderBottomWidth: 3 }} />
-                    <Button sx={{ mt: 2 }} color='warning' variant='contained' >
+                    <Button sx={{ mt: 2 }} color='warning' variant='contained' onClick={() => { navigate("/pay") }}>
                         <strong>  TIẾN HÀNH THANH TOÁN</strong>
                     </Button>
                 </Stack>

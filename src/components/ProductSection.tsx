@@ -1,5 +1,4 @@
-import React from 'react'
-import {Card, CardActionArea, CardContent, CardMedia, Grid, Typography} from "@mui/material";
+import {Card, CardActionArea,  CardMedia, Grid } from "@mui/material";
 import promotion from '../Image/promotion.png';
 import newProduct from '../Image/newProduct.png';
 

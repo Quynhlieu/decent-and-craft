@@ -3,23 +3,26 @@ import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../app/store.ts";
-import {grey} from "@mui/material/colors";
+import { RootState } from "../app/store.ts";
+import React, {useState} from "react";
+import { grey } from "@mui/material/colors";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import PinterestIcon from "@mui/icons-material/Pinterest";
-import {hotProducts} from "../data/products.ts";
+import { hotProducts } from "../data/product.ts";
 import ProductList from "../components/ProductList.tsx";
 import Review from "../components/ProductDetail/Review.tsx";
-import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
-import {Outlet} from "react-router-dom";
+// import { IProductDetail } from "../features/productDetail/productDetailSlice.ts";
+import { Outlet, useParams } from "react-router-dom";
 import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
-import {VNDNumericFormat} from "../components/ProductCard.tsx";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import {CartItem, cartItemAdd, cartUpdate} from "../features/cart/cartSlice.ts";
-import React, {useState} from "react";
+import {CartItem,  cartUpdate} from "../features/cart/cartSlice.ts";
+import { useGetProductByIdQuery } from "../api/productApi.ts";
+import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
 import {toast} from "react-toastify";
+import {cartItemAdd} from "../features/cart/cartSlice.ts";
+
 
 const Slider = () => {
     const mainImages = [
@@ -29,8 +32,8 @@ const Slider = () => {
         'https://fairycorner.vn/wp-content/uploads/2021/10/16.png',
     ];
     return (
-        <Box>
-            <MySclickCarousel mainImages={mainImages}/>
+        <Box  >
+            <MySclickCarousel mainImages={mainImages} />
         </Box>
     );
 };
@@ -44,7 +47,7 @@ export const LineIcon = () => {
 
 
 const Price = (prop: { price: number, discount: number }) => {
-    const {price, discount} = prop;
+    const { price, discount } = prop;
     const baseSx = {
         // Chỉ định cho các Typography con nằm trong baseSx
         '& > .MuiTypography-root': {
@@ -64,8 +67,8 @@ const Price = (prop: { price: number, discount: number }) => {
 
     return (
         <Stack spacing={2} direction="row" sx={baseSx}>
-            <Typography sx={priceSx}><VNDNumericFormat price={price}/></Typography>
-            <Typography sx={discountSx}><VNDNumericFormat price={price * discount}/></Typography>
+            <Typography sx={priceSx}>{price}</Typography>
+            <Typography sx={discountSx}>{price * discount}</Typography>
         </Stack>
     );
 }
@@ -113,7 +116,7 @@ const QuantityButton: React.FC<{ cartItem: CartItem }> = ({ cartItem }) => {
 
 // Thong tin chi tiet san pham
 const InformationProduct = (prop: { productDetail: IProductDetail }) => {
-   const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const {productDetail} = prop;
     const styleTitle = {
         color: colors.grey[700],
@@ -126,9 +129,9 @@ const InformationProduct = (prop: { productDetail: IProductDetail }) => {
         <Box flexDirection="column" letterSpacing={10}>
             <Typography sx={styleTitle}>{productDetail.product.name}</Typography>
             <LineIcon/>
-            <Price price={productDetail.product.price} discount={productDetail.discount}/>
+            <Price price={productDetail.product.price} discount={productDetail.product.origin}/>
             <Box>
-                <Typography variant='subtitle1'>{productDetail.overview}</Typography>
+                <Typography variant='subtitle1'>{productDetail.productBlog.content}</Typography>
             </Box>
             <Stack direction="row" spacing={2} mt={2}>
                 <QuantityButton cartItem={cartItem}/>
@@ -168,7 +171,7 @@ interface TabPanelProps {
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-    const {children, value, index, ...other} = props;
+    const { children, value, index, ...other } = props;
 
     return (
         <div
@@ -177,7 +180,7 @@ function CustomTabPanel(props: TabPanelProps) {
             {...other}
         >
             {value === index && (
-                <Box sx={value !== 2 ? {p: 2} : {p: 0}}>
+                <Box sx={value !== 2 ? { p: 2 } : { p: 0 }}>
                     {children}
                 </Box>
             )}
@@ -189,14 +192,16 @@ function CustomTabPanel(props: TabPanelProps) {
 /*
 * Component thông tin bổ sung cho sản phẩm
 * */
-const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
+const DescriptionProduct: React.FC<{ productId: number }> = ({ productId }) => {
     const [value, setValue] = React.useState(0);
     const productDetail = useSelector((state: RootState) => state.productDetail);
     const product = productDetail.find(i => i.product.id === productId);
     const productDescriptions = product && product.productDescriptions;
+
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
     // Show mô tả sản phẩm
     const showDescriptionTab = () => {
         return (
@@ -207,7 +212,7 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
     }
     // Show Review
     const showReviewTab = () => {
-        const content = <Review productId={productId}/>;
+        const content = <Review productId={productId} />;
         return (
             <CustomTabPanel index={1} value={value}>
                 {content}
@@ -217,11 +222,11 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
 
 
     return (
-        <Box sx={{width: '100%', paddingX: 10}}>
-            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+        <Box sx={{ width: '100%', paddingX: 10 }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange}>
-                    <Tab key={0} label="MÔ TẢ"/>
-                    <Tab key={1} label="ĐÁNH GIÁ SẢN PHẨM"/>
+                    <Tab key={0} label="MÔ TẢ" />
+                    <Tab key={1} label="ĐÁNH GIÁ SẢN PHẨM" />
                 </Tabs>
             </Box>
             {showDescriptionTab()}
@@ -235,10 +240,11 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
 * Similar product list
 * */
 const SimilarProductList = () => {
+    const data = hotProducts;
     return (
-        <Box sx={{my: 5}}>
-            <Typography sx={{fontWeight: 'bold'}}>SẢN PHẨM TƯƠNG TỰ</Typography>
-            <ProductList products={hotProducts}/>
+        <Box sx={{ my: 5 }}>
+            <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM TƯƠNG TỰ</Typography>
+            <ProductList products={data} />
         </Box>
     )
 }
@@ -264,17 +270,20 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
     )
 }
 
-const ProductDetail = (prop: { productId: number }) => {
-    const {productId} = prop;
-    const productDetails = useSelector((state: RootState) => state.productDetail);
-    const product = productDetails.find(p => productId === p.product.id);
+const ProductDetail = () => {
+    const {productId} =  useParams();
+    const { data, error, isLoading } = useGetProductByIdQuery(+productId);
+    const productDetail = data;
+    // const { productId } = prop;
+    // const productDetail = useSelector((state: RootState) => state.productDetail);
+    // const product = productDetail.find(p => p.id === productId);
     return (
-        <Box sx={{mb: 10}}>
-            <BreadcrumbHeader/>
-            {product && <Detail productDetail={product}/>}
-            <ProductSection/>
-            <BreadcrumbFooter/>
-            <Outlet/>
+        <Box sx={{ mb: 10 }}>
+            <BreadcrumbHeader />
+            {productDetail && <Detail productDetail={productDetail} />}
+            <ProductSection />
+            <BreadcrumbFooter />
+            <Outlet />
         </Box>
     )
 }

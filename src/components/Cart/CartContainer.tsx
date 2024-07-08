@@ -71,7 +71,7 @@ const CartContainer = (prop: { showCart: boolean, onMouseOut: never }) => {
                 <CartItemList cartItems={cart} />
                 <Typography>Tong tien: <strong><VNDNumericFormat price={getTotalPrice(cart)} /></strong></Typography>
                 <Button onClick={() => { navigate("cart") }} variant='contained'>Xem gio hang</Button>
-                <Button color="error" variant='contained'>Thanh Toan</Button>
+                <Button onClick={() => { navigate("pay") }} color="error" variant='contained'>Thanh Toan</Button>
             </Stack> : <Typography>
                 Chưa có sản phẩm trong giỏ hàng
             </Typography>}
