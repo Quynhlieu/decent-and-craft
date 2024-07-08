@@ -1,5 +1,4 @@
 import {Box, Button, Paper, Stack, Typography} from '@mui/material'
-import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {RootState} from '../../app/store'
 import {VNDNumericFormat} from '../ProductCard'
@@ -51,7 +50,7 @@ const CartItemList = (prop: CartItemListType) => {
     )
 
 }
-const CartContainer = (prop: { showCart: boolean, onMouseOut: any }) => {
+const CartContainer = (prop: { showCart: boolean, onMouseOut: never }) => {
     const { showCart } = prop;
     const cart = useSelector((state: RootState) => state.cart)
     const navigate = useNavigate();
@@ -72,7 +71,7 @@ const CartContainer = (prop: { showCart: boolean, onMouseOut: any }) => {
                 <CartItemList cartItems={cart} />
                 <Typography>Tong tien: <strong><VNDNumericFormat price={getTotalPrice(cart)} /></strong></Typography>
                 <Button onClick={() => { navigate("cart") }} variant='contained'>Xem gio hang</Button>
-                <Button color="error" variant='contained'>Thanh Toan</Button>
+                <Button onClick={() => { navigate("pay") }} color="error" variant='contained'>Thanh Toan</Button>
             </Stack> : <Typography>
                 Chưa có sản phẩm trong giỏ hàng
             </Typography>}

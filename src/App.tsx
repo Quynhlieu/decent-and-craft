@@ -6,15 +6,19 @@ import User from "./pages/User";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout, { ScrollToTop } from './pages/Layout.tsx';
 import Login from "./pages/Login.tsx";
-import Register from "./pages/Register.tsx";
 import Cart from './pages/Cart.tsx';
-import WishList from './pages/WishList.tsx';
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Blogs from './pages/Blogs.tsx';
 import BlogDetail from './components/BlogDetail.tsx';
+import SearchPage from "./pages/SearchPage.tsx";
+import Register from "./pages/Register.tsx";
+import Payment from "./pages/Payment.tsx";
+import WishList from "./pages/WishList.tsx";
+import Bill from "./pages/Bill.tsx";
 import AdminLayout from './components/Admin/Page/AdminLayout.tsx';
 import ProductManager from './components/Admin/Page/ProductManager.tsx';
 import CreateProduct from './components/Admin/Page/CreateProduct.tsx';
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -54,6 +58,9 @@ function App() {
               <Route index element={<Blogs />} />
               <Route path="category/:blogCategoryId" element={<Blogs />} />
             </Route>
+            <Route path="search" element={<SearchPage/>}/>
+            <Route path ="pay" element={<Payment />}/>
+            <Route path="bill" element={<Bill />} />
           </Route>
           <Route path="/admin" element={<AdminLayout />} >
             <Route path='products'  >

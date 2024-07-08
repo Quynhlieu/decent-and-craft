@@ -8,5 +8,4 @@ export interface Product{
     origin: number
     status: string
     unitInStock: number
-  }
-  
+}

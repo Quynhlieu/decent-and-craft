@@ -9,144 +9,161 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
+import {SubmitHandler, useForm} from "react-hook-form";
 
-const AddAddressForm = ({ onBack }) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        phone: '',
-        province: '',
-        district: '',
-        ward: '',
-        description: ''
-    });
+interface IAddress {
+    name: string;
+    phone: string;
+    province: string;
+    district: string;
+    ward: string;
+    description: string;
+}
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+const TitleAddress = ()=> {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+            <AddLocationIcon color="primary" sx={{ mr: 1 }} />
+            <Typography variant="h5" align="center">
+                Thêm Địa Chỉ Mới
+            </Typography>
+        </Box>
+    );
+}
+
+const BackAndAdd =({ onBack }: { onBack: () => void })=>{
+    return (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 3 }}>
+            <Button variant="outlined" color="secondary" onClick={onBack} sx={{ marginRight: 2 }}>
+                Quay lại
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+                Thêm Địa Chỉ
+            </Button>
+        </Box>
+    );
+}
+
+const AddAddressForm = ({ onBack }: { onBack: () => void }) => {
+    const { register, handleSubmit, formState: { errors } } = useForm<IAddress>();
+    const onSubmit: SubmitHandler<IAddress> = data => {
+        console.log(data);
+
+        onBack();
     };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(formData);
-        setFormData({
-            name: '',
-            phone: '',
-            province: '',
-            district: '',
-            ward: '',
-            description: ''
-        });
-    };
-
     return (
         <Container maxWidth="sm">
             <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
-                    <AddLocationIcon color="primary" sx={{ mr: 1 }} />
-                    <Typography variant="h5" align="center">
-                        Thêm Địa Chỉ Mới
-                    </Typography>
-                </Box>
-                <form onSubmit={handleSubmit}>
+               <TitleAddress />
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
                                 required
-                                name="name"
+                                id="name"
                                 label="Họ và Tên"
                                 variant="outlined"
-                                value={formData.name}
-                                onChange={handleChange}
+                                {...register("name", { required: "Họ và Tên là bắt buộc" })}
+                                error={!!errors.name}
+                                helperText={errors.name ? errors.name.message : ""}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
                                 required
-                                name="phone"
+                                id="phone"
                                 label="Số điện thoại"
                                 variant="outlined"
-                                value={formData.phone}
-                                onChange={handleChange}
+                                {...register("phone", {required: "Số điện thoại là bắt buộc"})}
+                                error={!!errors.phone}
+                                helperText={errors.phone ? errors.phone.message : ""}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
                                 required
-                                name="province"
+                                id="province"
                                 label="Thành phố/ tỉnh"
                                 variant="outlined"
-                                value={formData.province}
-                                onChange={handleChange}
+                                {...register("province", {required: "Thành phố là bắt buộc"})}
+                                error={!!errors.province}
+                                helperText={errors.province ? errors.province.message : ""}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
                                 required
-                                name="district"
+                                id="district"
                                 label="Quận/ huyện"
                                 variant="outlined"
-                                value={formData.district}
-                                onChange={handleChange}
+                                {...register("district", {required: "Huyện là bắt buộc"})}
+                                error={!!errors.district}
+                                helperText={errors.district ? errors.district.message : ""}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
                                 required
-                                name="ward"
+                                id="ward"
                                 label="Phường/ xã "
                                 variant="outlined"
-                                value={formData.ward}
-                                onChange={handleChange}
+                                {...register("ward", {required: "Xã là bắt buộc"})}
+                                error={!!errors.ward}
+                                helperText={errors.ward ? errors.ward.message : ""}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
                                 required
-                                name="description"
+                                id = "description"
                                 label="Ghi chú"
                                 variant="outlined"
-                                value={formData.description}
-                                onChange={handleChange}
+                                {...register("description", {required: "Ghi chú là bắt buộc"})}
+                                error={!!errors.description}
+                                helperText={errors.description ? errors.description.message : ""}
                             />
                         </Grid>
                     </Grid>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 3 }}>
-                        <Button variant="outlined" color="secondary" onClick={onBack} sx={{ marginRight: 2 }}>
-                            Quay lại
-                        </Button>
-                        <Button type="submit" variant="contained" color="primary">
-                            Thêm Địa Chỉ
-                        </Button>
-                    </Box>
+                    <BackAndAdd onBack={onBack} />
                 </form>
             </Paper>
         </Container>
     );
 };
 
-const MyAddress = () => {
+const AddBtn = ({ onBack }: { onBack: () => void }) => {
+    return (
+        <Box sx={{ width: '100%', display: 'flex', justifyContent:"flex-end", paddingTop: 3 }}>
+            <Fab variant="extended" onClick={onBack}>
+                <AddIcon sx={{ mr: 1 , flex:2}} />
+                Thêm
+            </Fab>
+        </Box>
+    );
+}
+
+const MyAddress: React.FC = () => {
     const [expanded, setExpanded] = useState(false);
     const [isFormVisible, setIsFormVisible] = useState(false);
 
+    const handleBack = () => {
+        setIsFormVisible(false);
+    };
+    const handleAddClick = () => {
+        setIsFormVisible(true);
+    };
     const handleSummaryClick = () => {
         setExpanded(true);
     };
 
     const handleCancelClick = () => {
         setExpanded(false);
-    };
-
-    const handleAddClick = () => {
-        setIsFormVisible(true);
-    };
-    const handleBack = () => {
-        setIsFormVisible(false);
     };
 
     return (
@@ -212,12 +229,7 @@ const MyAddress = () => {
                     </AccordionActions>
                 </Accordion>
             </Box>
-            <Box sx={{ width: '100%', display: 'flex', justifyContent:"flex-end", paddingTop: 3 }}>
-                <Fab variant="extended" onClick={handleAddClick}>
-                    <AddIcon sx={{ mr: 1 , flex:2}} />
-                    Thêm
-                </Fab>
-            </Box>
+            <AddBtn onBack={handleAddClick}/>
                 </>
             )}
         </Box>

@@ -1,5 +1,8 @@
-import Address from "./IAddess.ts";
-import Order from "./IOrder.ts";
+export enum UserStatus {
+    HOAT_DONG,
+    BI_KHOA
+}
+
 
 export default interface IUser{
     id: number;
@@ -7,7 +10,5 @@ export default interface IUser{
     email: string;
     password:string;
     phone?: string;
-    sex?: string;
-    address?: Address[];
-    order?: Order[];
+    status: UserStatus
 }

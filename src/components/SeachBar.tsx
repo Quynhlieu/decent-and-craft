@@ -2,7 +2,9 @@ import styled from '@emotion/styled';
 import { alpha, Box, InputBase } from '@mui/material';
 import React from 'react'
 import SearchIcon from '@mui/icons-material/Search';
+import {useNavigate} from "react-router-dom";
 const SeachBar = () => {
+    const navigate = useNavigate();
     return (
         <Box sx={{
             marginX: 3,
@@ -14,7 +16,9 @@ const SeachBar = () => {
             justifyContent: "center",
             alignItems: "center"
         }} >
-            <SearchIcon sx={{ mr: 2 }} />
+            <SearchIcon sx={{ mr: 2 }} onClick={() => {
+                navigate("/search")
+            }} />
             <InputBase sx={{ width: 300 }} placeholder='Bạn cần tìm gì?' />
         </Box>
     )

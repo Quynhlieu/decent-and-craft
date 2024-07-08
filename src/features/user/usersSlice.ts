@@ -16,7 +16,7 @@ const usersSlice = createSlice({
     name: "users",
     initialState,
     reducers: {
-        register(state, action: PayloadAction<User>) {
+        registerz(state, action: PayloadAction<User>) {
             const user = action.payload;
             if(user){
                 const existingUser = users.find(u => u.email === user.email)
@@ -37,4 +37,4 @@ const usersSlice = createSlice({
     }
 })
 export default usersSlice.reducer;
-export const {register} = usersSlice.actions;
+export const {registerz} = usersSlice.actions;

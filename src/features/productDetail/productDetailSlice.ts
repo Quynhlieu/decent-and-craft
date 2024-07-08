@@ -1,14 +1,43 @@
 import {productDetails} from "../../data/productDetail.ts"
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Image, IReview} from "../../interfaces/IProductDescription.ts";
-import {Product} from "../../interfaces/Product.ts";
 
-export interface IProductDetail extends Product {
-    discount: number;
-    images: Image[];
-    overview: string;
-    reviewList: IReview[];
-    productDescriptions: string;
+export interface IProductDetail {
+    id: number;
+    product: Product;
+    imageList: ImageList[];
+    categoryList: CategoryList[];
+    productBlog: ProductBlog;
+    views: number;
+}
+interface ProductBlog {
+    id: number;
+    content: string;
+}
+interface CategoryList {
+    id: number;
+    name: string;
+}
+interface ImageList {
+    id: number;
+    url: string;
+}
+interface Product {
+    createdDate: string;
+    modifiedDate: string;
+    id: number;
+    name: string;
+    thumbnail: string;
+    price: number;
+    origin: number;
+    status: string;
+    unitInStock: number;
+}
+interface IReview {
+    createdDate: string;
+    modifiedDate: string;
+    id: number;
+    comments: string;
+    rating: number;
 }
 
 const initialState: IProductDetail[] = productDetails;// danh sach san pham
@@ -19,7 +48,7 @@ const productDetailSlice = createSlice({
     reducers: {
         reviewAdd(state, action: PayloadAction<{ productId: number, review: IReview }>) {
             const {productId, review} = action.payload;
-            const product = state.find(i => i.id === productId);
+            const product = state.find(i => i.product.id === productId);
             const isExist:boolean|undefined = product?.reviewList.some(review=>review.customer?.id==review.customer?.id);
             if(isExist){
                 const currentReview = product?.reviewList.find(r=>r.customer?.id==review.customer?.id);
@@ -41,7 +70,7 @@ export default productDetailSlice.reducer
 
 // Số lượt review
 export const getTotalReview = (reviews: IReview[]):number => {
-    return reviews.length;
+    return reviews && reviews.length;
 }
 
 
