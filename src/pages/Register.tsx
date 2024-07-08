@@ -4,8 +4,6 @@ import { Box, Container, IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../app/store";
 import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -14,11 +12,10 @@ import GoogleIcon from "@mui/icons-material/Google";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import IUser from "../interfaces/IUser";
-import { registerz } from "../features/user/usersSlice";
 import { useEffect } from "react";
 import Visibility from "@mui/icons-material/Visibility";
-import { useForm, UseFormRegister, FieldErrors } from "react-hook-form";
+import {useForm, UseFormRegister, FieldErrors, SubmitHandler} from "react-hook-form";
+import {useRegisterMutation} from "../api/userApi.ts";
 
 const TitleAndMessage = ({ error }: { error: string | undefined }) => {
     return (
@@ -33,6 +30,8 @@ const TitleAndMessage = ({ error }: { error: string | undefined }) => {
         </Box>
     );
 };
+
+
 interface FormValues {
     firstName: string;
     lastName: string;
@@ -162,14 +161,15 @@ const FormRegister = ({
     );
 };
 
-function RegisterBtn() {
+function RegisterBtn({ isLoading }: { isLoading: boolean }) {
     return (
         <Box>
             <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 1 , backgroundColor: "rgb(77 182 172)" }}
+                sx={{ mt: 3, mb: 1, backgroundColor: "rgb(77 182 172)" }}
+                disabled={isLoading}
             >
                 Đăng ký
             </Button>
@@ -224,8 +224,9 @@ function RegisterWithFbOrGg() {
 
 export default function Register() {
     const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
-    const registerState = useSelector((state: RootState) => state.users);
-    const dispatch = useDispatch();
+    // const registerState = useSelector((state: RootState) => state.users);
+    // const dispatch = useDispatch();
+    const [registerUser, { data, isLoading,isError, error }] = useRegisterMutation();
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = React.useState(false);
@@ -236,23 +237,34 @@ export default function Register() {
 
     const passwordValue = watch('password');
     const confirmPasswordValue = watch('confirmPassword');
-    const onSubmitHandle = (data: FormValues) => {
-        const user: IUser = {
-            id: 4,
-            email: data.email,
-            fullName: `${data.firstName} ${data.lastName}`,
-            password: data.password,
+
+    const onSubmit: SubmitHandler<FormValues> = async (formData) => {
+        const userRegisterData = {
+            email: formData.email,
+            password: formData.password,
+            fullName: `${formData.firstName} ${formData.lastName}`
         };
-        dispatch(registerz(user));
-    }
 
-    useEffect(() => {
-        if (registerState.user) {
-            sessionStorage.setItem('user', JSON.stringify(registerState.user));
-            navigate("/login");
+        try {
+            await registerUser(userRegisterData);
+        } catch (error) {
+            console.error('Registration error:', error);
         }
-    }, [registerState.user, navigate]);
-
+    };
+    useEffect(() => {
+        if (data) {
+            sessionStorage.setItem('user', JSON.stringify(data));
+            navigate('/login');
+        }
+    }, [data, navigate]);
+    let displayError: string | undefined;
+    if (isError) {
+        if ('status' in error) {
+            displayError = 'An error occurred while registering.';
+        } else {
+            displayError = error.message;
+        }
+    }
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -264,8 +276,8 @@ export default function Register() {
                     alignItems: 'center',
                 }}
             >
-                <TitleAndMessage error={registerState.error}/>
-                <Box component="form" onSubmit={handleSubmit(onSubmitHandle)} sx={{ mt: 3 }}>
+                <TitleAndMessage error={displayError} />
+                <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
                     <FormRegister
                         registerForm={register}
                         errors={errors}
@@ -276,7 +288,7 @@ export default function Register() {
                         passwordValue={passwordValue}
                         confirmPasswordValue={confirmPasswordValue}
                     />
-                    <RegisterBtn />
+                    <RegisterBtn isLoading={isLoading} />
                     <RegisterWithFbOrGg />
                     <ForgotPasswordRegisterBtns />
                 </Box>

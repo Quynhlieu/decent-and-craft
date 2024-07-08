@@ -11,9 +11,7 @@ import {
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PasswordIcon from '@mui/icons-material/Password';
-import FemaleIcon from '@mui/icons-material/Female';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -24,7 +22,7 @@ import {useNavigate} from "react-router-dom";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {useDispatch} from "react-redux";
 import { updateInfo} from "../../features/user/userSlice.ts";
-import IUser from "../../interfaces/IUser.ts";
+import IUser , { UserStatus } from "../../interfaces/IUser.ts";
 
 const UserProfile: React.FC  = () => {
     const [open, setOpen] = React.useState<boolean>(false);
@@ -56,8 +54,8 @@ const UserProfile: React.FC  = () => {
             fullName: formData.get('fullName') as string,
             email: formData.get('email') as string,
             phone: formData.get('phone') as string,
-            sex: formData.get('sex') as string,
             password: user?.password ?? '',
+            status: user?.status ?? UserStatus.HOAT_DONG,
         };
         console.log(updatedUser);
         dispatch(updateInfo(updatedUser));
@@ -94,24 +92,15 @@ const UserProfile: React.FC  = () => {
                         <ListItemText sx={{ textAlign: 'right' }}  primary={user?.email} />
                     </ListItemButton>
                 </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <FemaleIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Giới tính:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.sex || 'N/A'} />
-                    </ListItemButton>
-                </ListItem>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <LocationOnIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Địa chỉ:" />
-                        <ListItemText sx={{ textAlign: 'right' }} primary={user?.address && user.address.length > 0 ? user.address[0].description : 'N/A'} />
-                    </ListItemButton>
-                </ListItem>
+                {/*<ListItem disablePadding>*/}
+                {/*    <ListItemButton>*/}
+                {/*        <ListItemIcon>*/}
+                {/*            <LocationOnIcon />*/}
+                {/*        </ListItemIcon>*/}
+                {/*        <ListItemText primary="Địa chỉ:" />*/}
+                {/*        <ListItemText sx={{ textAlign: 'right' }} primary={user?.address && user.address.length > 0 ? user.address[0].description : 'N/A'} />*/}
+                {/*    </ListItemButton>*/}
+                {/*</ListItem>*/}
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>

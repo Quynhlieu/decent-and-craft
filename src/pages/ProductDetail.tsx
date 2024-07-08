@@ -1,25 +1,26 @@
-import {Box, Button, colors, Grid, Stack, Tab, Tabs, TextField, Typography} from "@mui/material";
+import { Box, Button, colors, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
 import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../app/store.ts";
-import {grey} from "@mui/material/colors";
+import { RootState } from "../app/store.ts";
+import React, {useState} from "react";
+import { grey } from "@mui/material/colors";
+import QuantityButton from "../components/QuantityButton.tsx";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import PinterestIcon from "@mui/icons-material/Pinterest";
-import {hotProducts} from "../data/product.ts";
+import { hotProducts } from "../data/product.ts";
 import ProductList from "../components/ProductList.tsx";
 import Review from "../components/ProductDetail/Review.tsx";
-import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
-import {Outlet} from "react-router-dom";
+// import { IProductDetail } from "../features/productDetail/productDetailSlice.ts";
+import { Outlet, useParams } from "react-router-dom";
 import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
-import {VNDNumericFormat} from "../components/ProductCard.tsx";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import {CartItem, cartItemAdd, cartUpdate} from "../features/cart/cartSlice.ts";
-import React from "react";
+import { useGetProductByIdQuery } from "../api/productApi.ts";
+import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
 import {toast} from "react-toastify";
+import {cartItemAdd} from "../features/cart/cartSlice.ts";
+
 
 const Slider = () => {
     const mainImages = [
@@ -29,8 +30,8 @@ const Slider = () => {
         'https://fairycorner.vn/wp-content/uploads/2021/10/16.png',
     ];
     return (
-        <Box>
-            <MySclickCarousel mainImages={mainImages}/>
+        <Box  >
+            <MySclickCarousel mainImages={mainImages} />
         </Box>
     );
 };
@@ -50,7 +51,7 @@ const LineIcon = () => {
 
 
 const Price = (prop: { price: number, discount: number }) => {
-    const {price, discount} = prop;
+    const { price, discount } = prop;
     const baseSx = {
         // Chỉ định cho các Typography con nằm trong baseSx
         '& > .MuiTypography-root': {
@@ -70,64 +71,23 @@ const Price = (prop: { price: number, discount: number }) => {
 
     return (
         <Stack spacing={2} direction="row" sx={baseSx}>
-            <Typography sx={priceSx}><VNDNumericFormat price={price}/></Typography>
-            <Typography sx={discountSx}><VNDNumericFormat price={price * discount}/></Typography>
+            <Typography sx={priceSx}>{price}</Typography>
+            <Typography sx={discountSx}>{price * discount}</Typography>
         </Stack>
     );
 }
 
-/* Quantity button*/
-const QuantityButton = (prop: { cartItem: CartItem }) => {
-    const {cartItem} = prop;
-    const dispatch = useDispatch();
-
-    const baseSx = {
-        borderRadius: 50,
-        background: grey[200],
-        border: '1px solid #e0e0e0',
-        width: "auto",
-        height: 50,
-    };
-
-    return (
-        <Box>
-            <Stack sx={baseSx} direction="row">
-                <Button className="btn btn-quantity" onClick={() => {
-                    dispatch(cartUpdate({
-                        productId: cartItem.product.id,
-                        value: -1
-                    }))
-                }} endIcon={<RemoveIcon/>}/>
-                <TextField
-                    className="text-field"
-                    type="tel"
-                    sx={{width: 10}}
-                    // onChange={handleQuantity}
-                    value={cartItem.quantity}
-                />
-                <Button className="btn btn-quantity" onClick={() => {
-                    dispatch(cartUpdate({
-                        productId: cartItem.product.id,
-                        value: 1
-                    }))
-                }} startIcon={<AddIcon/>}/>
-            </Stack>
-        </Box>
-
-    )
-}
-/* End quantity button*/
-
 
 // Thong tin chi tiet san pham
 const InformationProduct = (prop: { productDetail: IProductDetail }) => {
-   const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const {productDetail} = prop;
     const styleTitle = {
         color: colors.grey[700],
         fontSize: 25,
         fontWeight: "bold",
     }
+    const [quantity, setQuantity] = useState(1);
     const cartItem = {product: productDetail.product, quantity: 1}
     return (
         <Box flexDirection="column" letterSpacing={10}>
@@ -142,7 +102,7 @@ const InformationProduct = (prop: { productDetail: IProductDetail }) => {
                 <Button className="btn btn-cart" variant='contained' onClick={() => {
                     dispatch(cartItemAdd({
                         product: productDetail.product,
-                        quantity: 1
+                        quantity: quantity
                     }))
                     toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" })
                 }}>THÊM VÀO GIỎ</Button>
@@ -175,7 +135,7 @@ interface TabPanelProps {
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-    const {children, value, index, ...other} = props;
+    const { children, value, index, ...other } = props;
 
     return (
         <div
@@ -184,7 +144,7 @@ function CustomTabPanel(props: TabPanelProps) {
             {...other}
         >
             {value === index && (
-                <Box sx={value !== 2 ? {p: 2} : {p: 0}}>
+                <Box sx={value !== 2 ? { p: 2 } : { p: 0 }}>
                     {children}
                 </Box>
             )}
@@ -196,14 +156,16 @@ function CustomTabPanel(props: TabPanelProps) {
 /*
 * Component thông tin bổ sung cho sản phẩm
 * */
-const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
+const DescriptionProduct: React.FC<{ productId: number }> = ({ productId }) => {
     const [value, setValue] = React.useState(0);
     const productDetail = useSelector((state: RootState) => state.productDetail);
     const product = productDetail.find(i => i.product.id === productId);
     const productDescriptions = product && product.productDescriptions;
+
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
     // Show mô tả sản phẩm
     const showDescriptionTab = () => {
         return (
@@ -214,7 +176,7 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
     }
     // Show Review
     const showReviewTab = () => {
-        const content = <Review productId={productId}/>;
+        const content = <Review productId={productId} />;
         return (
             <CustomTabPanel index={1} value={value}>
                 {content}
@@ -224,11 +186,11 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
 
 
     return (
-        <Box sx={{width: '100%', paddingX: 10}}>
-            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+        <Box sx={{ width: '100%', paddingX: 10 }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange}>
-                    <Tab key={0} label="MÔ TẢ"/>
-                    <Tab key={1} label="ĐÁNH GIÁ SẢN PHẨM"/>
+                    <Tab key={0} label="MÔ TẢ" />
+                    <Tab key={1} label="ĐÁNH GIÁ SẢN PHẨM" />
                 </Tabs>
             </Box>
             {showDescriptionTab()}
@@ -242,10 +204,11 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({productId}) => {
 * Similar product list
 * */
 const SimilarProductList = () => {
+    const data = hotProducts;
     return (
-        <Box sx={{my: 5}}>
-            <Typography sx={{fontWeight: 'bold'}}>SẢN PHẨM TƯƠNG TỰ</Typography>
-            <ProductList products={hotProducts}/>
+        <Box sx={{ my: 5 }}>
+            <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM TƯƠNG TỰ</Typography>
+            <ProductList products={data} />
         </Box>
     )
 }
@@ -271,17 +234,20 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
     )
 }
 
-const ProductDetail = (prop: { productId: number }) => {
-    const {productId} = prop;
-    const productDetails = useSelector((state: RootState) => state.productDetail);
-    const product = productDetails.find(p => productId === p.product.id);
+const ProductDetail = () => {
+    const {productId} =  useParams();
+    const { data, error, isLoading } = useGetProductByIdQuery(+productId);
+    const product = data;
+    // const { productId } = prop;
+    // const productDetail = useSelector((state: RootState) => state.productDetail);
+    // const product = productDetail.find(p => p.id === productId);
     return (
-        <Box sx={{mb: 10}}>
-            <BreadcrumbHeader/>
-            {product && <Detail productDetail={product}/>}
-            <ProductSection/>
-            <BreadcrumbFooter/>
-            <Outlet/>
+        <Box sx={{ mb: 10 }}>
+            <BreadcrumbHeader />
+            {product && <Detail product={product} />}
+            <ProductSection />
+            <BreadcrumbFooter />
+            <Outlet />
         </Box>
     )
 }
