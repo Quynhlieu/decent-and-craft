@@ -2,9 +2,8 @@ import {Box, Button, colors, Divider, Grid, Stack, Tab, Tabs, TextField, Typogra
 import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
-import {useDispatch, useSelector} from "react-redux";
-import { RootState } from "../app/store.ts";
-import React, {useState} from "react";
+import {useDispatch} from "react-redux";
+import React, {useEffect, useState} from "react";
 import { grey } from "@mui/material/colors";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -12,13 +11,12 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 import { hotProducts } from "../data/product.ts";
 import ProductList from "../components/ProductList.tsx";
 import Review from "../components/ProductDetail/Review.tsx";
-// import { IProductDetail } from "../features/productDetail/productDetailSlice.ts";
-import { Outlet, useParams } from "react-router-dom";
+import {Outlet, useNavigate, useParams} from "react-router-dom";
 import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import {CartItem,  cartUpdate} from "../features/cart/cartSlice.ts";
-import { useGetProductByIdQuery } from "../api/productApi.ts";
+import { useGetProductDetailByIdQuery } from "../api/productDetailApi.ts";
 import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
 import {toast} from "react-toastify";
 import {cartItemAdd} from "../features/cart/cartSlice.ts";
@@ -192,11 +190,12 @@ function CustomTabPanel(props: TabPanelProps) {
 /*
 * Component thông tin bổ sung cho sản phẩm
 * */
-const DescriptionProduct: React.FC<{ productId: number }> = ({ productId }) => {
+const DescriptionProduct =  (prop: {productDetail: IProductDetail}) => {
+    const {productDetail} = prop;
     const [value, setValue] = React.useState(0);
-    const productDetail = useSelector((state: RootState) => state.productDetail);
-    const product = productDetail.find(i => i.product.id === productId);
-    const productDescriptions = product && product.productDescriptions;
+    // const productDetail = useSelector((state: RootState) => state.productDetail);
+    // const product = productDetail.find(i => i.product.id === productId);
+    const productDescriptions = productDetail && productDetail.productBlog.content;
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -212,7 +211,7 @@ const DescriptionProduct: React.FC<{ productId: number }> = ({ productId }) => {
     }
     // Show Review
     const showReviewTab = () => {
-        const content = <Review productId={productId} />;
+        const content = <Review productId={productDetail.product.id} />;
         return (
             <CustomTabPanel index={1} value={value}>
                 {content}
@@ -252,6 +251,7 @@ const SimilarProductList = () => {
 // Chi tiet san pham
 const Detail = (prop: { productDetail: IProductDetail }) => {
     const {productDetail} = prop;
+    console.log(productDetail)
     return (
         <Box>
             <Grid container spacing={5}>
@@ -262,7 +262,7 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
                     <InformationProduct productDetail={productDetail}/>
                 </Grid>
                 <Grid item xs={12}>
-                    <DescriptionProduct productId={productDetail.product.id}/>
+                    <DescriptionProduct productDetail={productDetail}/>
                 </Grid>
             </Grid>
             <SimilarProductList/>
@@ -272,7 +272,13 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
 
 const ProductDetail = () => {
     const {productId} =  useParams();
-    const { data, error, isLoading } = useGetProductByIdQuery(+productId);
+    const navigate =useNavigate();
+    useEffect(() => {
+        if (!productId) {
+            navigate("/");
+        }
+    }, [productId, navigate]);
+    const { data, error, isLoading } = useGetProductDetailByIdQuery(Number(productId));
     const productDetail = data;
     // const { productId } = prop;
     // const productDetail = useSelector((state: RootState) => state.productDetail);

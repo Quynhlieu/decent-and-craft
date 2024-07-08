@@ -1,7 +1,5 @@
 import {productDetails} from "../../data/productDetail.ts"
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Image, IReview} from "../../interfaces/IProductDescription.ts";
-import {Product} from "../../interfaces/Product.ts";
 
 export interface IProductDetail {
     id: number;
@@ -33,6 +31,13 @@ interface Product {
     origin: number;
     status: string;
     unitInStock: number;
+}
+interface IReview {
+    createdDate: string;
+    modifiedDate: string;
+    id: number;
+    comments: string;
+    rating: number;
 }
 
 const initialState: IProductDetail[] = productDetails;// danh sach san pham
