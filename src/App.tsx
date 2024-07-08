@@ -12,6 +12,9 @@ import WishList from './pages/WishList.tsx';
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import Blogs from './pages/Blogs.tsx';
 import BlogDetail from './components/BlogDetail.tsx';
+import AdminLayout from './components/Admin/Page/AdminLayout.tsx';
+import ProductManager from './components/Admin/Page/ProductManager.tsx';
+import CreateProduct from './components/Admin/Page/CreateProduct.tsx';
 const theme = createTheme({
   palette: {
     primary: {
@@ -32,12 +35,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <ScrollToTop/>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="user" element={<User />} />
-            <Route path="product-detail" element={<ProductDetail productId={1}/>}>
+            <Route path="product" >
+              <Route path=":productId" element={<ProductDetail />} />
               {/* <Route path=":review-form" element={<ReviewForm />} /> */}
             </Route>
             <Route path="login" element={<Login />} />
@@ -49,6 +53,12 @@ function App() {
               <Route path=":blogId" element={<BlogDetail />} />
               <Route index element={<Blogs />} />
               <Route path="category/:blogCategoryId" element={<Blogs />} />
+            </Route>
+          </Route>
+          <Route path="/admin" element={<AdminLayout />} >
+            <Route path='products'  >
+              <Route index element={<ProductManager />} />
+              <Route path="create" element={<CreateProduct/>} />
             </Route>
           </Route>
         </Routes>

@@ -25,7 +25,7 @@ const ProductCard = (product: { data: Product }) => {
     return (
         <Card sx={{ minWidth: 280 }}>
             <CardActionArea onClick={() => {
-                navigate("product-detail");
+                navigate(`product/${id}`);
             }}>
                 <CardMedia
                     component="img"
