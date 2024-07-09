@@ -1,5 +1,5 @@
 
-enum UserStatus {
+export enum UserStatus {
     HOAT_DONG,
     BI_KHOA
 }

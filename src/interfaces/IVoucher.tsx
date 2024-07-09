@@ -1,4 +1,5 @@
-import {IOrder} from "./IOrder.ts";
+import IOrder from "./IOrder.ts";
+
 
 export interface IVoucher {
     id: number;

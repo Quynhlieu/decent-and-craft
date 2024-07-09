@@ -7,7 +7,6 @@ import {
     ListItemText,
     Typography,
     Button,
-    FormControl, FormLabel, RadioGroup, Radio
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -17,50 +16,66 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import React, {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import {useDispatch} from "react-redux";
-import { updateInfo} from "../../features/user/userSlice.ts";
-import IUser , { UserStatus } from "../../interfaces/IUser.ts";
+import React, {useEffect, useState} from "react";
+import {useUpdateInfoUserMutation} from "../../api/userApi.ts";
+import {OrbitProgress} from "react-loading-indicators";
+import {RootState} from "../../app/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {updateInfo} from "../../features/user/userSlice.ts";
 
 const UserProfile: React.FC  = () => {
     const [open, setOpen] = React.useState<boolean>(false);
-
-    const handleClickOpen = () => {
+    const[phone,setPhone] = useState<string>("");
+    const[fullName,setFullName] = useState<string>("");
+    const user = useSelector((state: RootState) => state.user.user);
+    const [userUpdate, { isLoading,data, isError, error}] = useUpdateInfoUserMutation();
+    const dispatch  = useDispatch();
+    const handleClickOpen =   () => {
+        console.log(user);
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = async() => {
         setOpen(false);
     };
-    const dispatch = useDispatch();
-    const userFromSessionStorage = sessionStorage.getItem('user');
-    const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
-    // console.log(sessionStorage.getItem("user"))
-    const navigate = useNavigate();
-    useEffect(()=>{
-        if(!user?.id){
-            navigate("/login");
-        }
-    },[]);
 
-    const handleFormSubmit =  (event: React.FormEvent<HTMLFormElement>) => {
+
+    const handleFormSubmit =  async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const updatedUser: IUser = {
-            ...user,
-            id: user?.id ?? 0,
-            fullName: formData.get('fullName') as string,
-            email: formData.get('email') as string,
-            phone: formData.get('phone') as string,
-            password: user?.password ?? '',
-            status: user?.status ?? UserStatus.HOAT_DONG,
+        const userInfo = {
+            userId: user?.id ?? 0,
+            fullName: fullName,
+            phone: phone,
         };
-        console.log(updatedUser);
-        dispatch(updateInfo(updatedUser));
+        try {
+            await userUpdate(userInfo);
+        }
+        catch (e) {
+            console.error('Update error:', error);
+        }
         setOpen(false);
     };
+    useEffect(() => {
+        if (user) {
+            setFullName(user.fullName);
+            setPhone(user.phone ?? "");
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (data) {
+            sessionStorage.setItem('user', JSON.stringify(data));
+            dispatch(updateInfo(data));
+        }
+    }, [data, dispatch]);
+    let displayError: string | undefined;
+    if (isError) {
+        if ('status' in error) {
+            displayError = 'Cập nhật không thành công !';
+        } else {
+            displayError = error.message;
+        }
+    }
     return (
         <Box  sx={{ minHeight: 320, width: 800}}>
             <Typography variant='h3'  sx={{
@@ -70,6 +85,10 @@ const UserProfile: React.FC  = () => {
             }}>
                 Thông tin tài khoản
             </Typography>
+            {isError &&
+                    <Typography color="error" sx={{ m: 1 }}>
+                        {displayError}
+                    </Typography>}
             <List
                 sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}
                 aria-label="contacts"
@@ -80,7 +99,7 @@ const UserProfile: React.FC  = () => {
                             <AccountCircleIcon />
                         </ListItemIcon>
                         <ListItemText primary="Số điện thoại:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.phone || 'N/A'} />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.phone || 'Chưa có số điện thoại'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -89,7 +108,7 @@ const UserProfile: React.FC  = () => {
                             <AssignmentIcon />
                         </ListItemIcon>
                         <ListItemText primary="Email:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.email} />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.email || 'Chưa có email'} />
                     </ListItemButton>
                 </ListItem>
                 {/*<ListItem disablePadding>*/}
@@ -137,21 +156,11 @@ const UserProfile: React.FC  = () => {
                             label="Họ và tên"
                             type="fullName"
                             fullWidth
+                            value={fullName}
                             variant="standard"
-                            defaultValue={user?.fullName}
-                        />
-
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="email"
-                            name="email"
-                            label="Địa chỉ Email"
-                            type="email"
-                            fullWidth
-                            variant="standard"
-                            defaultValue={user?.email}
+                            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+                                setFullName(event.target.value);
+                            }}
                         />
                         <TextField
                             autoFocus
@@ -160,20 +169,12 @@ const UserProfile: React.FC  = () => {
                             id="phone"
                             name="phone"
                             label="Số điện thoại"
-                            defaultValue={user?.phone}
+                            value={phone}
+                            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+                                setPhone(event.target.value);
+                            }}
                             fullWidth
                             variant="standard"/>
-                        <FormControl sx={{mt: 2}}>
-                            <FormLabel id="demo-radio-buttons-group-label">Giới tính</FormLabel>
-                            <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue="female"
-                                name="radio-buttons-group"
-                            >
-                                <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                                <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                            </RadioGroup>
-                        </FormControl>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
@@ -181,6 +182,23 @@ const UserProfile: React.FC  = () => {
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
+            {isLoading && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(5px)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                }}>
+                    <OrbitProgress color="color.primary.main" size="medium" text="" textColor="" />
+                </Box>
+            )}
         </Box>
     )
 }

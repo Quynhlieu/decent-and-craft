@@ -103,7 +103,7 @@ export default function Login() {
     let displayError: string | undefined;
     if (isError) {
         if ('status' in error) {
-            displayError = 'An error occurred while registering.';
+            displayError = 'Sai email hoặc password !';
         } else {
             displayError = error.message;
         }

@@ -9,7 +9,8 @@ import PasswordIcon from '@mui/icons-material/Password';
 import '../../assets/user.css';
 import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import IUser from "../../interfaces/IUser.ts";
+import {RootState} from "../../app/store.ts";
+import {useSelector} from "react-redux";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
@@ -20,11 +21,10 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile');
     const navigate = useNavigate();
 
-    const userFromSessionStorage = sessionStorage.getItem('user');
-    const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
+    const user = useSelector((state: RootState) => state.user.user);
     useEffect(() => {
         onComponentChange(selectedComponent);
-    }, [selectedComponent, onComponentChange]);
+    }, [selectedComponent, onComponentChange, user]);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
