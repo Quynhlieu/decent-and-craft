@@ -1,8 +1,7 @@
-// ReviewItem
 import { Avatar, Box, Button, Grid, IconButton, Rating, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import React, { useEffect, useRef, useState} from "react";
-import {  reviewAdd } from "../../features/productDetail/productDetailSlice.ts";
+import {  reviewAdd, reviewsLoad } from "../../features/productDetail/productDetailSlice.ts";
 import { IReview } from "../../interfaces/IProductDescription.ts";
 import MyPagination from "./MyPagination.tsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +13,7 @@ import { Customer } from "../../interfaces/Customer.ts";
 import { setContents, setIsShow, setRating } from "../../features/review/reviewSlice.ts";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useGetAllReviewsByProductIdQuery } from "../../api/reviewApi.ts";
 
 export const ReviewItem = (prop: { reviewData: IReview }) => {
     const { reviewData } = prop;
@@ -55,29 +55,27 @@ export const ReviewItem = (prop: { reviewData: IReview }) => {
 
 // Review form
 export const ReviewForm = () => {
-    const reviewFormState = useSelector((state: RootState) => state.review);
-    const reviewListState = useSelector((state: RootState) => state.productDetail);
-    const dispatch = useDispatch();
+    const productDetail = useSelector((state: RootState) => state.productDetail);
+    const { data: user, error, isLoading } = use;    const dispatch = useDispatch();
     // Bat loi form
     const [error, setError] = useState<string | null>(null);
-    const customer: Customer | undefined = findCustomerById(2);
     const formRef = useRef<HTMLDivElement>(null);
 
 
     const handleSubmit = (event: React.FormEvent<HTMLInputElement>) => {
         event.preventDefault();
-        if (!customer) {
-            setError("Vui lòng đăng nhập tài khoản!");
-            toast.error(error,
-                { autoClose: 1000, position: "top-right" });
-            return;
-        }
-        else if (reviewFormState.rating == 0) {
-            setError("Vui lòng thực hiện đánh giá sao!");
-            toast.error(error,
-                { autoClose: 1000, position: "top-right" });
-            return;
-        }
+        // if (!customer) {
+        //     setError("Vui lòng đăng nhập tài khoản!");
+        //     toast.error(error,
+        //         { autoClose: 1000, position: "top-right" });
+        //     return;
+        // }
+        // else if (reviewFormState.rating == 0) {
+        //     setError("Vui lòng thực hiện đánh giá sao!");
+        //     toast.error(error,
+        //         { autoClose: 1000, position: "top-right" });
+        //     return;
+        // }
         // IReview
         const newReview: IReview = {
             customer,
@@ -129,10 +127,13 @@ export const ReviewForm = () => {
     );
 };
 
-const RatingOverview = (prop: { productId: number, handleFilter: unknown }) => {
+export const RatingOverview = (prop: { productId: number, handleFilter: unknown }) => {
     const { productId, handleFilter } = prop;
     const productDetail = useSelector((state: RootState) => state.productDetail);
-    const product = productDetail.find(i => i.product.id === productId);
+    const product = productDetail.productDetail?.product;
+    const reviewList = productDetail.reviews || null;
+    console.log("DANH SACH REVIEW: "+reviewList);
+    
 
     const calculateAverageRating = (reviews: IReview[]) => {
         const totalRatings = reviews.reduce((total, item) => {
@@ -145,11 +146,11 @@ const RatingOverview = (prop: { productId: number, handleFilter: unknown }) => {
         return numberOfReviews > 0 ? (totalRatings / numberOfReviews).toFixed(1) : '0.0';
     };
 
-    const [rating, setRating] = useState(calculateAverageRating((product) && product.reviewList || []));
+    const [rating, setRating] = useState(calculateAverageRating((reviewList)));
     const [selectedRating, setSelectedRating] = useState<number | null>(0);
 
     useEffect(() => {
-        setRating(calculateAverageRating((product) && product.reviewList || []));
+        setRating(calculateAverageRating(reviewList || []));
     }, [product, productDetail, productId]);
 
     const handleRatingChange = (_event: React.MouseEvent<HTMLElement>, newRating: number | null) => {
@@ -158,7 +159,7 @@ const RatingOverview = (prop: { productId: number, handleFilter: unknown }) => {
     };
 
     const getQuantityReview = (rating: number): number => {
-        const reviews: (IReview[] | undefined) = product?.reviewList.filter(r => r.rating === rating);
+        const reviews: (IReview[] | undefined) = reviewList.filter(r => r.rating === rating);
         if(reviews) return reviews.length;
         return 0;
     }
@@ -233,9 +234,18 @@ const RatingOverview = (prop: { productId: number, handleFilter: unknown }) => {
 
 const Review = (prop: { productId: number }) => {
     const { productId } = prop;
-    const productDetail = useSelector((state: RootState) => state.productDetail);
-    const product = productDetail.find(i => i.product.id === productId);
-    const reviewList = product && product.reviewList;
+    // Lấy danh sách review từ server
+    const dispatch = useDispatch();
+
+    // Lấy danh sách review từ server
+    const { data: reviewList, error, isLoading } = useGetAllReviewsByProductIdQuery(productId);
+    // thêm vào slice
+    useEffect(() => {
+        if (reviewList) {
+            dispatch(reviewsLoad(reviewList));
+        }
+    }, [reviewList, dispatch]);
+
     const [filterReviewList, setFilterReviewList] = useState<IReview[]>(reviewList ? reviewList : []);
     useEffect(() => {
         (reviewList && setFilterReviewList(reviewList));
