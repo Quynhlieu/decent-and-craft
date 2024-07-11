@@ -195,7 +195,7 @@ const BlogCarousel = () => {
                         setShow(false);
                     }}  >
                         <Slider   {...setting} >
-                            {blogs && blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.date} show={show} title={blog.title} />)}
+                            {blogs && blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
                         </Slider>
                     </Box>
                 </Grid>
