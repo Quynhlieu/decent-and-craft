@@ -1,7 +1,7 @@
 import { Box, Grid, Stack, Typography, TypographyProps } from '@mui/material'
 import TitleBar from './TitleBar'
 import { blogs } from "../data/blogs";
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import Slider from 'react-slick';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -189,7 +189,7 @@ const BlogCarousel = () => {
                     setShow(false);
                 }}  >
                     <Slider   {...setting} >
-                        {blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumb} date={blog.date} show={show} title={blog.title} />)}
+                        {blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
                     </Slider>
                 </Box>
             </Grid>
@@ -198,7 +198,7 @@ const BlogCarousel = () => {
                 <Box>
                     <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
                     <Stack sx={{ ml: 2 }} spacing={1}>
-                        {blogs.map(blog => <BlogItem key={blog.author} date={blog.date} title={blog.title} categories={[]} />)}
+                        {blogs.map(blog => <BlogItem key={blog.id}  date={blog.createdDate} title={blog.title} />)}
                     </Stack>
                 </Box>
             </Grid>

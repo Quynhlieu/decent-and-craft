@@ -1,11 +1,11 @@
-import {Box, Button, Paper, Stack, Typography} from '@mui/material'
-import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../../app/store'
-import {VNDNumericFormat} from '../ProductCard'
-import {CartItem, cartItemRemove, getTotalPrice} from '../../features/cart/cartSlice'
+import { Box, Button, Paper, Stack, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../app/store'
+import { VNDNumericFormat } from '../ProductCard'
+import { CartItem, cartItemRemove, getTotalPrice } from '../../features/cart/cartSlice'
 import CancelIcon from '@mui/icons-material/Cancel';
-import {toast} from 'react-toastify'
-import {useNavigate} from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 type CartItemListType = {
     cartItems: CartItem[];
@@ -50,7 +50,7 @@ const CartItemList = (prop: CartItemListType) => {
     )
 
 }
-const CartContainer = (prop: { showCart: boolean, onMouseOut: never }) => {
+const CartContainer = (prop: { showCart: boolean, onMouseOut: () => void }) => {
     const { showCart } = prop;
     const cart = useSelector((state: RootState) => state.cart)
     const navigate = useNavigate();
