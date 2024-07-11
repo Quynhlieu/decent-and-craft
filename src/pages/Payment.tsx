@@ -19,7 +19,7 @@ const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
                 <CardMedia
                     component="img"
                     sx={{ width: 50, height: 50, objectFit: 'cover' }}
-                    image={detail.product.thumb}
+                    image={detail.product.thumbnail}
                     alt={detail.product.name}
                 />
             </Badge>
@@ -75,7 +75,7 @@ const Payment: React.FC = () => {
                                 Đơn hàng ({orders.length} sản phẩm)
                             </Typography>
                             {orders.map((order, index) => (
-                                <CardProductList key={index} orderDetail={order.orderDetail} />
+                                <CardProductList key={index} orderDetail={order.orderDetails} />
                             ))}
 
                             <Divider orientation="horizontal" flexItem />

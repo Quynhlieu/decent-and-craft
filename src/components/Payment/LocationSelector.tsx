@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Box, FormControl, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
@@ -20,7 +20,19 @@ interface City {
     Districts: District[];
 }
 
-const LocationSelector: React.FC = () => {
+interface LocationSelectorProps {
+    province: (name: string) => void;
+    district: (name: string) => void;
+    ward: (name: string) => void;
+    defaultValues?: {
+        province: string;
+        district: string;
+        ward: string;
+    };
+}
+
+
+const LocationSelector: React.FC<LocationSelectorProps> = ({province, district, ward, defaultValues}) => {
     const [cities, setCities] = useState<City[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
     const [wards, setWards] = useState<Ward[]>([]);
@@ -28,16 +40,35 @@ const LocationSelector: React.FC = () => {
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
     const [selectedWard, setSelectedWard] = useState<string>('');
 
+
     useEffect(() => {
         axios.get<City[]>("https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json")
             .then(response => {
                 setCities(response.data);
+               renderDefaultAddress(response.data);
             })
             .catch(error => {
                 console.error("Có lỗi xảy ra khi tải dữ liệu:", error);
             });
-    }, []);
 
+    }, []);
+    const renderDefaultAddress = (data: City[]) => {
+       if(data){
+           const optionalCity =data.find(c => c.Name.toLowerCase() === defaultValues?.province.toLowerCase());
+           const cityId = optionalCity? optionalCity.Id:"";
+           const optionalDistrict = optionalCity?.Districts.find(d=>d.Name.toLowerCase()===defaultValues?.district.toLowerCase());
+           const districtId = optionalDistrict? optionalDistrict.Id:"";
+           const optionalWard = optionalDistrict?.Wards.find(w=>w.Name.toLowerCase()===defaultValues?.ward.toLowerCase());
+           const wardId = optionalWard? optionalWard.Id:"";
+           setSelectedCity(cityId);
+           setSelectedDistrict(districtId);
+           setSelectedWard(wardId);
+           setDistricts(optionalCity?.Districts || []);
+           setWards(optionalDistrict?.Wards || []);
+
+       }
+
+    };
     const handleCityChange = (e: SelectChangeEvent<string>) => {
         const cityId = e.target.value;
         setSelectedCity(cityId);
@@ -47,7 +78,9 @@ const LocationSelector: React.FC = () => {
         if (cityId) {
             const selectedCityData = cities.find(city => city.Id === cityId);
             setDistricts(selectedCityData?.Districts || []);
+            province(selectedCityData?.Name || "");
         }
+
     };
 
     const handleDistrictChange = (e: SelectChangeEvent<string>) => {
@@ -58,14 +91,16 @@ const LocationSelector: React.FC = () => {
         if (districtId) {
             const selectedDistrictData = districts.find(district => district.Id === districtId);
             setWards(selectedDistrictData?.Wards || []);
+            district(selectedDistrictData?.Name || "");
         }
     };
 
     const handleWardChange = (e: SelectChangeEvent<string>) => {
         const wardId = e.target.value;
         setSelectedWard(wardId);
+        const selectedWardData = wards.find(ward => ward.Id === wardId);
+        ward(selectedWardData?.Name || "")
     };
-
 
     return (
         <Box>
@@ -77,6 +112,7 @@ const LocationSelector: React.FC = () => {
                     required
                     label="Chọn tỉnh thành"
                     onChange={handleCityChange}
+
                 >
                     <MenuItem value=""><em>Chọn tỉnh thành</em></MenuItem>
                     {cities.map(city => (
