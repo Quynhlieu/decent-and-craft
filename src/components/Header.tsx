@@ -10,7 +10,6 @@ import { getCount, getTotalPrice } from '../features/cart/cartSlice';
 import { VNDNumericFormat } from './ProductCard';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CartContainer from './Cart/CartContainer';
-import IUser from "../interfaces/IUser.ts";
 interface NavItemProps {
     active?: boolean,
     children: React.ReactNode
@@ -55,12 +54,12 @@ const NavBar = () => {
     )
 }
 
-const userFromSessionStorage = sessionStorage.getItem('user');
-const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
+
 
 const Header = () => {
     const cart = useSelector((state: RootState) => state.cart);
     const wishlist = useSelector((state: RootState) => state.wishlist);
+    const user = useSelector((state: RootState) => state.user.user);
     const [showCart, setShowCart] = useState<boolean>(false);
 
     return (
@@ -149,7 +148,7 @@ const Header = () => {
                             <VNDNumericFormat price={getTotalPrice(cart)} />
                             <CartContainer onMouseOut={() => {
                                 setShowCart(false);
-                            }} showCart={showCart} />
+                            }} showCart={showCart}/>
                         </Button>
                     </Stack>
                 </Toolbar>

@@ -1,21 +1,37 @@
 import React from "react";
-import Order from "../../interfaces/IOrder";
+import  {OrderStatus} from "../../interfaces/IOrder";
 import Divider from "@mui/material/Divider";
 import HorizontalNonLinearStepper from "./HorizontalNonLinearStepper.tsx";
 import AddressAndInfoOrder from "./AddressAndInfoOrder.tsx";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Box, Stack, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import ListProductOfOrder from "./ListProductOfOrder.tsx";
+import Address from "../../interfaces/IAddress.ts";
+import Voucher from "../../interfaces/IVoucher.ts";
+import IUser from "../../interfaces/IUser.ts";
+import OrderDetail from "../../interfaces/IOrderDetail.ts";
 
-
+interface DataType {
+    createdDate: string;
+    id: number;
+    address: Address;
+    status: OrderStatus;
+    voucher?: Voucher;
+    user: IUser;
+    orderDetails: OrderDetail[];
+    shipment: string;
+    notice: string;
+    shippingFee: number;
+    totalPrice: number;
+}
 interface MyOrderDetailProps {
     open: boolean;
     onClose: () => void;
-    order: Order | null;
+    order: DataType | null;
 }
 
 
-const ProductCodeAndStatus: React.FC<{ order: Order | null }> = ({ order }) => {
+const ProductCodeAndStatus: React.FC<{ order: DataType | null }> = ({ order }) => {
     return (
         <Stack direction="row" spacing={1} alignItems="center" sx={{ paddingRight: 3 }}>
             <Typography sx={{ backgroundColor: "#f3f0f0" }} component="div">
@@ -29,7 +45,7 @@ const ProductCodeAndStatus: React.FC<{ order: Order | null }> = ({ order }) => {
     );
 };
 
-const BackAndStatus: React.FC<{ order: Order | null }> = ({ order }) => {
+const BackAndStatus: React.FC<{ order: DataType | null }> = ({ order }) => {
     return (
         <Box sx={{ width: "98.5%", backgroundColor: "#f3f0f0", paddingY: 2, borderRadius: '8px' }}>
             <Stack direction="row"  justifyContent="space-between">

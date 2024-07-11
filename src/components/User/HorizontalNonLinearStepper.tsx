@@ -5,14 +5,14 @@ import Step from '@mui/material/Step';
 import StepLabel, { StepLabelProps } from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import Order from "../../interfaces/IOrder.ts";
+import Order, {OrderStatus} from "../../interfaces/IOrder.ts";
 
 interface HorizontalLineerStepperProps{
     order: Order | null;
 }
 const steps: string[] = [
     'Đơn hàng đã đặt',
-    'Đơn hàng đã thanh toán',
+    'Đơn hàng đang chờ vận chuyển',
     'Đơn hàng đã giao cho đơn vị vận chuyển',
     'Đã nhận được hàng',
     'Đánh giá'
@@ -39,13 +39,16 @@ const HorizontalLinearStepper: React.FC<HorizontalLineerStepperProps> = ({ order
             return 0;
         }
         switch (order.status) {
-            case 'Đã thanh toán':
+            case OrderStatus.CHO_VAN_CHUYEN:
                 return 1;
-            case 'Đã giao cho đơn vị vận chuyển':
+            case OrderStatus.DA_HUY:
+                return 0;
+            case OrderStatus.DANG_VAN_CHUYEN:
                 return 2;
-            case 'Đã nhận được hàng':
+            case OrderStatus.HOAN_THANH:
                 return 3;
-            case 'Đánh giá':
+            case OrderStatus.HOAN_TIEN:
+            case OrderStatus.TRA_HANG:
                 return 4;
             default:
                 return 0;

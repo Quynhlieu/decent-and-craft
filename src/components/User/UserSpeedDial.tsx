@@ -10,7 +10,8 @@ import '../../assets/user.css';
 import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import {RootState} from "../../app/store.ts";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../../features/user/userSlice.ts";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
@@ -20,7 +21,7 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile');
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user.user);
     useEffect(() => {
         onComponentChange(selectedComponent);
@@ -34,7 +35,7 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
         setSelectedComponent(componentName);
     };
     const handleLogout = () => {
-        sessionStorage.removeItem("user");
+        dispatch(logout());
         navigate("/login");
     };
     return (

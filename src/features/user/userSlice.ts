@@ -20,8 +20,12 @@ const userSlice = createSlice({
             state.user = { ...state.user, ...action.payload };
             sessionStorage.setItem('user', JSON.stringify(state.user));
         },
+        logout(state) {
+            state.user = undefined;
+            sessionStorage.removeItem('user');
+        },
     },
 });
 
 export default userSlice.reducer;
-export const { updateInfo } = userSlice.actions;
+export const { updateInfo, logout } = userSlice.actions;

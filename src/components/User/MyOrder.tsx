@@ -1,8 +1,40 @@
 import {Box, Typography} from "@mui/material";
 import LabTabs from "./LabTabs.tsx";
+import {useGetOrderListQuery} from "../../api/orderApi.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../app/store.ts";
+import {useEffect} from "react";
+import {toast} from "react-toastify";
+import {OrbitProgress} from "react-loading-indicators";
+import {OrderStatus} from "../../interfaces/IOrder.ts";
+import Address from "../../interfaces/IAddress.ts";
+import Voucher from "../../interfaces/IVoucher.ts";
+import IUser from "../../interfaces/IUser.ts";
+import OrderDetail from "../../interfaces/IOrderDetail.ts";
 
+interface DataType {
+    createdDate: string;
+    id: number;
+    address: Address;
+    status: OrderStatus;
+    voucher?: Voucher;
+    user: IUser;
+    orderDetails: OrderDetail[];
+    shipment: string;
+    notice: string;
+    shippingFee: number;
+    totalPrice: number;
+}
 
 const MyOrder = () => {
+    const user = useSelector((state: RootState) => state.user.user);
+    const {data, isLoading, error} = useGetOrderListQuery(user?.id ?? 0);
+
+    useEffect(() => {
+        if (error) {
+            toast.error("Đã xảy ra lỗi khi tải đơn hàng. Vui lòng thử lại sau.");
+        }
+    }, [error]);
     return (
         <Box sx={{ height: 500, width: 800 }}>
             <Typography variant='h3' sx={{
@@ -12,8 +44,25 @@ const MyOrder = () => {
             }}>
                 Đơn hàng của bạn
             </Typography>
-            <LabTabs />
+            <LabTabs data = {data as DataType[]}/>
 
+            {isLoading && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(5px)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                }}>
+                    <OrbitProgress color="color.primary.main" size="medium" text="" textColor="" />
+                </Box>
+            )}
         </Box>
 
     );

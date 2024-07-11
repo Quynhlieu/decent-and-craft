@@ -1,22 +1,26 @@
-import IAddress from "./IAddress";
+
+import Voucher from "./IVoucher.ts";
+import Address from "./IAddress";
+import OrderDetail from "./IOrderDetail.ts";
 import IUser from "./IUser.ts";
-import {IVoucher} from "./IVoucher.tsx";
 
 export enum OrderStatus {
-    CHO_THANH_TOAN,
-    DANG_VAN_CHUYEN,
-    HOAN_THANH,
-    TRA_HANG,
-    HOAN_TIEN,
-    DA_HUY
+    CHO_VAN_CHUYEN = 'CHO_VAN_CHUYEN',
+    DANG_VAN_CHUYEN = 'DANG_VAN_CHUYEN',
+    HOAN_THANH = 'HOAN_THANH',
+    DA_HUY = 'DA_HUY',
+    TRA_HANG = 'TRA_HANG',
+    HOAN_TIEN = 'HOAN_TIEN',
 }
 
 export default interface IOrder {
     id: number;
-    address: IAddress;
+    address: Address;
     status: OrderStatus;
-    voucher: IVoucher;
+    voucher?: Voucher;
     user: IUser;
+    orderDetails: OrderDetail[];
+    shipment: string;
     notice: string;
     shippingFee: number;
     totalPrice: number;

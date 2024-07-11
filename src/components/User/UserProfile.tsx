@@ -22,12 +22,15 @@ import {OrbitProgress} from "react-loading-indicators";
 import {RootState} from "../../app/store.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {updateInfo} from "../../features/user/userSlice.ts";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import {useGetAddressListQuery} from "../../api/addressApi.ts";
 
 const UserProfile: React.FC  = () => {
     const [open, setOpen] = React.useState<boolean>(false);
     const[phone,setPhone] = useState<string>("");
     const[fullName,setFullName] = useState<string>("");
     const user = useSelector((state: RootState) => state.user.user);
+    const {data : addressList} = useGetAddressListQuery(user?.id ?? 0);
     const [userUpdate, { isLoading,data, isError, error}] = useUpdateInfoUserMutation();
     const dispatch  = useDispatch();
     const handleClickOpen =   () => {
@@ -76,6 +79,11 @@ const UserProfile: React.FC  = () => {
             displayError = error.message;
         }
     }
+
+    const defaultAddress = addressList && (addressList.find((addr) => addr.defaultAddress) || addressList[0]);
+    const defaultAddressString = defaultAddress
+        ? `${defaultAddress.description}, ${defaultAddress.ward}, ${defaultAddress.district}, ${defaultAddress.province}`
+        : "Chưa có địa chỉ";
     return (
         <Box  sx={{ minHeight: 320, width: 800}}>
             <Typography variant='h3'  sx={{
@@ -111,22 +119,22 @@ const UserProfile: React.FC  = () => {
                         <ListItemText sx={{ textAlign: 'right' }}  primary={user?.email || 'Chưa có email'} />
                     </ListItemButton>
                 </ListItem>
-                {/*<ListItem disablePadding>*/}
-                {/*    <ListItemButton>*/}
-                {/*        <ListItemIcon>*/}
-                {/*            <LocationOnIcon />*/}
-                {/*        </ListItemIcon>*/}
-                {/*        <ListItemText primary="Địa chỉ:" />*/}
-                {/*        <ListItemText sx={{ textAlign: 'right' }} primary={user?.address && user.address.length > 0 ? user.address[0].description : 'N/A'} />*/}
-                {/*    </ListItemButton>*/}
-                {/*</ListItem>*/}
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <LocationOnIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Địa chỉ:" />
+                        <ListItemText sx={{ textAlign: 'right' }} primary= {defaultAddressString || "Không có địa chỉ"} />
+                    </ListItemButton>
+                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
                             <PasswordIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Password:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="********" />
+                        <ListItemText primary="Trạng thái:" />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.status ||""} />
                     </ListItemButton>
                 </ListItem>
 

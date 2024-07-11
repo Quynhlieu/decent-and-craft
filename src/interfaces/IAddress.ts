@@ -8,7 +8,7 @@ export default interface Address{
     district: string;
     ward: string;
     description: string;
-    isDefaultAddress: boolean;
+    defaultAddress: boolean;
     fullName: string;
     phoneNumber: string;
     user: IUser;

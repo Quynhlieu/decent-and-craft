@@ -23,9 +23,11 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import {useLoginMutation} from "../api/userApi.ts";
 import {OrbitProgress} from "react-loading-indicators";
+import {updateInfo} from "../features/user/userSlice.ts";
+import {useDispatch} from "react-redux";
 // TODO remove, this demo shouldn't need to reset the theme.
 
-const FacebookGoogleBtns=()=>{
+const FacebookGoogleBtns = () => {
     const handleFacebookLogin = () => {
         console.log('Logging in with Facebook');
     };
@@ -78,14 +80,14 @@ export default function Login() {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const[email,setEmail] = useState<string>("");
-    const[password,setPassword] = useState<string>("");
-    const [loginUser, { data, isLoading,isError, error }] = useLoginMutation();
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [loginUser, {data, isLoading, isError, error}] = useLoginMutation();
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const loginData = { email, password };
+        const loginData = {email, password};
         try {
             await loginUser(loginData).unwrap();
         } catch (error) {
@@ -96,6 +98,7 @@ export default function Login() {
     useEffect(() => {
         if (data) {
             sessionStorage.setItem('user', JSON.stringify(data));
+            dispatch(updateInfo(data));
             navigate('/user');
         }
     }, [data, navigate]);
@@ -122,12 +125,12 @@ export default function Login() {
                 <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
                     <LockOutlinedIcon/>
                 </Avatar>
-                <Typography  component="h1" variant="h5">
+                <Typography component="h1" variant="h5">
                     Đăng nhập
                 </Typography>
-                    <Typography color="error">
-                       {displayError}
-                    </Typography>
+                <Typography color="error">
+                    {displayError}
+                </Typography>
                 <Box component="form" onSubmit={handleLogin} sx={{mt: 1}}>
                     <TextField
                         margin="normal"
@@ -140,7 +143,7 @@ export default function Login() {
                         type="email"
                         autoFocus
                         value={email}
-                        onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             setEmail(event.target.value);
                         }}
                     />
@@ -162,7 +165,7 @@ export default function Login() {
                             }
                             label="Password"
                             value={password}
-                            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setPassword(event.target.value);
                             }}/>
                     </FormControl>
@@ -198,7 +201,7 @@ export default function Login() {
                     alignItems: 'center',
                     zIndex: 9999,
                 }}>
-                    <OrbitProgress color="primary.main" size="medium" text="" textColor="" />
+                    <OrbitProgress color="primary.main" size="medium" text="" textColor=""/>
                 </Box>
             )}
         </Container>
