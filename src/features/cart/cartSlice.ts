@@ -18,18 +18,18 @@ const cartSlice = createSlice({
         cartItemAdd(state, action: PayloadAction<CartItem>) {
             const isExist = state.some(i => i.product.id === action.payload.product.id)
             if (isExist) {
-                let currentCartItem = state.find(i => i.product.id === action.payload.product.id);
+                const currentCartItem = state.find(i => i.product.id === action.payload.product.id);
                 (currentCartItem) && currentCartItem.quantity++;
             } else {
                 state.push(action.payload)
             }
         },
-        cartItemRemove(state, action: PayloadAction<Number>) {
+        cartItemRemove(state, action: PayloadAction<number>) {
             return state.filter((cartItem => cartItem.product.id !== action.payload))
         },
         cartUpdate(state,
             action: PayloadAction<{ productId: number, value: number }>) {
-            let currentCartItem = state.find(i => i.product.id === action.payload.productId);
+            const currentCartItem = state.find(i => i.product.id === action.payload.productId);
             (currentCartItem)
                 && (currentCartItem.quantity + action.payload.value > 0)
                 && (currentCartItem.quantity += action.payload.value)

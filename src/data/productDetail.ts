@@ -3,10 +3,12 @@ import {IProductDetail} from "../features/productDetail/productDetailSlice.ts";
 
 export const productDetails: IProductDetail[] = [
     {
+    product: {
         id: 1,
         name: "Set Qua Protrail 113",
         price: 950000,
-        thumb: "https://fairycorner.vn/wp-content/uploads/2022/02/MG_9303-300x300.jpg",
+        thumb: "https://fairycorner.vn/wp-content/uploads/2022/02/MG_9303-300x300.jpg"
+    },
         discount: 0.2,
         images: [
             {
@@ -50,10 +52,12 @@ export const productDetails: IProductDetail[] = [
             "Cam kết không sử dụng thêm các chất để làm tăng cường độ tỏa hương. "
     },
     {
+    product: {
         id: 2,
         name: "Set Qua Protrail Sieu cap vip pro",
         price: 555555,
-        thumb: "https://fairycorner.vn/wp-content/uploads/2022/02/MG_9303-300x300.jpg",
+        thumb: "https://fairycorner.vn/wp-content/uploads/2022/02/MG_9303-300x300.jpg"
+    },
         discount: 0.2,
         images: [
             {

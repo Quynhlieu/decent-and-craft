@@ -1,5 +1,6 @@
-import { Box, Grid, Skeleton, Stack, Typography, TypographyProps } from '@mui/material'
+import { Box, Grid, Stack, Typography, TypographyProps } from '@mui/material'
 import TitleBar from './TitleBar'
+import { blogs } from "../data/blogs";
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import Slider from 'react-slick';
@@ -7,8 +8,14 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useState } from 'react';
 import BlogCategory from '../interfaces/IBlogCategory';
-import { useGetAllblogsQuery } from '../api/blogApi';
-import IBlog from '../interfaces/IBlog';
+type BlogItemProps = {
+    tag?: string,
+    title: string,
+    date: string,
+    thumb?: string,
+    show?: boolean,
+    categories?: BlogCategory[]
+}
 const PrevArrow = (props: any) => {
     const { className, style, onClick, show } = props;
     const commomStyle = {
@@ -92,7 +99,8 @@ const StyledLink = styled(Link)<any>(() => ({
     color: "black",
 
 }));
-const BlogItem = (props: BlogItemProps) => { const { title, date } = props;
+const BlogItem = (props: BlogItemProps) => {
+    const { title, date } = props;
     return (
         <Box>
             <StyledLink>
@@ -105,14 +113,6 @@ const BlogItem = (props: BlogItemProps) => { const { title, date } = props;
             </Typography>
         </Box >
     )
-}
-type BlogItemProps = {
-    tag?: string,
-    title: string,
-    date: string,
-    thumb?: string,
-    show?: boolean,
-    categories?: BlogCategory[]
 }
 const BlogCarouselItem = (props: BlogItemProps) => {
     const { title, date, show, thumb, categories } = props;
@@ -169,11 +169,6 @@ const BlogCarouselItem = (props: BlogItemProps) => {
 }
 const BlogCarousel = () => {
     const [show, setShow] = useState<boolean>(false);
-    const { data, isLoading, error } = useGetAllblogsQuery();
-    const blogs: IBlog[] | undefined = data;
-    console.log(blogs);
-
-
     let setting = {
         infinite: true,
         speed: 1000,
@@ -183,33 +178,31 @@ const BlogCarousel = () => {
         autoplaySpeed: 4000,
         prevArrow: <PrevArrow show={show} />,
         nextArrow: <NextArrow show={show} />,
+
     }
     return (
-        !isLoading ?
-            <Grid container sx={{ mt: 5 }
-            } spacing={2} >
-                <Grid item sx={{ mt: 12 }} xs={6} >
-                    <Box sx={{ height: "100%" }} onMouseOver={() => {
-                        setShow(true);
-                    }} onMouseOut={() => {
-                        setShow(false);
-                    }}  >
-                        <Slider   {...setting} >
-                            {blogs && blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
-                        </Slider>
-                    </Box>
-                </Grid>
-                <Grid item xs={6} >
-                    <Box>
-                        <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
-                        <Stack sx={{ ml: 2 }} spacing={1}>
-                            {blogs && blogs.map((blog:IBlog) => <BlogItem key={blog.id} date={blog.createdDate} title={blog.title}  />)}
-                        </Stack>
-                    </Box>
-                </Grid>
-            </Grid >
-            :
-            <h1>Loading</h1>
+        <Grid container sx={{ mt: 5 }} spacing={2}>
+            <Grid item sx={{ mt: 12 }} xs={6} >
+                <Box sx={{ height: "100%" }} onMouseOver={() => {
+                    setShow(true);
+                }} onMouseOut={() => {
+                    setShow(false);
+                }}  >
+                    <Slider   {...setting} >
+                        {blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
+                    </Slider>
+                </Box>
+            </Grid>
+            {/* <Divider orientation='vertical' flexItem /> */}
+            <Grid item xs={6} >
+                <Box>
+                    <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
+                    <Stack sx={{ ml: 2 }} spacing={1}>
+                        {blogs.map(blog => <BlogItem key={blog.id}  date={blog.createdDate} title={blog.title} />)}
+                    </Stack>
+                </Box>
+            </Grid>
+        </Grid>
     )
 }
 

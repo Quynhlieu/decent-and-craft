@@ -1,4 +1,4 @@
-import { Avatar, Box, Rating, Typography } from '@mui/material'
+import { Avatar, Box, Rating, Skeleton, Typography } from '@mui/material'
 import TitleBar from './TitleBar'
 import Slider from 'react-slick'
 import { NextArrow, PrevArrow } from './Carousel';
@@ -51,13 +51,15 @@ const Feedbacks = () => {
     return (
         <Box sx={{ mt: 5 }}>
             <TitleBar title='DECENT&CRAFT / KHÁCH HÀNG' />
-            <Box sx={{ mt: 3 }}>
-                <Slider  {...setting} >
-                    {feedbacks && feedbacks.map(f => {
-                        return <FeedbackItem key={f.id} feedback={f} />
-                    })}
-                </Slider>
-            </Box>
+            {isLoading ? <Skeleton width={100} height={50}/>
+            : <Box sx={{ mt: 2 }}>
+                    <Slider  {...setting} >
+                        {feedbacks && feedbacks.map(f => {
+                            return <FeedbackItem key={f.id} feedback={f} />
+                        })}
+                    </Slider>
+                </Box>
+            }
         </Box>
     )
 }

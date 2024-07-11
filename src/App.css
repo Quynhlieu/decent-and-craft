@@ -29,3 +29,6 @@ html{
 .slick-next:before{
     visibility: hidden;
 }
+html{
+    /*font-size: 80%;*/
+}

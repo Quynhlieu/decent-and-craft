@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import TitleBar from './TitleBar'
+import ProductList from './ProductList'
 import { useGetAllProductQuery } from '../api/productApi';
-import ProductList from './ProductList';
 
 const HotProductList = () => {
     const {data,isLoading}  = useGetAllProductQuery() 

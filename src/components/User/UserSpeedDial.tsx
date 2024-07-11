@@ -6,8 +6,12 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PasswordIcon from '@mui/icons-material/Password';
-import '../assets/user.css';
+import '../../assets/user.css';
 import {useNavigate} from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import {RootState} from "../../app/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../../features/user/userSlice.ts";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
@@ -15,11 +19,10 @@ interface UserSpeedDialProps {
 
 const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
-    const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile'); // Thay đổi ở đây
+    const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile');
     const navigate = useNavigate();
-    useEffect(() => {
-        onComponentChange(selectedComponent);
-    }, [selectedComponent, onComponentChange]);
+    const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user.user);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
@@ -28,11 +31,14 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const handleItemClick = (componentName: string) => {
         setSelectedComponent(componentName);
     };
-    console.log(sessionStorage.getItem("user"))
     const handleLogout = () => {
-        sessionStorage.removeItem("user");
-        navigate("/login");
+        dispatch(logout());
+        navigate("/");
     };
+
+    useEffect(() => {
+        onComponentChange(selectedComponent);
+    }, [selectedComponent, onComponentChange, user]);
     return (
         <Box className="UserProfile">
             <div className="left">
@@ -42,6 +48,11 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                 <Box className={isExpanded ? 'expanded' : 'collapsed'} sx={{ width: '100%', bgcolor: 'background.paper' }} style={{ display: isExpanded ? 'block' : 'none' }}>
                     <nav aria-label="main mailbox folders">
                         <List>
+                            <ListItem disablePadding sx={{my: 2}}>
+                                Xin chào
+                                <Typography sx={{mx:1, color: "red"}}>{user?.fullName} !</Typography>
+                            </ListItem>
+
                             <ListItem disablePadding>
                                 <ListItemButton
                                     onClick={() => handleItemClick('UserProfile')}
@@ -120,7 +131,7 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                     <nav aria-label="secondary mailbox folders">
                         <List>
                             <ListItem>
-                                <ListItemButton  onClick={handleLogout}>
+                                <ListItemButton onClick={handleLogout}>
                                     <ListItemText primary="Đăng xuất" />
                                 </ListItemButton>
                             </ListItem>

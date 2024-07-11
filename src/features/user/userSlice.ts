@@ -1,36 +1,31 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import IUser from "../../interfaces/IUser.ts";
-import users from "../../data/user.ts";
 
-type initialStateProp = {
-    error: string,
-    user?: IUser,
-}
-const initialState: initialStateProp = {
-    error: "",
-    user: undefined,
+type InitialState = {
+    error: string;
+    user?: IUser;
 };
 
 const userFromSessionStorage = sessionStorage.getItem('user');
-    if (userFromSessionStorage) {
-        initialState.user = JSON.parse(userFromSessionStorage);
-    }
+const initialState: InitialState = {
+    error: "",
+    user: userFromSessionStorage ? JSON.parse(userFromSessionStorage) : undefined,
+};
+
 const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        login(state, action: PayloadAction<{ email: string, password: string }>) {
-            const {email, password} = action.payload;
-            const user = users.find(u=>(u.email===email&&u.password===password));
-            if(user){
-                state.error="";
-                state.user=user;
-            }
-            else{
-                state.error="Đăng nhập thất bại";
-            }
-        }
-    }
-})
+        updateInfo(state, action: PayloadAction<IUser>) {
+            state.user = { ...state.user, ...action.payload };
+            sessionStorage.setItem('user', JSON.stringify(state.user));
+        },
+        logout(state) {
+            state.user = undefined;
+            sessionStorage.clear();
+        },
+    },
+});
+
 export default userSlice.reducer;
-export const {login} = userSlice.actions;
+export const { updateInfo, logout } = userSlice.actions;

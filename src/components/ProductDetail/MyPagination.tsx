@@ -1,7 +1,7 @@
 import { Box, Pagination, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ReviewItem } from "./Review.tsx";
-import { IReview } from "../interfaces/IProductDescription.ts";
+import { IReview } from "../../interfaces/IProductDescription.ts";
 
 interface Pagination {
     count: number;
@@ -9,12 +9,12 @@ interface Pagination {
 
 export const usePagination = (data:IReview[], itemsPerPage:number) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const maxPage = Math.ceil(data.length / itemsPerPage);
+    const maxPage = data && Math.ceil(data.length / itemsPerPage);
 
     function currentData() {
         const begin = (currentPage - 1) * itemsPerPage;
         const end = begin + itemsPerPage;
-        return data.slice(begin, end);
+        return data && data.slice(begin, end);
     }
 
     function next() {
@@ -38,15 +38,15 @@ export default function MyPagination(prop: { data:IReview[] }) {
     const {data} = prop;
     const PER_PAGE = 10;
     const [page, setPage] = useState(1);
-    const count = Math.ceil(data.length / PER_PAGE);
+    const count = data && Math.ceil(data.length / PER_PAGE);
     const _DATA = usePagination(data, PER_PAGE);
 
     // current page
-    const handleChange = (e, p:number) => {
+    const handleChange = (_e:unknown, p:number) => {
         setPage(p);
         _DATA.jump(p)
     }
-    
+
     const showNoResult = () => {
 
         return (
@@ -58,7 +58,7 @@ export default function MyPagination(prop: { data:IReview[] }) {
     }
     return (
         <Box>
-             {_DATA.currentData().length === 0 ? (
+             {_DATA.currentData() && _DATA.currentData().length === 0 ? (
                 showNoResult()
             ) : (
                 <>
