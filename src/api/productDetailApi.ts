@@ -7,9 +7,6 @@ export const productDetailApi = createApi({
         baseUrl: BASE_URL,
     }),
     endpoints: (builder) => ({
-        // getAllProduct: builder.query<Product[], void>({
-        //     query: () => `products`,
-        // }),
         getProductDetailById: builder.query<IProductDetail, number>({
             query: (id:number) => `product-detail/${id}`,
         }),

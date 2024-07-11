@@ -4,11 +4,13 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
     rating:number,
     contents?:string,
     isShow: boolean,
+    key: number,
 }
 const initialState:ReviewFormType = {
     rating:0,
     contents:"",
-    isShow: false
+    isShow: false,
+    key:0,
 }; 
 const reviewSlice = createSlice({
     name:"review",
@@ -22,9 +24,12 @@ const reviewSlice = createSlice({
         },
         setIsShow(state, action: PayloadAction<boolean>){
             state.isShow = action.payload;
+        },
+        setKey(state, action: PayloadAction<number>){
+            state.key = action.payload;
         }
     }
 
 })
 export default reviewSlice.reducer;
-export const {setRating,setContents, setIsShow} = reviewSlice.actions;
+export const {setRating,setContents, setIsShow, setKey} = reviewSlice.actions;

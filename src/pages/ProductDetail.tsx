@@ -2,24 +2,27 @@ import { Box, Button, colors, Divider, Grid, Rating, Stack, Tab, Tabs, TextField
 import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
-import { useDispatch } from "react-redux";
-import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
 import { grey } from "@mui/material/colors";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import PinterestIcon from "@mui/icons-material/Pinterest";
-import { hotProducts } from "../data/product.ts";
 import ProductList from "../components/ProductList.tsx";
-import Review, { RatingOverview } from "../components/ProductDetail/Review.tsx";
+import Review from "../components/ProductDetail/Review.tsx";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { CartItem, cartUpdate } from "../features/cart/cartSlice.ts";
 import { useGetProductDetailByIdQuery } from "../api/productDetailApi.ts";
-import { IProductDetail } from "../features/productDetail/productDetailSlice.ts";
+import { addCartItem, productDetailLoad, updateCartItem } from "../features/productDetail/productDetailSlice.ts";
 import { toast } from "react-toastify";
 import { cartItemAdd } from "../features/cart/cartSlice.ts";
+import { VNDNumericFormat } from "../components/ProductCard.tsx";
+import { RootState } from "../app/store";
+import { Product } from "../interfaces/Product.ts";
+import { useGetAllProductQuery } from "../api/productApi.ts";
+import { IProductDetail } from "../interfaces/ProductDetail.ts";
 
 // Line icon
 export const LineIcon = () => {
@@ -28,12 +31,12 @@ export const LineIcon = () => {
     )
 }
 
-const Price = (prop: { price: number, origin: number }) => {
-    const { price, origin } = prop;
+export const Price = (prop: { price: number, origin: number, fontSize: number }) => {
+    const { price, origin, fontSize } = prop;
     const baseSx = {
         // Chỉ định cho các Typography con nằm trong baseSx
         '& > .MuiTypography-root': {
-            fontSize: 25,
+            fontSize: fontSize,
         },
     };
 
@@ -49,102 +52,98 @@ const Price = (prop: { price: number, origin: number }) => {
 
     return (
         <Stack spacing={2} direction="row" sx={baseSx}>
-            <Typography sx={priceSx}>{price}</Typography>
-            <Typography sx={discountSx}>{origin}</Typography>
+            <Typography sx={priceSx}><VNDNumericFormat price={price}/></Typography>
+            <Typography sx={discountSx}><VNDNumericFormat price={origin}/></Typography>
         </Stack>
     );
 }
 
-/* Quantity button*/
-const QuantityButton: React.FC<{ cartItem: CartItem }> = ({ cartItem }) => {
+// Quantity button component
+const QuantityButton: React.FC = () => {
     const dispatch = useDispatch();
+    const cartItem = useSelector((state: RootState) => state.productDetail.cartItem);
 
     const baseSx = {
         borderRadius: 50,
-        background: grey[200],
+        background: colors.grey[200],
         border: '1px solid #e0e0e0',
         width: "auto",
         height: 50,
     };
 
+    if (!cartItem) return null;
+
     return (
         <Box>
             <Stack sx={baseSx} direction="row">
                 <Button className="btn btn-quantity" onClick={() => {
-                    dispatch(cartUpdate({
-                        productId: cartItem.product.id,
-                        value: -1
-                    }))
+                    dispatch(updateCartItem(-1));
                 }} endIcon={<RemoveIcon />} />
                 <TextField
                     className="text-field"
                     type="tel"
-                    sx={{ width: 10 }}
+                    sx={{ width: 50 }}
                     value={cartItem.quantity}
                     disabled
                 />
                 <Button className="btn btn-quantity" onClick={() => {
-                    dispatch(cartUpdate({
-                        productId: cartItem.product.id,
-                        value: 1
-                    }))
+                    dispatch(updateCartItem(1));
                 }} startIcon={<AddIcon />} />
             </Stack>
         </Box>
     );
 }
-/* End quantity button*/
-
 
 // Thong tin chi tiet san pham
-const InformationProduct = (prop: { productDetail: IProductDetail }) => {
+const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ productDetail }) => {
     const dispatch = useDispatch();
-    const { productDetail } = prop;
     const styleTitle = {
         color: colors.grey[700],
         fontSize: 25,
         fontWeight: "bold",
-    }
-    const [quantity, setQuantity] = useState(1);
-    const cartItem = { product: productDetail.product, quantity: 1 }
+        
+    };
     const product = productDetail.product;
-    const productBlog = productDetail.productBlog;
+
+    useEffect(() => {
+        const cartItem = { product: product, quantity: 1 };
+        dispatch(addCartItem(cartItem));
+    }, [dispatch, product]);
+
     const categories = productDetail.categoryList;
     const getCategoryNames = categories.map(c => {
         return c.name.toLowerCase()
-        .split(' ')
-        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-        .join(' ');
-    }).join(", ")
+            .split(' ')
+            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
+    }).join(", ");
+
+    const productDetailState = useSelector((state: RootState) => state.productDetail);
+    const currentCartItem = productDetailState.cartItem;
+
     return (
         <Box flexDirection="column" letterSpacing={10}>
             <Typography sx={styleTitle}>{product.name}</Typography>
-            <Box sx={{my:2}} flexDirection="row">
-                {/* <RatingOverview productId={product.id} /> */}
-                <Box sx={{mr: 2}}></Box>
+            <Box sx={{ my: 2 }} flexDirection="row">
+                <Box sx={{ mr: 2 }}></Box>
                 <Rating
-                            name="half-read-only"
-                            defaultValue={0}
-                            value={parseFloat("5.0")}
-                            precision={0.25}
-                            readOnly
-                            sx={{ fontSize: 15 }}
-                        
-                        />
-                {/* <Typography variant='subtitle2'>{rating}</Typography> */}
-                
+                    name="half-read-only"
+                    defaultValue={0}
+                    value={parseFloat("5.0")}
+                    precision={0.25}
+                    readOnly
+                    sx={{ fontSize: 15 }}
+                />
             </Box>
             <LineIcon />
-            <Price price={product.price} origin={product.origin} />
-            
+            <Price price={product.price} origin={product.origin} fontSize={25}/>
             <Stack direction="row" spacing={2} mt={2}>
-                <QuantityButton cartItem={cartItem} />
+                <QuantityButton />
                 <Button className="btn btn-cart" variant='contained' onClick={() => {
-                    dispatch(cartItemAdd({
-                        product: productDetail.product,
-                        quantity: quantity
-                    }))
-                    toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" })
+                    if (currentCartItem) {
+                        dispatch(cartItemAdd(currentCartItem));
+                        toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" });
+                    }
                 }}>THÊM VÀO GIỎ</Button>
             </Stack>
             <Stack direction="column" mt={2}>
@@ -159,12 +158,12 @@ const InformationProduct = (prop: { productDetail: IProductDetail }) => {
                 </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
-                <FacebookIcon fontSize="small" color="secondary" /> 
+                <FacebookIcon fontSize="small" color="secondary" />
                 <TwitterIcon fontSize="small" color="secondary" />
                 <PinterestIcon fontSize="small" color="secondary" />
             </Stack>
         </Box>
-    )
+    );
 }
 
 /* Description Tab*/
@@ -217,8 +216,7 @@ const DescriptionProduct = (prop: { productDetail: IProductDetail }) => {
     }
     // Show Review
     const showReviewTab = () => {
-        // const content = <Review productId={productDetail.product.id} />;
-        const content = <Review productId={1} />;
+        const content = <Review productId={productDetail.product.id} />;
         return (
             <CustomTabPanel index={1} value={value}>
                 {content}
@@ -245,12 +243,12 @@ const DescriptionProduct = (prop: { productDetail: IProductDetail }) => {
 /*
 * Similar product list
 * */
-const SimilarProductList = () => {
-    const data = hotProducts;
+const SimilarProductList = (prop: {similarProducts: Product[]}) => {
+    const {similarProducts} = prop;
     return (
         <Box sx={{ my: 5 }}>
             <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM TƯƠNG TỰ</Typography>
-            <ProductList products={data} />
+            <ProductList products={similarProducts} />
         </Box>
     )
 }
@@ -258,9 +256,11 @@ const SimilarProductList = () => {
 // Chi tiet san pham
 const Detail = (prop: { productDetail: IProductDetail }) => {
     const { productDetail } = prop;
+    const { data } = useGetAllProductQuery();
+    const products = data;
     return (
-        <Box>
-            <Grid container spacing={5}>
+        <Box component="div">
+            <Grid container spacing={2}>
                 <Grid item xs={5}>
                     <Box  >
                         <MySclickCarousel mainImages={productDetail.imageList} />
@@ -269,11 +269,11 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
                 <Grid item xs={7}>
                     <InformationProduct productDetail={productDetail} />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} mt={2}>
                     <DescriptionProduct productDetail={productDetail} />
                 </Grid>
             </Grid>
-            <SimilarProductList />
+            <SimilarProductList similarProducts={products ?? []}/>
         </Box>
     )
 }
@@ -286,8 +286,10 @@ const ProductDetail = () => {
             navigate("/");
         }
     }, [productId, navigate]);
-    const { data, error, isLoading } = useGetProductDetailByIdQuery(Number(productId));
+    const { data} = useGetProductDetailByIdQuery(Number(productId));
     const productDetail = data;
+    const dispatch = useDispatch();
+    productDetail && dispatch(productDetailLoad(productDetail));
     console.log(productDetail);
     
     // const productDetail = useSelector((state: RootState) => state.productDetail);
