@@ -11,6 +11,7 @@ import { userApi } from "../api/userApi.ts";
 import { productDetailApi } from "../api/productDetailApi.ts";
 import { addressApi } from "../api/addressApi.ts";
 import { orderApi } from "../api/orderApi.ts";
+import saveCartMiddleware from "../features/cart/saveCartMiddleware.ts";
 export const store = configureStore({
     reducer: {
         cart: cartReducer,
@@ -33,7 +34,9 @@ export const store = configureStore({
             addressApi.middleware,
             orderApi.middleware,
             blogApi.middleware,
-            feedbackApi.middleware)
+            feedbackApi.middleware,
+            saveCartMiddleware
+        )
 })
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

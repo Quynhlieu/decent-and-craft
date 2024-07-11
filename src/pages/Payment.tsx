@@ -1,4 +1,4 @@
-import {Badge, Box, Card, CardContent, CardMedia, Divider, Grid, TextField, Typography} from '@mui/material';
+import { Badge, Box, Card, CardContent, CardMedia, Divider, Grid, TextField, Typography } from '@mui/material';
 import React from "react";
 import PurchaseInformation from "../components/Payment/PurchaseInformation.tsx";
 import Transport from "../components/Payment/Transport.tsx";
@@ -13,9 +13,9 @@ interface CardProductProps {
 }
 
 const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
-    <Card sx={{ marginBottom: 2, height: "70px"}}>
+    <Card sx={{ marginBottom: 2, height: "70px" }}>
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Badge badgeContent={4} color="primary" sx={{ alignSelf: 'center', marginX: 1 , marginBottom: 2}}>
+            <Badge badgeContent={4} color="primary" sx={{ alignSelf: 'center', marginX: 1, marginBottom: 2 }}>
                 <CardMedia
                     component="img"
                     sx={{ width: 50, height: 50, objectFit: 'cover' }}
@@ -23,27 +23,27 @@ const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
                     alt={detail.product.name}
                 />
             </Badge>
-        <CardContent sx={{ flex: 1 }}>
-            <Typography gutterBottom component="div">
-                {detail.product.name}
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row' , justifyContent: "space-between"}}>
-                <Typography variant="body2" color="text.secondary">
-                    Số lượng: {detail.quantity}
+            <CardContent sx={{ flex: 1 }}>
+                <Typography gutterBottom component="div">
+                    {detail.product.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    Giá: {detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
-                </Typography>
-            </Box>
-        </CardContent>
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
+                    <Typography variant="body2" color="text.secondary">
+                        Số lượng: {detail.quantity}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Giá: {detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                    </Typography>
+                </Box>
+            </CardContent>
         </Box>
     </Card>
 );
 
-interface CardProductListProps{
+interface CardProductListProps {
     orderDetail: OrderDetail[];
 }
-const CardProductList: React.FC<CardProductListProps> = ({orderDetail}) => {
+const CardProductList: React.FC<CardProductListProps> = ({ orderDetail }) => {
     return (
         <Box>
             {orderDetail.map((detail, index) => (
@@ -74,12 +74,9 @@ const Payment: React.FC = () => {
                             <Typography variant="h6" gutterBottom>
                                 Đơn hàng ({orders.length} sản phẩm)
                             </Typography>
-                            {orders.map((order, index) => (
-                                <CardProductList key={index} orderDetail={order.orderDetails} />
-                            ))}
-
+                            <CardProductList />
                             <Divider orientation="horizontal" flexItem />
-                            <Box sx={{ padding: 2}}>
+                            <Box sx={{ padding: 2 }}>
                                 <Grid container spacing={2} alignItems="center">
                                     <Grid item xs={8}>
                                         <TextField
@@ -111,21 +108,21 @@ const Payment: React.FC = () => {
                                 </Grid>
                             </Box>
                             <Divider orientation="horizontal" flexItem />
-                            <Box sx={{paddingY: 2}}>
-                               <Box sx={{ display: 'flex', flexDirection: 'row' , justifyContent: "space-between"}}>
-                                   <Typography variant="body2">
-                                       Tạm tính:
-                                   </Typography>
-                                   <Typography variant="body2">
+                            <Box sx={{ paddingY: 2 }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
+                                    <Typography variant="body2">
+                                        Tạm tính:
+                                    </Typography>
+                                    <Typography variant="body2">
                                         50000
-                                   </Typography>
-                               </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'row' , justifyContent: "space-between", paddingTop: 2}}>
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between", paddingTop: 2 }}>
                                     <Typography variant="body2">
                                         Phí vận chuyển:
                                     </Typography>
                                     <Typography variant="body2">
-                                       40000
+                                        40000
                                     </Typography>
                                 </Box>
 

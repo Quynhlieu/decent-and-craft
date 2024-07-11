@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {Link, useNavigate} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { getCount, getTotalPrice } from '../features/cart/cartSlice';
 import { VNDNumericFormat } from './ProductCard';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CartContainer from './Cart/CartContainer';
-import {logout} from "../features/user/userSlice.ts";
+import { logout } from "../features/user/userSlice.ts";
 interface NavItemProps {
     active?: boolean,
     children: React.ReactNode
@@ -134,7 +134,7 @@ const Header = () => {
                                     style={{
                                         color: "white",
                                         textDecoration: "none"
-                                    }}   to={user ? '/user': '/login'}>
+                                    }} to={user ? '/user' : '/login'}>
                                     <Typography>
                                         {user ? 'Tài khoản' : 'Đăng nhập'}
                                     </Typography>
@@ -149,28 +149,31 @@ const Header = () => {
                                 </IconButton>
                             </Link>
                         </Badge>
-                        <Button
+                        <Stack
                             onMouseOver={() => {
                                 setShowCart(true);
                             }}
                             onMouseOut={() => {
                                 setShowCart(false);
                             }}
-                            sx={{
-                                height: 30,
-                                borderRadius: 10,
-                                textTransform: "none",
-                                position: "relative"
-                            }}
-                            variant='contained'
-                            endIcon={<Badge color='error' badgeContent={getCount(cart)}>
-                                <ShoppingCartIcon />
-                            </Badge>}>
-                            <VNDNumericFormat price={getTotalPrice(cart)} />
+                            spacing={3} >
+                            <Button
+                                sx={{
+                                    height: 30,
+                                    borderRadius: 10,
+                                    textTransform: "none",
+                                    position: "relative"
+                                }}
+                                variant='contained'
+                                endIcon={<Badge color='error' badgeContent={getCount(cart)}>
+                                    <ShoppingCartIcon />
+                                </Badge>}>
+                                <VNDNumericFormat price={getTotalPrice(cart)} />
+                            </Button>
                             <CartContainer onMouseOut={() => {
                                 setShowCart(false);
-                            }} showCart={showCart}/>
-                        </Button>
+                            }} showCart={showCart} />
+                        </Stack>
                     </Stack>
                 </Toolbar>
                 <NavBar />
