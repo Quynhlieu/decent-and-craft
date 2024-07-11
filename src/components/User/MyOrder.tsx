@@ -11,6 +11,7 @@ import Address from "../../interfaces/IAddress.ts";
 import Voucher from "../../interfaces/IVoucher.ts";
 import IUser from "../../interfaces/IUser.ts";
 import OrderDetail from "../../interfaces/IOrderDetail.ts";
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 
 interface DataType {
     createdDate: string;
@@ -37,14 +38,25 @@ const MyOrder = () => {
     }, [error]);
     return (
         <Box sx={{ height: 500, width: 800 }}>
-            <Typography variant='h3' sx={{
-                textAlign: 'center',
-                position: 'relative',
-                marginBottom: '20px',
-            }}>
-                Đơn hàng của bạn
-            </Typography>
-            <LabTabs data = {data as DataType[]}/>
+            {data && data.length > 0 ? (
+                <>
+                    <Typography variant='h3' sx={{
+                        textAlign: 'center',
+                        position: 'relative',
+                        marginBottom: '20px',
+                    }}>
+                        Đơn hàng của bạn
+                    </Typography>
+                    <LabTabs data={data as DataType[]} />
+                </>
+            ) : (
+                <Box sx={{ my: 10, textAlign: 'center' }}>
+                    <Typography variant='h3'>
+                        Bạn chưa có đơn hàng nào!
+                    </Typography>
+                    <SentimentVeryDissatisfiedIcon color='primary' sx={{ fontSize: 100, marginTop: 2 }} />
+                </Box>
+            )}
 
             {isLoading && (
                 <Box sx={{

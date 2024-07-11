@@ -23,9 +23,6 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user.user);
-    useEffect(() => {
-        onComponentChange(selectedComponent);
-    }, [selectedComponent, onComponentChange, user]);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
@@ -36,8 +33,12 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     };
     const handleLogout = () => {
         dispatch(logout());
-        navigate("/login");
+        navigate("/");
     };
+
+    useEffect(() => {
+        onComponentChange(selectedComponent);
+    }, [selectedComponent, onComponentChange, user]);
     return (
         <Box className="UserProfile">
             <div className="left">
@@ -130,7 +131,7 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                     <nav aria-label="secondary mailbox folders">
                         <List>
                             <ListItem>
-                                <ListItemButton  onClick={handleLogout}>
+                                <ListItemButton onClick={handleLogout}>
                                     <ListItemText primary="Đăng xuất" />
                                 </ListItemButton>
                             </ListItem>

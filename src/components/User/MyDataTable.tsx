@@ -155,6 +155,11 @@ interface MyDataTableProps {
     filter: string;
 }
 
+const NoDataComponent = () => (
+    <div style={{ padding: '24px', textAlign: 'center' }}>
+        <p>Không có dữ liệu để hiển thị</p>
+    </div>
+);
 
 const MyDataTable: React.FC<MyDataTableProps> = ({ filter, data }) => {
     const [filteredRows, setFilteredRows] = useState<DataType[]>([]);
@@ -237,6 +242,7 @@ const MyDataTable: React.FC<MyDataTableProps> = ({ filter, data }) => {
                 pagination
                 striped
                 customStyles={tableCustomStyles}
+                noDataComponent={<NoDataComponent />}
             />
             <MyOrderDetail open={openDetail}
                            onClose={handleCloseDetail}

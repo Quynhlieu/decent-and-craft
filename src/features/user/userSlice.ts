@@ -22,7 +22,7 @@ const userSlice = createSlice({
         },
         logout(state) {
             state.user = undefined;
-            sessionStorage.removeItem('user');
+            sessionStorage.clear();
         },
     },
 });

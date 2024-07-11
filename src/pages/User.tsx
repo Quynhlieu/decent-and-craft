@@ -18,7 +18,7 @@ const User = () => {
         const navigate = useNavigate();
 
         useEffect(() => {
-            if (!user || user.id === 0) {
+            if (!user) {
                 navigate('/login');
 
                 toast.error('Vui lòng đăng nhập để tiếp tục!', {
@@ -31,7 +31,7 @@ const User = () => {
                     progress: undefined,
                 });
             }
-        }, [user, navigate]);
+        }, []);
 
         return null;
     };

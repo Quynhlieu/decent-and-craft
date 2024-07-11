@@ -24,8 +24,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {updateInfo} from "../../features/user/userSlice.ts";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {useGetAddressListQuery} from "../../api/addressApi.ts";
+import {Controller, useForm} from "react-hook-form";
+import {UserStatus} from "../../interfaces/IUser.ts";
 
+interface FormData {
+    fullName: string;
+    phone: string;
+}
 const UserProfile: React.FC  = () => {
+    const { handleSubmit, control, formState: { errors } } = useForm<FormData>();
     const [open, setOpen] = React.useState<boolean>(false);
     const[phone,setPhone] = useState<string>("");
     const[fullName,setFullName] = useState<string>("");
@@ -43,12 +50,11 @@ const UserProfile: React.FC  = () => {
     };
 
 
-    const handleFormSubmit =  async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleFormSubmit =  async (data: FormData) => {
         const userInfo = {
             userId: user?.id ?? 0,
-            fullName: fullName,
-            phone: phone,
+            fullName: data.fullName,
+            phone: data.phone,
         };
         try {
             await userUpdate(userInfo);
@@ -134,7 +140,10 @@ const UserProfile: React.FC  = () => {
                             <PasswordIcon />
                         </ListItemIcon>
                         <ListItemText primary="Trạng thái:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.status ||""} />
+                        <ListItemText
+                            sx={{ textAlign: 'right' }}
+                            primary={user?.status === UserStatus.HOAT_DONG ? 'Hoạt động' : ''}
+                        />
                     </ListItemButton>
                 </ListItem>
 
@@ -150,39 +159,65 @@ const UserProfile: React.FC  = () => {
                     onClose={handleClose}
                     PaperProps={{
                         component: 'form',
-                        onSubmit: handleFormSubmit,
+                        onSubmit: handleSubmit(handleFormSubmit),
                     }}
                 >
                     <DialogTitle>Cập nhật thông tin</DialogTitle>
                     <DialogContent>
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="name"
+                        <Controller
                             name="fullName"
-                            label="Họ và tên"
-                            type="fullName"
-                            fullWidth
-                            value={fullName}
-                            variant="standard"
-                            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
-                                setFullName(event.target.value);
-                            }}
+                            control={control}
+                            defaultValue={fullName}
+                            rules={{ required: 'Họ và tên là bắt buộc' }}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    autoFocus
+                                    required
+                                    margin="dense"
+                                    id="fullName"
+                                    label="Họ và tên"
+                                    type="text"
+                                    fullWidth
+                                    variant="standard"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setFullName(event.target.value);
+                                        field.onChange(event);
+                                    }}
+                                    error={!!errors.fullName}
+                                    helperText={errors.fullName ? errors.fullName.message : ''}
+                                />
+                            )}
                         />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="phone"
+                        <Controller
                             name="phone"
-                            label="Số điện thoại"
-                            value={phone}
-                            onChange={(event:React.ChangeEvent<HTMLInputElement>)=>{
-                                setPhone(event.target.value);
+                            control={control}
+                            defaultValue={phone}
+                            rules={{
+                                required: 'Số điện thoại là bắt buộc',
+                                pattern: {
+                                    value: /^0\d{9}$/,
+                                    message: 'Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0'
+                                }
                             }}
-                            fullWidth
-                            variant="standard"/>
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    required
+                                    margin="dense"
+                                    id="phone"
+                                    label="Số điện thoại"
+                                    fullWidth
+                                    variant="standard"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setPhone(event.target.value);
+                                        field.onChange(event);
+                                    }}
+                                    error={!!errors.phone}
+                                    helperText={errors.phone ? errors.phone.message : ''}
+                                />
+                            )}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>

@@ -73,6 +73,7 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
     const [addAddress] = useAddAddressMutation();
 
     const[updateAddress] = useUpdateAddressMutation();
+
     const onSubmit: SubmitHandler<FormValue> = async formData => {
         try {
             if (defaultValues) {
@@ -142,7 +143,17 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                                 id="phone"
                                 label="Số điện thoại"
                                 variant="outlined"
-                                {...register("phoneNumber", {required: "Số điện thoại là bắt buộc"})}
+                                {...register("phoneNumber", {
+                                    required: "Số điện thoại là bắt buộc",
+                                    pattern: {
+                                        value: /\d{10,11}/,
+                                        message: "Số điện thoại không hợp lệ"
+                                    },
+                                    maxLength: {
+                                        value: 11,
+                                        message: "Số điện thoại tối đa 11 số"
+                                    }
+                                })}
                                 error={!!errors.phoneNumber}
                                 helperText={errors.phoneNumber ? errors.phoneNumber.message : ""}
                             />
@@ -194,6 +205,8 @@ const AddBtn = ({onBack}: { onBack: () => void }) => {
 }
 
 const AddressInfo: React.FC<AddressInfoProps> = ({ address, onClickEdit, onClickDelete }) => {
+
+
     return (
         <Box sx={{
             borderTop: '1px solid #ebebeb',

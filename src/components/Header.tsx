@@ -3,13 +3,14 @@ import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import {Link, useNavigate} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 import { RootState } from '../app/store';
 import { getCount, getTotalPrice } from '../features/cart/cartSlice';
 import { VNDNumericFormat } from './ProductCard';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CartContainer from './Cart/CartContainer';
+import {logout} from "../features/user/userSlice.ts";
 interface NavItemProps {
     active?: boolean,
     children: React.ReactNode
@@ -62,6 +63,12 @@ const Header = () => {
     const user = useSelector((state: RootState) => state.user.user);
     const [showCart, setShowCart] = useState<boolean>(false);
 
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate("/");
+    };
     return (
         <Box sx={{
             padding: 0,
@@ -95,8 +102,22 @@ const Header = () => {
                                 color='white'
                                 title={
                                     <Stack direction="column" spacing={1}>
-                                        <Link to={user ? '/home' : '/register'}>
-                                            <Button variant='contained' sx={{ width: '100%' }}>{user ? 'Đăng xuất' : 'Đăng Ký'}</Button>
+                                        <Link to={user ? '/login' : '/register'}>
+                                            {user ? (
+                                                <Button
+                                                    variant='contained'
+                                                    sx={{ width: '100%' }}
+                                                    onClick={handleLogout}
+                                                >
+                                                    Đăng xuất
+                                                </Button>
+                                            ) : (
+                                                <Link to='/register' style={{ width: '100%' }}>
+                                                    <Button variant='contained' sx={{ width: '100%' }}>
+                                                        Đăng Ký
+                                                    </Button>
+                                                </Link>
+                                            )}
                                         </Link>
                                     </Stack>
                                 }
@@ -113,7 +134,7 @@ const Header = () => {
                                     style={{
                                         color: "white",
                                         textDecoration: "none"
-                                    }}   to={user ? '/user' : '/login'}>
+                                    }}   to={user ? '/user': '/login'}>
                                     <Typography>
                                         {user ? 'Tài khoản' : 'Đăng nhập'}
                                     </Typography>
