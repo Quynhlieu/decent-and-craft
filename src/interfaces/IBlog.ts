@@ -3,9 +3,9 @@ import BlogCategory from "./IBlogCategory";
 export default interface Blog {
     id: number;
     title: string,
-    date: string,
+    createdDate: string,
     categories?: BlogCategory[]
-    thumb?: string,
+    thumbnail?: string,
     author?: string,
     content?: string,
     header?: string,

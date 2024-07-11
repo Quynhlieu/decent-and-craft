@@ -6,6 +6,7 @@ import userReducer from "../features/user/userSlice.ts";
 import productDetailSlice from "../features/productDetail/productDetailSlice.ts";
 import reviewSlice from "../features/review/reviewSlice.ts";
 import { productApi } from "../api/productApi.ts";
+import { blogApi } from "../api/blogApi.ts";
 export const store = configureStore({
     reducer: {
         cart: cartReducer,
@@ -14,10 +15,12 @@ export const store = configureStore({
         users: usersReducer,
         productDetail: productDetailSlice,
         review:reviewSlice,
-        [productApi.reducerPath]:productApi.reducer
+        [productApi.reducerPath]:productApi.reducer,
+        [blogApi.reducerPath]:blogApi.reducer
+
     },
     middleware: (getDefaultMiddleware)=>
-        getDefaultMiddleware().concat(productApi.middleware)
+        getDefaultMiddleware().concat(productApi.middleware,blogApi.middleware)
 })
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

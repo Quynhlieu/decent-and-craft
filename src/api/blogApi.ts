@@ -1,7 +1,6 @@
-import { blogApi } from './blogApi';
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import BASE_URL from "./url";
-import IBlog from '../interfaces/IBlog';
+import IBlog from "../interfaces/IBlog";
 
 
 export const blogApi = createApi({
@@ -14,4 +13,6 @@ export const blogApi = createApi({
             query: () => `blogs`
         }),
     })
-}
+});
+export const {useGetAllblogsQuery} = blogApi
+
