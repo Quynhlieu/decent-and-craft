@@ -17,19 +17,26 @@ export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProper
         <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
     )
 }
+export const RoundedNumericFormat = (prop: {averageRating: number, styled?: React.CSSProperties}) => {
+    return (
+        <NumericFormat style={{...prop.styled}} value={prop.averageRating.toFixed(1)} displayType='text' />
+    );
+}
 const InfomationHover = (props: { product: Product }) => {
     const { product } = props;
+    const quantitySold = 10
+
     return (
         <Box>
             <Typography>Số lượng trong kho: {product.unitInStock}</Typography>
-            <Typography>Lượt xem: 25000</Typography>    
-            <Typography>Đã bán: 10</Typography>
+            <Typography>Lượt xem: 25000</Typography>
+            <Typography>Đã bán: {quantitySold}</Typography>
         </Box>
     );
 }
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} placement='top'/>
+    <Tooltip {...props} classes={{ popper: className }} placement='top' />
 ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: theme.palette.common.white,
@@ -39,22 +46,42 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
+const StyledCardWrapper = styled('div')(({ theme }) => ({
+    position: 'relative',
+    border: `2px solid transparent`,
+    transition: 'border-color 0.3s',
+    '&:hover': {
+        borderColor: theme.palette.primary.main,
+    }
+}));
+
 const ProductCard = (product: { data: Product }) => {
     const { id, name, price, thumbnail, origin } = product.data;
     const wishlist = useSelector((state: RootState) => state.wishlist);
     const isInWishList = wishlist.some(p => p.id === id);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const quantitySold = 10
 
     return (
-        <Card sx={{ minWidth: 210, height: "auto" }}>
-            <CardActionArea  onClick={() => {
+        <StyledCardWrapper>
+            <Card  sx={{ 
+            minWidth: 150, 
+            height: "auto", 
+            transition: "border-color 0.3s",
+            borderColor: "transparent",
+            "&:hover": {
+                 boxShadow: 6, // Tăng mức độ shadow để có hiệu ứng rõ ràng
+                    borderColor: "primary.main"
+            }
+        }}>
+            <CardActionArea onClick={() => {
                 navigate(`product/${id}`);
             }}>
                 <LightTooltip title={<InfomationHover product={product.data} />}>
                     <CardMedia
                         component="img"
-                        height="140"
+                        height="220"
                         image={thumbnail}
                         sx={{
                             transition: "all 0.5s ease",
@@ -65,7 +92,7 @@ const ProductCard = (product: { data: Product }) => {
                     />
                 </LightTooltip>
 
-                <CardContent sx={{paddingBottom: 0}}>
+                <CardContent sx={{ paddingBottom: 0 }}>
                     <Typography sx={{
                         display: '-webkit-box',
                         overflow: 'hidden',
@@ -81,8 +108,8 @@ const ProductCard = (product: { data: Product }) => {
                     <Price price={price} origin={origin} fontSize={16} />
                 </CardContent>
             </CardActionArea >
-            <CardActions sx={{ paddingBottom: 2, paddingTop: 1,display: 'flex', justifyContent: 'space-between'}} disableSpacing>
-                <Typography sx={{ fontSize: 11 }}>Đã bán 10</Typography>
+            <CardActions sx={{padding: 2, paddingTop: 1, display: 'flex', justifyContent: 'space-between' }} disableSpacing>
+                <Typography sx={{ fontSize: 13 }}>Đã bán {quantitySold}</Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <IconButton sx={{ alignItems: 'end' }} onClick={() => {
                         !isInWishList ? dispatch(wishlistAdd(product.data))
@@ -97,28 +124,32 @@ const ProductCard = (product: { data: Product }) => {
                             ? <FavoriteIcon color="error" />
                             : <FavoriteBorderIcon color="error" />}
                     </IconButton>
-                    <Button
-                        variant='contained'
-                        sx={{
-                            fontWeight: "bold",
-                            borderRadius: 5,
-                            fontSize: 11,
-                        }}
-                        color="primary"
-                        endIcon={<AddShoppingCartIcon />}
-                        onClick={() => {
-                            dispatch(cartItemAdd({
-                                product: product.data,
-                                quantity: 1
-                            }))
-                            toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" })
-                        }}
-                    >
-                        Thêm vào giỏ
-                    </Button>
+                    <LightTooltip title="Thêm vào giỏ hàng">
+                        <Button
+                            variant='contained'
+                            sx={{
+                                fontWeight: "bold",
+                                borderRadius: 5,
+                                fontSize: 10,
+                            }}
+                            color="primary"
+
+                            onClick={() => {
+                                dispatch(cartItemAdd({
+                                    product: product.data,
+                                    quantity: 1
+                                }))
+                                toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" })
+                            }}
+                        >
+                            {<AddShoppingCartIcon />}
+                            {/* Thêm vào giỏ */}
+                        </Button>
+                    </LightTooltip>
                 </Box>
             </CardActions>
         </Card>
+        </StyledCardWrapper>
     )
 }
 

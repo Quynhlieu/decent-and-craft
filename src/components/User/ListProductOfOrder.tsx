@@ -1,36 +1,73 @@
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Divider, Grid, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Divider,
+    Grid,
+    Tooltip,
+    Typography
+} from "@mui/material";
 import React from "react";
 import SmsIcon from '@mui/icons-material/Sms';
 import InfoIcon from '@mui/icons-material/Info';
-import Order from "../../interfaces/IOrder.ts";
+import {OrderStatus} from "../../interfaces/IOrder.ts";
 import OrderDetail from "../../interfaces/IOrderDetail.ts";
+import Address from "../../interfaces/IAddress.ts";
+import Voucher from "../../interfaces/IVoucher.ts";
+import IUser from "../../interfaces/IUser.ts";
 
+interface DataType {
+    createdDate: string;
+    id: number;
+    address: Address;
+    status: OrderStatus;
+    voucher?: Voucher;
+    user: IUser;
+    orderDetails: OrderDetail[];
+    shipment: string;
+    notice: string;
+    shippingFee: number;
+    totalPrice: number;
+}
 interface ListProductOfOrderProps {
-    order: Order | null;
+    order: DataType | null;
 }
 interface CardProductProps {
     detail: OrderDetail;
 }
+
+const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `${day}/${month}/${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+};
 const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
-    <Card sx={{ marginBottom: 2 }}> {/* Add marginBottom to create space */}
+    <Card sx={{ marginBottom: 2 }}>
         <CardActionArea>
             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <CardMedia
                     component="img"
                     sx={{ width: 140 }}
-                    image={detail.product.thumb}
+                    image={detail.product.thumbnail}
                     alt={detail.product.name}
                 />
                 <CardContent sx={{ flex: 1 }}>
 
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography gutterBottom sx={{ fontSize: '1rem' }} component="div">
                         {detail.product.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         Số lượng: {detail.quantity}
                     </Typography>
                     <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" color="black" sx={{ fontSize: '1rem', fontWeight: 'bold' }}>
                             Giá: {detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
                         </Typography>
                     </Box>
@@ -49,7 +86,7 @@ const CardProductList: React.FC<ListProductOfOrderProps> = ({ order }) => {
 
     return (
         <Box>
-            {order.orderDetail.map((detail, index) => (
+            {order.orderDetails.map((detail, index) => (
                 <CardProduct key={index} detail={detail} />
             ))}
         </Box>
@@ -72,8 +109,10 @@ const ListProductOfOrder: React.FC<ListProductOfOrderProps> = ({ order }) => (
                             Chat
                         </Button>
                     </Box>
-                    
-                    <InfoIcon />
+                    <Tooltip title= {order && formatDate(order.createdDate)} arrow>
+                        <InfoIcon />
+                    </Tooltip>
+
                 </Box>
             </Grid>
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -246,7 +246,7 @@ export default function Register() {
         const userRegisterData = {
             email: formData.email,
             password: formData.password,
-            fullName: `${formData.firstName} ${formData.lastName}`
+            fullName: `${formData.lastName} ${formData.firstName}`
         };
 
         try {
@@ -264,7 +264,7 @@ export default function Register() {
     let displayError: string | undefined;
     if (isError) {
         if ('status' in error) {
-            displayError = 'An error occurred while registering.';
+            displayError = 'Email đã tồn tại trong hệ thống !';
         } else {
             displayError = error.message;
         }

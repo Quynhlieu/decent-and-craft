@@ -1,12 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import BASE_URL from "./url";
+import IBlog from "../interfaces/IBlog";
 
 
-// export const blogApi = createApi({
-//     baseQuery: fetchBaseQuery({
-//         baseUrl: BASE_URL
-//     }),
-//     endpoints(builder) {
-//         // getAllBlog:builder.querylk
-//     },
-// })
+export const blogApi = createApi({
+    reducerPath: "blogApi",
+    baseQuery: fetchBaseQuery({
+        baseUrl: BASE_URL
+    }),
+    endpoints: (builder) => ({
+        getAllblogs: builder.query<IBlog[], void>({
+            query: () => `blogs`
+        }),
+    })
+});
+export const {useGetAllblogsQuery} = blogApi
+

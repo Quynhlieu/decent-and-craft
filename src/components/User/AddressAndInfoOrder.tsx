@@ -1,14 +1,34 @@
 import {Box, Grid, Typography} from "@mui/material";
 import Divider from "@mui/material/Divider";
 import React from "react";
-import Order from "../../interfaces/IOrder.ts";
+import  {OrderStatus} from "../../interfaces/IOrder.ts";
 import InfoOrder from "./InfoOrder.tsx";
+import Address from "../../interfaces/IAddress.ts";
+import Voucher from "../../interfaces/IVoucher.ts";
+import IUser from "../../interfaces/IUser.ts";
+import OrderDetail from "../../interfaces/IOrderDetail.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../app/store.ts";
 
+interface DataType {
+    createdDate: string;
+    id: number;
+    address: Address;
+    status: OrderStatus;
+    voucher?: Voucher;
+    user: IUser;
+    orderDetails: OrderDetail[];
+    shipment: string;
+    notice: string;
+    shippingFee: number;
+    totalPrice: number;
+}
 interface AddressAndInfoOrderProps {
-    order: Order | null;
+    order: DataType | null;
 }
 
 const AddressAndInfoOrder: React.FC<AddressAndInfoOrderProps> = ({order}) => {
+    const user = useSelector((state: RootState) => state.user.user);
     return (
         <Box sx={{width: "100%", flexGrow: 1}}>
             <Grid container spacing={1}>
@@ -17,10 +37,10 @@ const AddressAndInfoOrder: React.FC<AddressAndInfoOrderProps> = ({order}) => {
                         Địa chỉ nhận hàng
                     </Typography>
                     <Typography sx={{color: "black", paddingY: 1}}>
-                        <b>Tên người nhận:</b> {order?.user.fullName}
+                        <b>Tên người nhận:</b> {user?.fullName}
                     </Typography>
                     <Typography sx={{color: "#9a9393"}}>
-                        <b>Số điện thoại:</b> {order?.user.phone}
+                        <b>Số điện thoại:</b> {user?.phone}
                     </Typography>
                     <Typography sx={{color: "#9a9393", wordWrap: "break-word", wordBreak: "break-all"}}>
                         <b>Địa

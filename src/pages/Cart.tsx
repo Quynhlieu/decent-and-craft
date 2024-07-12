@@ -74,7 +74,7 @@ const CartTable = () => {
         {
             name: "SẢN PHẨM",
             minWidth: "400px",
-            cell: (row: any) => {
+            cell: (row: CartItem) => {
                 return (
                     <Stack direction="row" sx={{ alignItems: "center" }} spacing={2}>
                         <CancelIcon onClick={() => {
@@ -82,7 +82,7 @@ const CartTable = () => {
                             toast.error("Xóa sản phẩm khỏi giỏ hàng thành công",
                                 { autoClose: 1000, position: "bottom-left" })
                         }} color='warning' sx={{ "&:hover": { color: "black" } }} />
-                        <img width={60} height={60} src={row.product.thumb} />
+                        <img width={60} height={60} src={row.product.thumbnail} />
                         <Typography>
                             {row.product.name}
                         </Typography>
@@ -92,16 +92,16 @@ const CartTable = () => {
         },
         {
             name: "GIÁ",
-            cell: (row: any) => <VNDNumericFormat styled={{ fontWeight: "bold" }} price={row.product.price} />
+            cell: (row: CartItem) => <VNDNumericFormat styled={{ fontWeight: "bold" }} price={row.product.price} />
         },
         {
             name: "SỐ LƯỢNG",
-            cell: (row: any) =>
+            cell: (row: CartItem) =>
                 <QuantityButton cartItem={row} />
         },
         {
             name: "TỔNG TIỀN",
-            cell: (row: any) => <VNDNumericFormat styled={{ fontWeight: "bold" }} price={row.product.price * row.quantity} />
+            cell: (row: CartItem) => <VNDNumericFormat styled={{ fontWeight: "bold" }} price={row.product.price * row.quantity} />
         }
     ]
     return (

@@ -9,7 +9,9 @@ import PasswordIcon from '@mui/icons-material/Password';
 import '../../assets/user.css';
 import {useNavigate} from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import IUser from "../../interfaces/IUser.ts";
+import {RootState} from "../../app/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../../features/user/userSlice.ts";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
@@ -19,12 +21,8 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const [isExpanded, setIsExpanded] = useState(true);
     const [selectedComponent, setSelectedComponent] = useState<string>('UserProfile');
     const navigate = useNavigate();
-
-    const userFromSessionStorage = sessionStorage.getItem('user');
-    const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
-    useEffect(() => {
-        onComponentChange(selectedComponent);
-    }, [selectedComponent, onComponentChange]);
+    const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user.user);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
@@ -34,9 +32,13 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
         setSelectedComponent(componentName);
     };
     const handleLogout = () => {
-        sessionStorage.removeItem("user");
-        navigate("/login");
+        dispatch(logout());
+        navigate("/");
     };
+
+    useEffect(() => {
+        onComponentChange(selectedComponent);
+    }, [selectedComponent, onComponentChange, user]);
     return (
         <Box className="UserProfile">
             <div className="left">
@@ -129,7 +131,7 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                     <nav aria-label="secondary mailbox folders">
                         <List>
                             <ListItem>
-                                <ListItemButton  onClick={handleLogout}>
+                                <ListItemButton onClick={handleLogout}>
                                     <ListItemText primary="Đăng xuất" />
                                 </ListItemButton>
                             </ListItem>

@@ -1,7 +1,7 @@
 
 export enum UserStatus {
-    HOAT_DONG,
-    BI_KHOA
+    HOAT_DONG = 'HOAT_DONG',
+    BI_KHOA = 'BI_KHOA',
 }
 
 export default interface IUser {
@@ -11,5 +11,4 @@ export default interface IUser {
     password: string;
     phone?: string;
     status: UserStatus;
-
 }

@@ -1,17 +1,9 @@
-import { Avatar, Box, Rating, Typography } from '@mui/material'
-import React from 'react'
+import { Avatar, Box, Rating, Skeleton, Typography } from '@mui/material'
 import TitleBar from './TitleBar'
 import Slider from 'react-slick'
-import { feedbacks } from "../data/feedbacks";
 import { NextArrow, PrevArrow } from './Carousel';
-export type Feedback = {
-    avatar: string,
-    rating: number,
-    text: string,
-    author: string,
-    source: string,
-}
-
+import Feedback from '../interfaces/IFeedback';
+import { useGetAllFeedbacksQuery } from '../api/feedackApi';
 const FeedbackItem = (prop: { feedback: Feedback }) => {
     const { feedback } = prop;
     return (
@@ -32,16 +24,18 @@ const FeedbackItem = (prop: { feedback: Feedback }) => {
                     minHeight: 270,
                     fontStyle: "italic"
                 }}>
-                    {feedback.text}
+                    {feedback.comment}
                 </Typography>
             </Box>
-            <Typography variant='h5'>
-                <strong>{feedback.author}</strong>/{feedback.source}
+            <Typography variant='h6'>
+                <strong>{feedback.name}</strong>/{feedback.source}
             </Typography>
         </div>
     )
 }
 const Feedbacks = () => {
+    const { data, isLoading } = useGetAllFeedbacksQuery();
+    const feedbacks = data;
     let setting = {
         dots: true,
         infinite: true,
@@ -57,13 +51,15 @@ const Feedbacks = () => {
     return (
         <Box sx={{ mt: 5 }}>
             <TitleBar title='DECENT&CRAFT / KHÁCH HÀNG' />
-            <Box sx={{ mt: 3 }}>
-                <Slider  {...setting} >
-                    {feedbacks.map(f => {
-                        return <FeedbackItem key={f.author} feedback={f} />
-                    })}
-                </Slider>
-            </Box>
+            {isLoading ? <Skeleton width={100} height={50}/>
+            : <Box sx={{ mt: 2 }}>
+                    <Slider  {...setting} >
+                        {feedbacks && feedbacks.map(f => {
+                            return <FeedbackItem key={f.id} feedback={f} />
+                        })}
+                    </Slider>
+                </Box>
+            }
         </Box>
     )
 }

@@ -14,11 +14,11 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { useGetProductDetailByIdQuery } from "../api/productDetailApi.ts";
+import { useGetAverageRatingQuery, useGetProductDetailByIdQuery } from "../api/productDetailApi.ts";
 import { addCartItem, productDetailLoad, updateCartItem } from "../features/productDetail/productDetailSlice.ts";
 import { toast } from "react-toastify";
 import { cartItemAdd } from "../features/cart/cartSlice.ts";
-import { VNDNumericFormat } from "../components/ProductCard.tsx";
+import { RoundedNumericFormat, VNDNumericFormat } from "../components/ProductCard.tsx";
 import { RootState } from "../app/store";
 import { Product } from "../interfaces/Product.ts";
 import { useGetAllProductQuery } from "../api/productApi.ts";
@@ -52,8 +52,8 @@ export const Price = (prop: { price: number, origin: number, fontSize: number })
 
     return (
         <Stack spacing={2} direction="row" sx={baseSx}>
-            <Typography sx={priceSx}><VNDNumericFormat price={price}/></Typography>
-            <Typography sx={discountSx}><VNDNumericFormat price={origin}/></Typography>
+            <Typography sx={priceSx}><VNDNumericFormat price={price} /></Typography>
+            <Typography sx={discountSx}><VNDNumericFormat price={origin} /></Typography>
         </Stack>
     );
 }
@@ -101,9 +101,10 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
         color: colors.grey[700],
         fontSize: 25,
         fontWeight: "bold",
-        
+
     };
     const product = productDetail.product;
+    const { data: averageRating } = useGetAverageRatingQuery(productDetail.id);
 
     useEffect(() => {
         const cartItem = { product: product, quantity: 1 };
@@ -124,19 +125,39 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
     return (
         <Box flexDirection="column" letterSpacing={10}>
             <Typography sx={styleTitle}>{product.name}</Typography>
-            <Box sx={{ my: 2 }} flexDirection="row">
-                <Box sx={{ mr: 2 }}></Box>
-                <Rating
-                    name="half-read-only"
-                    defaultValue={0}
-                    value={parseFloat("5.0")}
-                    precision={0.25}
-                    readOnly
-                    sx={{ fontSize: 15 }}
-                />
+            <Box sx={{
+                my: 2, 
+                display: 'flex',
+                borderColor: 'divider',
+                color: 'text.secondary',
+                direction: "row",
+                '& svg': {
+                    m: 1,
+                },
+            }} >
+                <Stack sx={{ mr: 2 }} direction="row" alignItems="center" spacing={1}>
+                    <Typography><RoundedNumericFormat averageRating={averageRating ? averageRating : 0} /></Typography>
+                    <Rating
+                        name="half-read-only"
+                        defaultValue={0}
+                        value={1.28}
+                        precision={0.25}
+                        readOnly
+                        sx={{ fontSize: 15 }}
+                    />
+                </Stack>
+                <Divider orientation="vertical" variant="middle" flexItem />
+
+                <Typography>{productDetail.views} Lượt xem</Typography>
+                <Typography>{productDetail.views} Đánh giá</Typography>
+                <Typography>{productDetail.views} Đã bán</Typography>
+
             </Box>
             <LineIcon />
-            <Price price={product.price} origin={product.origin} fontSize={25}/>
+            <Price price={product.price} origin={product.origin} fontSize={25} />
+            <Box>
+
+            </Box>
             <Stack direction="row" spacing={2} mt={2}>
                 <QuantityButton />
                 <Button className="btn btn-cart" variant='contained' onClick={() => {
@@ -243,8 +264,8 @@ const DescriptionProduct = (prop: { productDetail: IProductDetail }) => {
 /*
 * Similar product list
 * */
-const SimilarProductList = (prop: {similarProducts: Product[]}) => {
-    const {similarProducts} = prop;
+const SimilarProductList = (prop: { similarProducts: Product[] }) => {
+    const { similarProducts } = prop;
     return (
         <Box sx={{ my: 5 }}>
             <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM TƯƠNG TỰ</Typography>
@@ -273,7 +294,7 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
                     <DescriptionProduct productDetail={productDetail} />
                 </Grid>
             </Grid>
-            <SimilarProductList similarProducts={products ?? []}/>
+            <SimilarProductList similarProducts={products ?? []} />
         </Box>
     )
 }
@@ -286,12 +307,11 @@ const ProductDetail = () => {
             navigate("/");
         }
     }, [productId, navigate]);
-    const { data} = useGetProductDetailByIdQuery(Number(productId));
-    const productDetail = data;
+    const { data: productDetail } = useGetProductDetailByIdQuery(Number(productId));
     const dispatch = useDispatch();
     productDetail && dispatch(productDetailLoad(productDetail));
     console.log(productDetail);
-    
+
     // const productDetail = useSelector((state: RootState) => state.productDetail);
     // const product = productDetail.find(p => p.id === productId);
     return (

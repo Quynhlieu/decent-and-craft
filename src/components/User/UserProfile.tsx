@@ -7,7 +7,6 @@ import {
     ListItemText,
     Typography,
     Button,
-    FormControl, FormLabel, RadioGroup, Radio
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -17,50 +16,80 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import React, {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import {useDispatch} from "react-redux";
-import { updateInfo} from "../../features/user/userSlice.ts";
-import IUser , { UserStatus } from "../../interfaces/IUser.ts";
+import React, {useEffect, useState} from "react";
+import {useUpdateInfoUserMutation} from "../../api/userApi.ts";
+import {OrbitProgress} from "react-loading-indicators";
+import {RootState} from "../../app/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {updateInfo} from "../../features/user/userSlice.ts";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import {useGetAddressListQuery} from "../../api/addressApi.ts";
+import {Controller, useForm} from "react-hook-form";
+import {UserStatus} from "../../interfaces/IUser.ts";
 
+interface FormData {
+    fullName: string;
+    phone: string;
+}
 const UserProfile: React.FC  = () => {
+    const { handleSubmit, control, formState: { errors } } = useForm<FormData>();
     const [open, setOpen] = React.useState<boolean>(false);
-
-    const handleClickOpen = () => {
+    const[phone,setPhone] = useState<string>("");
+    const[fullName,setFullName] = useState<string>("");
+    const user = useSelector((state: RootState) => state.user.user);
+    const {data : addressList} = useGetAddressListQuery(user?.id ?? 0);
+    const [userUpdate, { isLoading,data, isError, error}] = useUpdateInfoUserMutation();
+    const dispatch  = useDispatch();
+    const handleClickOpen =   () => {
+        console.log(user);
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = async() => {
         setOpen(false);
     };
-    const dispatch = useDispatch();
-    const userFromSessionStorage = sessionStorage.getItem('user');
-    const user: IUser | null = userFromSessionStorage ? JSON.parse(userFromSessionStorage) : null;
-    // console.log(sessionStorage.getItem("user"))
-    const navigate = useNavigate();
-    useEffect(()=>{
-        if(!user?.id){
-            navigate("/login");
-        }
-    },[]);
 
-    const handleFormSubmit =  (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const updatedUser: IUser = {
-            ...user,
-            id: user?.id ?? 0,
-            fullName: formData.get('fullName') as string,
-            email: formData.get('email') as string,
-            phone: formData.get('phone') as string,
-            password: user?.password ?? '',
-            status: user?.status ?? UserStatus.HOAT_DONG,
+
+    const handleFormSubmit =  async (data: FormData) => {
+        const userInfo = {
+            userId: user?.id ?? 0,
+            fullName: data.fullName,
+            phone: data.phone,
         };
-        console.log(updatedUser);
-        dispatch(updateInfo(updatedUser));
+        try {
+            await userUpdate(userInfo);
+        }
+        catch (e) {
+            console.error('Update error:', error);
+        }
         setOpen(false);
     };
+    useEffect(() => {
+        if (user) {
+            setFullName(user.fullName);
+            setPhone(user.phone ?? "");
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (data) {
+            sessionStorage.setItem('user', JSON.stringify(data));
+            dispatch(updateInfo(data));
+        }
+    }, [data, dispatch]);
+    let displayError: string | undefined;
+    if (isError) {
+        if ('status' in error) {
+            displayError = 'Cập nhật không thành công !';
+        } else {
+            displayError = error.message;
+        }
+    }
+
+    const defaultAddress = addressList && (addressList.find((addr) => addr.defaultAddress) || addressList[0]);
+    const defaultAddressString = defaultAddress
+        ? `${defaultAddress.description}, ${defaultAddress.ward}, ${defaultAddress.district}, ${defaultAddress.province}`
+        : "Chưa có địa chỉ";
     return (
         <Box  sx={{ minHeight: 320, width: 800}}>
             <Typography variant='h3'  sx={{
@@ -70,6 +99,10 @@ const UserProfile: React.FC  = () => {
             }}>
                 Thông tin tài khoản
             </Typography>
+            {isError &&
+                    <Typography color="error" sx={{ m: 1 }}>
+                        {displayError}
+                    </Typography>}
             <List
                 sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}
                 aria-label="contacts"
@@ -80,7 +113,7 @@ const UserProfile: React.FC  = () => {
                             <AccountCircleIcon />
                         </ListItemIcon>
                         <ListItemText primary="Số điện thoại:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.phone || 'N/A'} />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.phone || 'Chưa có số điện thoại'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -89,25 +122,28 @@ const UserProfile: React.FC  = () => {
                             <AssignmentIcon />
                         </ListItemIcon>
                         <ListItemText primary="Email:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.email} />
+                        <ListItemText sx={{ textAlign: 'right' }}  primary={user?.email || 'Chưa có email'} />
                     </ListItemButton>
                 </ListItem>
-                {/*<ListItem disablePadding>*/}
-                {/*    <ListItemButton>*/}
-                {/*        <ListItemIcon>*/}
-                {/*            <LocationOnIcon />*/}
-                {/*        </ListItemIcon>*/}
-                {/*        <ListItemText primary="Địa chỉ:" />*/}
-                {/*        <ListItemText sx={{ textAlign: 'right' }} primary={user?.address && user.address.length > 0 ? user.address[0].description : 'N/A'} />*/}
-                {/*    </ListItemButton>*/}
-                {/*</ListItem>*/}
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <LocationOnIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Địa chỉ:" />
+                        <ListItemText sx={{ textAlign: 'right' }} primary= {defaultAddressString || "Không có địa chỉ"} />
+                    </ListItemButton>
+                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
                             <PasswordIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Password:" />
-                        <ListItemText sx={{ textAlign: 'right' }}  primary="********" />
+                        <ListItemText primary="Trạng thái:" />
+                        <ListItemText
+                            sx={{ textAlign: 'right' }}
+                            primary={user?.status === UserStatus.HOAT_DONG ? 'Hoạt động' : ''}
+                        />
                     </ListItemButton>
                 </ListItem>
 
@@ -123,57 +159,65 @@ const UserProfile: React.FC  = () => {
                     onClose={handleClose}
                     PaperProps={{
                         component: 'form',
-                        onSubmit: handleFormSubmit,
+                        onSubmit: handleSubmit(handleFormSubmit),
                     }}
                 >
                     <DialogTitle>Cập nhật thông tin</DialogTitle>
                     <DialogContent>
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="name"
+                        <Controller
                             name="fullName"
-                            label="Họ và tên"
-                            type="fullName"
-                            fullWidth
-                            variant="standard"
-                            defaultValue={user?.fullName}
+                            control={control}
+                            defaultValue={fullName}
+                            rules={{ required: 'Họ và tên là bắt buộc' }}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    autoFocus
+                                    required
+                                    margin="dense"
+                                    id="fullName"
+                                    label="Họ và tên"
+                                    type="text"
+                                    fullWidth
+                                    variant="standard"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setFullName(event.target.value);
+                                        field.onChange(event);
+                                    }}
+                                    error={!!errors.fullName}
+                                    helperText={errors.fullName ? errors.fullName.message : ''}
+                                />
+                            )}
                         />
-
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="email"
-                            name="email"
-                            label="Địa chỉ Email"
-                            type="email"
-                            fullWidth
-                            variant="standard"
-                            defaultValue={user?.email}
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="phone"
+                        <Controller
                             name="phone"
-                            label="Số điện thoại"
-                            defaultValue={user?.phone}
-                            fullWidth
-                            variant="standard"/>
-                        <FormControl sx={{mt: 2}}>
-                            <FormLabel id="demo-radio-buttons-group-label">Giới tính</FormLabel>
-                            <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue="female"
-                                name="radio-buttons-group"
-                            >
-                                <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-                                <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                            </RadioGroup>
-                        </FormControl>
+                            control={control}
+                            defaultValue={phone}
+                            rules={{
+                                required: 'Số điện thoại là bắt buộc',
+                                pattern: {
+                                    value: /^0\d{9}$/,
+                                    message: 'Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0'
+                                }
+                            }}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    required
+                                    margin="dense"
+                                    id="phone"
+                                    label="Số điện thoại"
+                                    fullWidth
+                                    variant="standard"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        setPhone(event.target.value);
+                                        field.onChange(event);
+                                    }}
+                                    error={!!errors.phone}
+                                    helperText={errors.phone ? errors.phone.message : ''}
+                                />
+                            )}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
@@ -181,6 +225,23 @@ const UserProfile: React.FC  = () => {
                     </DialogActions>
                 </Dialog>
             </React.Fragment>
+            {isLoading && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(5px)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                }}>
+                    <OrbitProgress color="color.primary.main" size="medium" text="" textColor="" />
+                </Box>
+            )}
         </Box>
     )
 }
