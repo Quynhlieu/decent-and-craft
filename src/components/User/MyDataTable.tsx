@@ -9,6 +9,7 @@ import Address from "../../interfaces/IAddress.ts";
 import Voucher from "../../interfaces/IVoucher.ts";
 import IUser from "../../interfaces/IUser.ts";
 import OrderDetail from "../../interfaces/IOrderDetail.ts";
+import { formatDate } from "../../utils/DateFormater.ts";
 
 // Khai báo keyframe cho spinner
 const rotate360 = keyframes`
@@ -105,11 +106,12 @@ const statusColumn:TableColumn<DataType> = {
 const orderDateColumn: TableColumn<DataType> = {
     name: 'Ngày đặt hàng',
     selector: row => {
-        const dateObject = new Date(row.createdDate);
-        const day = dateObject.getDate();
-        const month = dateObject.getMonth() + 1;
-        const year = dateObject.getFullYear();
-        return `${day}/${month}/${year}`;
+        // const dateObject = new Date(row.createdDate);
+        // const day = dateObject.getDate();
+        // const month = dateObject.getMonth() + 1;
+        // const year = dateObject.getFullYear();
+        // return `${day}/${month}/${year}`;
+        return formatDate(row.createdDate)
     },
     sortable: true,
     width: '150px', // Đặt width cho cột ngày đặt hàng

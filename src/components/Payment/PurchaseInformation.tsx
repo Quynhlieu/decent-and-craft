@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 import {
     Card,
     CardContent,
@@ -17,10 +16,11 @@ import Address from "../../interfaces/IAddress.ts";
 import { SelectChangeEvent } from '@mui/material';
 import LocationSelector from "./LocationSelector.tsx";
 import MinHeightTextarea from "./MinHeightTextarea.tsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store.ts";
 import { useGetAddressListQuery } from "../../api/addressApi.ts";
 import { useNavigate } from "react-router-dom";
+import { orderSetAddressId, orderSetUserId } from "../../features/order/orderSlice.ts";
 
 interface FormValues {
     fullName: string;
@@ -42,21 +42,27 @@ const PurchaseInformation: React.FC = () => {
     const user = useSelector((state: RootState) => state.user).user;
     const navigate = useNavigate();
     const { data, isLoading } = useGetAddressListQuery(user.id);
-    const addressess = data;
+    const addresses = data;
     const [showLocationSelector, setShowLocationSelector] = useState(false);
     const [selectedAddress, setSelectedAddress] = React.useState<Address | undefined>(undefined);
+    const dispatch = useDispatch();
     useEffect(() => {
         if (user == undefined) {
             navigate("/")
         }
+        else {
+            dispatch(orderSetUserId(user?.id));
+        }
     }, [user]);
     useEffect(() => {
-        if (addressess && addressess.length > 0 && !isLoading) {
-            const defaultAddress = addressess.find(a => a.defaultAddress);
-            console.log(defaultAddress);
+        if (addresses && addresses.length > 0 && !isLoading) {
+            const defaultAddress = addresses.find(a => a.defaultAddress);
+            if (defaultAddress) {
+                dispatch(orderSetAddressId(defaultAddress?.id));
+            }
             setSelectedAddress(defaultAddress);
         }
-    }, [addressess, isLoading]);
+    }, [addresses, isLoading]);
 
 
     return (
@@ -107,10 +113,11 @@ const PurchaseInformation: React.FC = () => {
                 {selectedAddress &&
                     <AddressSelect
                         handleChange={(event) => {
-                            setSelectedAddress(addressess?.find(a=>a.id==event.target.value));
+                            dispatch(orderSetAddressId(+event.target.value));
+                            setSelectedAddress(addresses?.find(a => a.id == +event.target.value));
                         }}
                         selectedAddress={selectedAddress}
-                        addresses={addressess}
+                        addresses={addresses}
                     />
                 }
                 <MinHeightTextarea />
@@ -124,7 +131,6 @@ interface Props {
     selectedAddress: Address | undefined;
     handleChange: (event: SelectChangeEvent<string>, child: React.ReactNode) => void;
 }
-
 const AddressSelect: React.FC<Props> = ({ addresses, selectedAddress, handleChange }) => {
     return (
         <FormControl fullWidth>
@@ -136,7 +142,7 @@ const AddressSelect: React.FC<Props> = ({ addresses, selectedAddress, handleChan
                 onChange={handleChange}
                 value={selectedAddress?.id.toString()}
             >
-                {addresses && addresses.map((addr,index) => (
+                {addresses && addresses.map((addr, index) => (
                     <MenuItem key={addr.id} value={addr.id.toString()}>
                         {`#${index} ${addr.description}, ${addr.ward}, ${addr.district}, ${addr.province}`}
                     </MenuItem>

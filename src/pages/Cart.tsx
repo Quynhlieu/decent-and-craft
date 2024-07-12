@@ -16,7 +16,6 @@ import {useNavigate} from 'react-router-dom'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-
 const QuantityButton = (prop: { cartItem: CartItem }) => {
     const { cartItem } = prop;
     const dispatch = useDispatch();

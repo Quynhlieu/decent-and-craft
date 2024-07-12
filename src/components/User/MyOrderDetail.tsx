@@ -68,7 +68,7 @@ const MyOrderDetail: React.FC<MyOrderDetailProps> = ({ open, onClose, order }) =
                 <Box sx={{ minHeight: 500 }}>
                     <HorizontalNonLinearStepper order={order} />
                     <ListProductOfOrder order={order}/>
-                    {/* <AddressAndInfoOrder order = {order} /> */}
+                    <AddressAndInfoOrder order = {order} />
                 </Box>
             </DialogContent>
             <DialogActions >

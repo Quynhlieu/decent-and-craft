@@ -1,5 +1,5 @@
 import { Badge, Box, Card, CardContent, CardMedia, Divider, Grid, TextField, Typography } from '@mui/material';
-import React from "react";
+import React, { useEffect } from "react";
 import PurchaseInformation from "../components/Payment/PurchaseInformation.tsx";
 import Transport from "../components/Payment/Transport.tsx";
 import PaymentType from "../components/Payment/PaymentType.tsx";
@@ -7,9 +7,13 @@ import { orders } from "../data/order.ts";
 import OrderDetail from "../interfaces/IOrderDetail.ts";
 import Button from "@mui/material/Button";
 import PaymentBtn from "../components/Payment/PaymentBtn.tsx";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store.ts';
 import TruncateText from '../components/TruncateText.tsx';
+import { OrderDetailDto, orderSetOrderDetails } from '../features/order/orderSlice.ts';
+import { useCreateOrderMutation, userApi } from '../api/userApi.ts';
+import { useNavigate } from 'react-router-dom';
+import { OrbitProgress } from 'react-loading-indicators';
 
 interface CardProductProps {
     detail: OrderDetail;
@@ -47,6 +51,7 @@ const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
 
 const CardProductList = () => {
     const cart = useSelector((state: RootState) => state.cart);
+    const dispatch = useDispatch();
     const orderDetails: OrderDetail[] = cart.map(cartItem => (
         {
             id: 0,
@@ -55,6 +60,16 @@ const CardProductList = () => {
             quantity: cartItem.quantity
         }
     ));
+    useEffect(() => {
+        const orderDetailsDto: OrderDetailDto[] = orderDetails.map(od => (
+            {
+                price: od.price,
+                productId: od.product.id,
+                quantity: od.quantity
+            }
+        ))
+        dispatch(orderSetOrderDetails(orderDetailsDto))
+    }, [])
     return (
         <Box>
             {orderDetails.map((detail, index) => (
@@ -65,14 +80,21 @@ const CardProductList = () => {
 };
 
 const Payment: React.FC = () => {
-    const order = useSelector((state:RootState)=>state.order)
-    const dispatcher = 
-    const createOrder = () => {
-
-        console.log(order);
+    const order = useSelector((state: RootState) => state.order)
+    const [createOrder, { data, isLoading, error }] = useCreateOrderMutation();
+    const navigate = useNavigate();
+    const handleCreateOrder = async () => {
+        const data = await createOrder(order).unwrap();
+        if (!error && data && !isLoading) {
+            navigate(`/bill/${data.id}`, { state: { order: data } });
+        }
     }
     return (
         <Box sx={{ padding: 2 }}>
+            <h3>
+                {JSON.stringify(order)}
+            </h3>
+            <h4>{JSON.stringify(data)}</h4>
             <Grid container spacing={2}>
                 <Grid item xs={8}>
                     <Grid container spacing={2}>
@@ -148,12 +170,29 @@ const Payment: React.FC = () => {
                             <Typography variant="h6" sx={{ marginTop: 2 }}>
                                 Tổng thanh toán: 90000
                             </Typography>
-                            <PaymentBtn  handleCreateOrder={createOrder} />
+                            <PaymentBtn handleCreateOrder={handleCreateOrder} />
                         </CardContent>
 
                     </Card>
                 </Grid>
             </Grid>
+            {isLoading && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(5px)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 9999,
+                }}>
+                    <OrbitProgress color="primary.main" size="medium" text="" textColor="" />
+                </Box>
+            )}
         </Box>
     );
 }

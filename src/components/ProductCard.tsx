@@ -13,7 +13,9 @@ import { wishlistAdd, wishlistRemove } from '../features/wishlist/wishlistSlice'
 import { RootState } from '../app/store';
 export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
-        <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
+        <NumericFormat style={{ ...prop.styled }}
+            value={prop.price} displayType={'text'}
+            thousandSeparator={true} suffix={'đ'} />
     )
 }
 const ProductCard = (product: { data: Product }) => {
@@ -47,7 +49,7 @@ const ProductCard = (product: { data: Product }) => {
                     </Typography>
                 </CardContent>
             </CardActionArea >
-            <CardActions sx={{ paddingY: 2}}>
+            <CardActions sx={{ paddingY: 2 }}>
                 <Button
                     variant='contained'
                     sx={{

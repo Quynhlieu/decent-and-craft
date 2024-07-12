@@ -1,6 +1,5 @@
 import { Box, Grid, Stack, Typography, TypographyProps } from '@mui/material'
 import TitleBar from './TitleBar'
-import { blogs } from "../data/blogs";
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import Slider from 'react-slick';
@@ -8,6 +7,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useState } from 'react';
 import BlogCategory from '../interfaces/IBlogCategory';
+import { formatDatetime } from '../utils/DateFormater';
 type BlogItemProps = {
     tag?: string,
     title: string,
@@ -109,7 +109,7 @@ const BlogItem = (props: BlogItemProps) => {
                 </BlogTitle>
             </StyledLink>
             <Typography fontStyle="italic" sx={{ textDecoration: "underline" }} >
-                <small>{date}</small>
+                <small>{formatDatetime(date)}</small>
             </Typography>
         </Box >
     )
@@ -198,7 +198,7 @@ const BlogCarousel = () => {
                 <Box>
                     <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
                     <Stack sx={{ ml: 2 }} spacing={1}>
-                        {blogs.map(blog => <BlogItem key={blog.id}  date={blog.createdDate} title={blog.title} />)}
+                        {blogs.map(blog => <BlogItem key={blog.id} date={blog.createdDate} title={blog.title} />)}
                     </Stack>
                 </Box>
             </Grid>

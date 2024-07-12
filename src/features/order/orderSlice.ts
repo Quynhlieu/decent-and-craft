@@ -1,11 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-interface OrderAddDto {
+export interface OrderAddDto {
     "voucherId": number | null;
     "addressId": number | null;
     "notice": string;
     "shipment": "COD",
     "shippingFee": number;
     "userId": number | null;
+    "orderDetails": OrderDetailDto[]
+}
+export interface OrderDetailDto {
+    productId: number;
+    price: number;
+    quantity: number;
 }
 const initialState: OrderAddDto = {
     voucherId: null,
@@ -14,7 +20,7 @@ const initialState: OrderAddDto = {
     shipment: "COD",
     shippingFee: 20000,
     userId: null,
-
+    orderDetails: []
 };
 const orderSlice = createSlice({
     name: "order",
@@ -29,8 +35,19 @@ const orderSlice = createSlice({
         orderSetVoucherId(state, action: PayloadAction<number>) {
             state.voucherId = action.payload
         },
+        orderSetNotice(state, action: PayloadAction<string>) {
+            state.notice = action.payload
+        },
+        orderSetOrderDetails(state, action: PayloadAction<OrderDetailDto[]>) {
+            state.orderDetails = action.payload
+        }
     }
-
 })
 export default orderSlice.reducer
-export const { orderSetAddressId, orderSetVoucherId, orderSetUserId } = orderSlice.actions;
+export const {
+    orderSetAddressId,
+    orderSetVoucherId,
+    orderSetUserId,
+    orderSetNotice,
+    orderSetOrderDetails
+} = orderSlice.actions;

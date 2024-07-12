@@ -13,7 +13,7 @@ const InfoOrder: React.FC<InfoOrderProps>  = ({order}) => {
 
     if (!order) return null;
 
-    const totalItemsPrice = order.orderDetail.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalItemsPrice = order.orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shippingFee = order.shippingFee;
     const voucherDiscount = order.voucher ? order.voucher.discount : 0;
     const finalPrice = totalItemsPrice + shippingFee - voucherDiscount;
@@ -37,7 +37,7 @@ const InfoOrder: React.FC<InfoOrderProps>  = ({order}) => {
         },
         {
             name: "Phương thức thanh toán: ",
-            value: order.paymentMethod,
+            value: order.shipment
         },
     ];
 

@@ -1,7 +1,6 @@
 import { Box, Grid, Typography } from '@mui/material'
 import React, { PropsWithChildren } from 'react'
 import TitleBar from './TitleBar'
-import { Image } from '@mui/icons-material'
 import feature1 from "../assets/features/feature1.png"
 import feature2 from "../assets/features/feature2.png"
 import feature3 from "../assets/features/feature3.jpg"
