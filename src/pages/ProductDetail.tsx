@@ -104,7 +104,7 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
 
     };
     const product = productDetail.product;
-    const { data: averageRating } = useGetAverageRatingQuery(productDetail.id);
+    let { data: averageRating } = useGetAverageRatingQuery(productDetail.id);
 
     useEffect(() => {
         const cartItem = { product: product, quantity: 1 };
@@ -121,38 +121,43 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
 
     const productDetailState = useSelector((state: RootState) => state.productDetail);
     const currentCartItem = productDetailState.cartItem;
+    averageRating = typeof averageRating === 'number' ? averageRating : 0;
 
     return (
         <Box flexDirection="column" letterSpacing={10}>
             <Typography sx={styleTitle}>{product.name}</Typography>
-            <Box sx={{
-                my: 2, 
-                display: 'flex',
-                borderColor: 'divider',
-                color: 'text.secondary',
-                direction: "row",
-                '& svg': {
-                    m: 1,
-                },
-            }} >
-                <Stack sx={{ mr: 2 }} direction="row" alignItems="center" spacing={1}>
-                    <Typography><RoundedNumericFormat averageRating={averageRating ? averageRating : 0} /></Typography>
-                    <Rating
-                        name="half-read-only"
-                        defaultValue={0}
-                        value={1.28}
-                        precision={0.25}
-                        readOnly
-                        sx={{ fontSize: 15 }}
-                    />
-                </Stack>
-                <Divider orientation="vertical" variant="middle" flexItem />
+            <Stack spacing={2} direction="row" alignItems="center">
+                {averageRating !== 0 ? (
+                    <Stack direction="row" alignItems="center">
+                        <Typography>
+                            <RoundedNumericFormat value={averageRating} />
+                        </Typography>
+                        <Rating
+                            name="half-read-only"
+                            defaultValue={0}
+                            value={parseFloat(String(averageRating))}
+                            precision={0.25}
+                            readOnly
+                            sx={{ fontSize: 15, ml: 1, '& .MuiRating-icon': { mr: 0 } }}
+                        />
+                        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+                        <Typography>{productDetail.views} Đánh giá</Typography>
+                    </Stack>
+                ) : (
+                    <Stack direction="row" alignItems="center">
+                        <Typography>Chưa có đánh giá</Typography>
+                    </Stack>
+                )}
+
+                <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
 
                 <Typography>{productDetail.views} Lượt xem</Typography>
-                <Typography>{productDetail.views} Đánh giá</Typography>
-                <Typography>{productDetail.views} Đã bán</Typography>
 
-            </Box>
+                <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+
+                <Typography>{productDetail.views} Đã bán</Typography>
+            </Stack>
             <LineIcon />
             <Price price={product.price} origin={product.origin} fontSize={25} />
             <Box>
@@ -311,9 +316,6 @@ const ProductDetail = () => {
     const dispatch = useDispatch();
     productDetail && dispatch(productDetailLoad(productDetail));
     console.log(productDetail);
-
-    // const productDetail = useSelector((state: RootState) => state.productDetail);
-    // const product = productDetail.find(p => p.id === productId);
     return (
         <Box sx={{ mb: 10 }}>
             <BreadcrumbHeader />

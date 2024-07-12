@@ -17,11 +17,12 @@ export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProper
         <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
     )
 }
-export const RoundedNumericFormat = (prop: {averageRating: number, styled?: React.CSSProperties}) => {
+export const RoundedNumericFormat = (prop: { value: number, styled?: React.CSSProperties }) => {
+    const {value, styled} = prop;
     return (
-        <NumericFormat style={{...prop.styled}} value={prop.averageRating.toFixed(1)} displayType='text' />
+      <NumericFormat style={{ ...styled }} value={value} displayType='text' />
     );
-}
+  };
 const InfomationHover = (props: { product: Product }) => {
     const { product } = props;
     const quantitySold = 10

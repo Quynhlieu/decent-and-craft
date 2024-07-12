@@ -18,8 +18,8 @@ export const productApi = createApi({
         getProductsByFilters: builder.query<PageIml, {minPrice: number, maxPrice: number, categoryId: number, page: Page }>({
             query: ({minPrice, maxPrice, categoryId, page}) => `filter?minPrice=${minPrice}&maxPrice=${maxPrice}&categoryId=${categoryId}&page=${page.number}`
         }),
-        getProductByCategoryId: builder.query<PageIml, {categoryId: number}>({
-            query: ({categoryId}) => `filter?categoryId=${categoryId}`
+        getProductByCategoryId: builder.query<PageIml, {categoryId: number, categoryName: string}>({
+            query: ({categoryId, categoryName}) => `filter?categoryId=${categoryId}&categoryName=${categoryName}`
         }),
         
     }),
