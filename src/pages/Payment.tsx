@@ -7,15 +7,18 @@ import { orders } from "../data/order.ts";
 import OrderDetail from "../interfaces/IOrderDetail.ts";
 import Button from "@mui/material/Button";
 import PaymentBtn from "../components/Payment/PaymentBtn.tsx";
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store.ts';
+import TruncateText from '../components/TruncateText.tsx';
 
 interface CardProductProps {
     detail: OrderDetail;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
-    <Card sx={{ marginBottom: 2, height: "70px" }}>
+    <Card sx={{ marginBottom: 2, height: "100px" }}>
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Badge badgeContent={4} color="primary" sx={{ alignSelf: 'center', marginX: 1, marginBottom: 2 }}>
+            <Badge badgeContent={detail.quantity} color="primary" sx={{ alignSelf: 'center', marginX: 1, marginBottom: 2 }}>
                 <CardMedia
                     component="img"
                     sx={{ width: 50, height: 50, objectFit: 'cover' }}
@@ -25,7 +28,9 @@ const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
             </Badge>
             <CardContent sx={{ flex: 1 }}>
                 <Typography gutterBottom component="div">
-                    {detail.product.name}
+                    <TruncateText maxLength={50}>
+                        {detail.product.name}
+                    </TruncateText>
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between" }}>
                     <Typography variant="body2" color="text.secondary">
@@ -40,13 +45,19 @@ const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
     </Card>
 );
 
-interface CardProductListProps {
-    orderDetail: OrderDetail[];
-}
-const CardProductList: React.FC<CardProductListProps> = ({ orderDetail }) => {
+const CardProductList = () => {
+    const cart = useSelector((state: RootState) => state.cart);
+    const orderDetails: OrderDetail[] = cart.map(cartItem => (
+        {
+            id: 0,
+            price: cartItem.product.price,
+            product: cartItem.product,
+            quantity: cartItem.quantity
+        }
+    ));
     return (
         <Box>
-            {orderDetail.map((detail, index) => (
+            {orderDetails.map((detail, index) => (
                 <CardProduct key={index} detail={detail} />
             ))}
         </Box>
@@ -54,6 +65,12 @@ const CardProductList: React.FC<CardProductListProps> = ({ orderDetail }) => {
 };
 
 const Payment: React.FC = () => {
+    const order = useSelector((state:RootState)=>state.order)
+    const dispatcher = 
+    const createOrder = () => {
+
+        console.log(order);
+    }
     return (
         <Box sx={{ padding: 2 }}>
             <Grid container spacing={2}>
@@ -131,7 +148,7 @@ const Payment: React.FC = () => {
                             <Typography variant="h6" sx={{ marginTop: 2 }}>
                                 Tổng thanh toán: 90000
                             </Typography>
-                            <PaymentBtn />
+                            <PaymentBtn  handleCreateOrder={createOrder} />
                         </CardContent>
 
                     </Card>

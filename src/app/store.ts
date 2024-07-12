@@ -4,6 +4,7 @@ import wishlistReducer from "../features/wishlist/wishlistSlice"
 import userReducer from "../features/user/userSlice.ts";
 import productDetailSlice from "../features/productDetail/productDetailSlice.ts";
 import reviewSlice from "../features/review/reviewSlice.ts";
+import orderReducer from "../features/order/orderSlice.ts";
 import { productApi } from "../api/productApi.ts";
 import { blogApi } from "../api/blogApi.ts";
 import { feedbackApi } from "../api/feedackApi.ts";
@@ -17,6 +18,7 @@ export const store = configureStore({
         cart: cartReducer,
         wishlist: wishlistReducer,
         user: userReducer,
+        order: orderReducer,
         [userApi.reducerPath]: userApi.reducer,
         [addressApi.reducerPath]: addressApi.reducer,
         [orderApi.reducerPath]: orderApi.reducer,
