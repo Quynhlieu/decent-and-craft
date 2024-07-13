@@ -39,13 +39,11 @@ const DEFAULT_ADDRESS: Address = {
 };
 
 const PurchaseInformation: React.FC = () => {
-    const user = useSelector((state: RootState) => state.user).user;
     const navigate = useNavigate();
-    const { data, isLoading } = useGetAddressListQuery(user.id);
-    const addresses = data;
-    const [showLocationSelector, setShowLocationSelector] = useState(false);
     const [selectedAddress, setSelectedAddress] = React.useState<Address | undefined>(undefined);
     const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user).user;
+    const { data, isLoading } = useGetAddressListQuery(user?.id);
     useEffect(() => {
         if (user == undefined) {
             navigate("/")
@@ -53,7 +51,8 @@ const PurchaseInformation: React.FC = () => {
         else {
             dispatch(orderSetUserId(user?.id));
         }
-    }, [user]);
+    }, [navigate, user, dispatch]);
+    const addresses = data;
     useEffect(() => {
         if (addresses && addresses.length > 0 && !isLoading) {
             const defaultAddress = addresses.find(a => a.defaultAddress);
