@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "../../assets/product-detail.css"
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import { ImageList } from "../../features/productDetail/productDetailSlice";
 const NextArrow = (props:any) => {
     const { onClick } = props;
     return (
@@ -22,14 +23,14 @@ const PrevArrow = (props:any) => {
     );
 };
 
-function MySlickCarousel(prop: { mainImages: string[] }) {
+function MySlickCarousel(prop: { mainImages: ImageList[] }) {
     const { mainImages } = prop;
 
     const settings = {
         customPaging: function (i: number) {
             return (
                 <a>
-                    <img width={80} height={80} src={`${mainImages[i]}`} alt={`thumbnail-${i}`} />
+                    <img width={80} height={80} src={`${mainImages[i].url}`} alt={`thumbnail-${i}`} />
                 </a>
             );
         },
@@ -46,7 +47,7 @@ function MySlickCarousel(prop: { mainImages: string[] }) {
     const showImg = () => {
         return mainImages.map((imgSrc, index) => (
             <div key={index} className="img-main">
-                <img width="auto" height={400} src={imgSrc} alt={`slide-${index}`} />
+                <img width="auto" height={400} src={imgSrc.url} alt={`slide-${index}`} />
             </div>
         ));
     };

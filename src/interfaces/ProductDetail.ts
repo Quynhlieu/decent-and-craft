@@ -1,9 +1,12 @@
-// import {Product} from "./Product.ts";
-// import {Image, ProductDescription} from "./IProductDescription.ts";
+import { ImageList, ProductBlog } from "../features/productDetail/productDetailSlice";
+import { CategoryList } from "./CategoryList";
+import { Product } from "./Product";
 
-// export interface IProductDetail extends Product{
-//     discount: number;
-//     images: Image[];
-//     overview: string;
-//     productDescription: ProductDescription[];
-// }
+export interface IProductDetail {
+    id: number;
+    product: Product;
+    imageList: ImageList[];
+    categoryList: CategoryList[];
+    productBlog: ProductBlog;
+    views: number;
+}

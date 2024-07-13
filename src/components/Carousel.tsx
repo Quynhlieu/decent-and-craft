@@ -47,7 +47,7 @@ const CarouselItem = (props: any) => {
     const { image } = props;
     return (
         <div className='flex-center'>
-            <img width={1200} height={600} style={{objectFit:"cover"}} src={image} alt="" />
+            <img width={1200} height={500} style={{objectFit:"cover"}} src={image} alt="" />
         </div >
     )
 }
@@ -67,7 +67,7 @@ const Carousel = () => {
 
     }
     return (
-        <Box sx={{mt:3  }}>
+        <Box sx={{pb:5  }}>
             <Slider  {...setting}>
                 <CarouselItem image={carouse1} />
                 <CarouselItem image={carouse2} />

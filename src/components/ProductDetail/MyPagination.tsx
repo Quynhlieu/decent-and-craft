@@ -1,8 +1,7 @@
 import { Box, Pagination, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ReviewItem } from "./Review.tsx";
-import { IReview } from "../../interfaces/IProductDescription.ts";
-
+import { IReview } from "../../features/productDetail/productDetailSlice.ts";
 interface Pagination {
     count: number;
 }

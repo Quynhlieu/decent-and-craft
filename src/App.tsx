@@ -47,7 +47,6 @@ function App() {
             <Route path="user" element={<User />} />
             <Route path="product" >
               <Route path=":productId" element={<ProductDetail />} />
-              {/* <Route path=":review-form" element={<ReviewForm />} /> */}
             </Route>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
