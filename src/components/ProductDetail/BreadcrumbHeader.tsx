@@ -3,7 +3,8 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useLocation, Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+
 const BreadcrumbHeader = () => {
     const location = useLocation();
     const pathNames = location.pathname.split("/").filter(x => x);
@@ -14,38 +15,20 @@ const BreadcrumbHeader = () => {
     const product = productDetailState.productDetail?.product;
     const firstCategory = productDetail?.categoryList[0];
 
-    const [containerWidth, setContainerWidth] = useState(0);
-    const [otherBreadcrumbsWidth, setOtherBreadcrumbsWidth] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const breadcrumbsRef = useRef<HTMLDivElement[]>([]);
-
-    useEffect(() => {
-        if (containerRef.current) {
-            setContainerWidth(containerRef.current.offsetWidth);
-        }
-    }, []);
-
-    useEffect(() => {
-        const totalWidth = breadcrumbsRef.current.reduce((acc, el) => acc + (el?.offsetWidth || 0), 0);
-        setOtherBreadcrumbsWidth(totalWidth);
-    }, [pathNames, containerWidth]);
-
     const breadcrumbItemStyle = {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         maxWidth: '120px',
-        display: 'inline-block',
-        verticalAlign: 'middle'
     };
 
     const breadcrumbNameStyle = {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        maxWidth: `${containerWidth - otherBreadcrumbsWidth}px`, // Tính toán maxWidth dựa trên chiều rộng container còn lại
-        display: 'inline-block',
-        verticalAlign: 'middle'
+        maxWidth: '400px',
     };
 
     const breadcrumbs = [
@@ -68,18 +51,19 @@ const BreadcrumbHeader = () => {
         );
 
         breadcrumbs.push(
-            <Typography color="text.primary" sx={breadcrumbNameStyle} key="product">
+            <Typography color="text.primary" sx={breadcrumbNameStyle} key="product" noWrap>
                 {product?.name}
             </Typography>
         );
     }
 
     return (
-        <div ref={containerRef} style={{ display: 'flex', alignItems: 'center' }}>
-            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ marginY: 3, paddingX: 5 }} maxItems={3}>
-                {breadcrumbs}
-            </Breadcrumbs>
-        </div>
+            <div ref={containerRef}>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ marginY: 3, paddingX: 5 }} maxItems={3}>
+                    {breadcrumbs}
+                </Breadcrumbs>
+            </div>
     );
 }
+
 export default BreadcrumbHeader;

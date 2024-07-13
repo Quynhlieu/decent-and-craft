@@ -101,6 +101,13 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
         color: colors.grey[700],
         fontSize: 25,
         fontWeight: "bold",
+        display: '-webkit-box',
+        overflow: 'hidden',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: 2,
+        textOverflow: 'ellipsis',
+        lineHeight: '1.5em', // Điều chỉnh dòng cao cho phù hợp với kiểu chữ
+        height: '3em' // Chiều cao cố định cho 2 dòng
 
     };
     const product = productDetail.product;
@@ -142,7 +149,7 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
                         />
                         <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
 
-                        <Typography>{productDetail.views} Đánh giá</Typography>
+                        <Typography>{productDetail.views || 0} Đánh giá</Typography>
                     </Stack>
                 ) : (
                     <Stack direction="row" alignItems="center">
@@ -152,11 +159,11 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
 
-                <Typography>{productDetail.views} Lượt xem</Typography>
+                <Typography>{productDetail.views || 0} Lượt xem</Typography>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
 
-                <Typography>{productDetail.views} Đã bán</Typography>
+                <Typography>{productDetail.views || 0} Đã bán</Typography>
             </Stack>
             <LineIcon />
             <Price price={product.price} origin={product.origin} fontSize={25} />
