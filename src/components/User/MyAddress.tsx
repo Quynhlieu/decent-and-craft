@@ -206,7 +206,6 @@ const AddBtn = ({onBack}: { onBack: () => void }) => {
 
 const AddressInfo: React.FC<AddressInfoProps> = ({ address, onClickEdit, onClickDelete }) => {
 
-
     return (
         <Box sx={{
             borderTop: '1px solid #ebebeb',

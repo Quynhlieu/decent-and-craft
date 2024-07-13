@@ -13,6 +13,7 @@ import { productDetailApi } from "../api/productDetailApi.ts";
 import { addressApi } from "../api/addressApi.ts";
 import { orderApi } from "../api/orderApi.ts";
 import saveCartMiddleware from "../features/cart/saveCartMiddleware.ts";
+import { voucherApi } from "../api/voucherApi.ts";
 export const store = configureStore({
     reducer: {
         cart: cartReducer,
@@ -27,7 +28,8 @@ export const store = configureStore({
         [productApi.reducerPath]: productApi.reducer,
         [blogApi.reducerPath]: blogApi.reducer,
         [feedbackApi.reducerPath]: feedbackApi.reducer,
-        [productDetailApi.reducerPath]: productDetailApi.reducer
+        [productDetailApi.reducerPath]: productDetailApi.reducer,
+        [voucherApi.reducerPath]: voucherApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(productApi.middleware,
@@ -37,6 +39,7 @@ export const store = configureStore({
             orderApi.middleware,
             blogApi.middleware,
             feedbackApi.middleware,
+            voucherApi.middleware,
             saveCartMiddleware
         )
 })

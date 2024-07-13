@@ -24,4 +24,5 @@ export default interface IOrder {
     notice: string;
     shippingFee: number;
     totalPrice: number;
+    createdDate: string;
 }

@@ -14,11 +14,11 @@ import SearchPage from "./pages/SearchPage.tsx";
 import Register from "./pages/Register.tsx";
 import Payment from "./pages/Payment.tsx";
 import WishList from "./pages/WishList.tsx";
-import Bill from "./pages/Bill.tsx";
 import AdminLayout from './components/Admin/Page/AdminLayout.tsx';
 import ProductManager from './components/Admin/Page/ProductManager.tsx';
 import CreateProduct from './components/Admin/Page/CreateProduct.tsx';
 import Page404 from "./pages/Page404.tsx";
+import BillContainer from './pages/Bill.tsx';
 
 const theme = createTheme({
   palette: {
@@ -62,7 +62,7 @@ function App() {
             <Route path="search" element={<SearchPage />} />
             <Route path="pay" element={<Payment />} />
             <Route path="bill"   >
-              <Route path=":orderId" element={<Bill />} />
+              <Route path=":orderId" element={<BillContainer />} />
             </Route>
           </Route>
           <Route path="/admin" element={<AdminLayout />} >

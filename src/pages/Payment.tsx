@@ -1,5 +1,5 @@
-import { Badge, Box, Card, CardContent, CardMedia, Divider, Grid, TextField, Typography } from '@mui/material';
-import React, { useEffect } from "react";
+import { Badge, Box, Card, CardContent, CardMedia, Dialog, DialogContent, DialogActions, DialogTitle, Divider, Grid, Skeleton, Stack, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from "react";
 import PurchaseInformation from "../components/Payment/PurchaseInformation.tsx";
 import Transport from "../components/Payment/Transport.tsx";
 import PaymentType from "../components/Payment/PaymentType.tsx";
@@ -11,12 +11,76 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store.ts';
 import TruncateText from '../components/TruncateText.tsx';
 import { OrderDetailDto, orderSetOrderDetails } from '../features/order/orderSlice.ts';
-import { useCreateOrderMutation, userApi } from '../api/userApi.ts';
+import { useCreateOrderMutation } from '../api/userApi.ts';
 import { useNavigate } from 'react-router-dom';
 import { OrbitProgress } from 'react-loading-indicators';
-
+import SellIcon from '@mui/icons-material/Sell';
+import { useGetAllVouchersQuery } from '../api/voucherApi.ts';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import IVoucher from '../interfaces/IVoucher.ts';
+import { VNDNumericFormat } from '../components/ProductCard.tsx';
 interface CardProductProps {
     detail: OrderDetail;
+}
+const VoucherList: React.FC = () => {
+    const { data, isLoading } = useGetAllVouchersQuery();
+    const [open, setOpen] = useState(false);
+    const [selectedVoucher, setSelectedVoucher] = useState<IVoucher | null>(null);
+    const MySwal = withReactContent(Swal)
+    const handleClickOpen = (voucher: IVoucher) => {
+        setSelectedVoucher(voucher);
+        setOpen(true);
+    }
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedVoucher(null);
+    }
+    return (
+        <>
+            <Stack sx={{ ml: 1 }} spacing={2} direction="row">
+                {data && data.length > 0 &&
+                    data.map(v => <VoucherItem onClick={() => handleClickOpen(v)} key={v.id} voucher={v} />)
+                }
+            </Stack>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle align='center'  >Chi tiết voucher</DialogTitle>
+                <DialogContent>
+                    {selectedVoucher && (
+                        <>
+                            <p><strong>Mã voucher:</strong> {selectedVoucher.voucherCode}</p>
+                            <p><strong>Điều kiện:</strong>
+                                Hóa đơn ít nhất:
+                                <VNDNumericFormat price={selectedVoucher.conditions} />
+                            </p>
+                            <p><strong>Số tiền giảm:</strong>
+                                <VNDNumericFormat price={selectedVoucher.amount} />
+                            </p>
+                            <p><strong>Số lượng còn lại:</strong> {selectedVoucher.quantity}</p>
+                            <p><strong>Ngày hết hạn:</strong> {selectedVoucher.expirationDate}</p>
+                            <p><strong>Mô tả:</strong> {selectedVoucher.description}</p>
+                        </>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {
+                        const code = selectedVoucher?.voucherCode ?? "";
+                        navigator.clipboard.writeText(code);
+                        MySwal.fire({
+                            title: "Sử dụng mã giảm giá thành công",
+                            icon: "success",
+                        })
+                        handleClose();
+                    }} variant='contained' color="primary">
+                        Lưu mã
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                        Đóng
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    )
 }
 
 const CardProduct: React.FC<CardProductProps> = ({ detail }) => (
@@ -78,23 +142,33 @@ const CardProductList = () => {
         </Box>
     );
 };
-
+interface VoucherItemProps {
+    voucher: IVoucher
+    onClick: () => void
+}
+const VoucherItem: React.FC<VoucherItemProps> = ({ voucher, onClick }) => {
+    return (
+        <Button onClick={onClick}
+            size='small' color='warning' variant='contained' >
+            <strong>
+                {voucher.voucherCode}
+            </strong>
+        </Button >
+    )
+}
 const Payment: React.FC = () => {
-    const order = useSelector((state: RootState) => state.order)
-    const [createOrder, { data, isLoading, error }] = useCreateOrderMutation();
+    const order = useSelector((state: RootState) => state.order);
+    const user = useSelector((state: RootState) => state.user);
+    const [createOrder, { isLoading, error }] = useCreateOrderMutation();
     const navigate = useNavigate();
     const handleCreateOrder = async () => {
         const data = await createOrder(order).unwrap();
         if (!error && data && !isLoading) {
-            navigate(`/bill/${data.id}`, { state: { order: data } });
+            navigate(`/bill/${data.id}`, { state: { order: data, userInfo: user } });
         }
     }
     return (
         <Box sx={{ padding: 2 }}>
-            <h3>
-                {JSON.stringify(order)}
-            </h3>
-            <h4>{JSON.stringify(data)}</h4>
             <Grid container spacing={2}>
                 <Grid item xs={8}>
                     <Grid container spacing={2}>
@@ -117,6 +191,13 @@ const Payment: React.FC = () => {
                             <Divider orientation="horizontal" flexItem />
                             <Box sx={{ padding: 2 }}>
                                 <Grid container spacing={2} alignItems="center">
+                                    <Stack direction="row" sx={{ mt: 2 }}>
+                                        <Typography color="secondary.main" >
+                                            <SellIcon fontSize='small' />
+                                            <strong>Voucher</strong>
+                                        </Typography>
+                                        <VoucherList />
+                                    </Stack>
                                     <Grid item xs={8}>
                                         <TextField
                                             id="outlined-basic"

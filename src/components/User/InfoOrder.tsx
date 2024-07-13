@@ -1,21 +1,21 @@
 import React from "react";
-import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/material";
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import Order from "../../interfaces/IOrder.ts";
 
-interface InfoOrderProps{
+interface InfoOrderProps {
     order: Order | null;
 }
 
 const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
-const InfoOrder: React.FC<InfoOrderProps>  = ({order}) => {
+const InfoOrder: React.FC<InfoOrderProps> = ({ order }) => {
 
     if (!order) return null;
 
     const totalItemsPrice = order.orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shippingFee = order.shippingFee;
-    const voucherDiscount = order.voucher ? order.voucher.discount : 0;
+    const voucherDiscount = order.voucher ? order.voucher.amount : 0;
     const finalPrice = totalItemsPrice + shippingFee - voucherDiscount;
 
     const rows = [
