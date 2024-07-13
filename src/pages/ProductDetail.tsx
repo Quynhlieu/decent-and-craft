@@ -137,7 +137,7 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
                 {averageRating !== 0 ? (
                     <Stack direction="row" alignItems="center">
                         <Typography>
-                            <RoundedNumericFormat value={averageRating} />
+                            {averageRating.toFixed(1)}
                         </Typography>
                         <Rating
                             name="half-read-only"

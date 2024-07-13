@@ -16,7 +16,6 @@ import {useNavigate} from 'react-router-dom'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-
 const QuantityButton = (prop: { cartItem: CartItem }) => {
     const { cartItem } = prop;
     const dispatch = useDispatch();
@@ -195,17 +194,6 @@ const Cart = () => {
                     </Box>}
                     <PriceRow name='Tổng cộng' price={getTotalPrice(cart) - discount} />
                     <Divider sx={{ mt: 1, borderBottomWidth: 3 }} />
-                    <Stack direction="row" sx={{ mt: 2 }}>
-                        <Typography color="secondary.main" >
-                            <SellIcon fontSize='small' />
-                            <strong>Voucher</strong>
-                        </Typography>
-                        <Stack sx={{ ml: 3 }} spacing={2} direction="row">
-                            <VoucherItem />
-                            <VoucherItem />
-                            <VoucherItem />
-                        </Stack>
-                    </Stack>
                     <Divider sx={{ mt: 1, borderBottomWidth: 3 }} />
                     <TextField sx={{ mt: 2 }}
                         size='small'

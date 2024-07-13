@@ -12,16 +12,19 @@ export const productApi = createApi({
         getAllProduct: builder.query<Product[], void>({
             query: () => `products`,
         }),
+        getAllHotProduct: builder.query<Product[], void>({
+            query: () => `products/hot-products`,
+        }),
         getProductById: builder.query<Product, number>({
             query: (id) => `products/${id}`,
         }),
-        getProductsByFilters: builder.query<PageIml, {minPrice: number, maxPrice: number, categoryId: number, page: Page }>({
-            query: ({minPrice, maxPrice, categoryId, page}) => `filter?minPrice=${minPrice}&maxPrice=${maxPrice}&categoryId=${categoryId}&page=${page.number}`
+        getProductsByFilters: builder.query<PageIml, { minPrice: number, maxPrice: number, categoryId: number, page: Page }>({
+            query: ({ minPrice, maxPrice, categoryId, page }) => `filter?minPrice=${minPrice}&maxPrice=${maxPrice}&categoryId=${categoryId}&page=${page.number}`
         }),
-        getProductByCategoryId: builder.query<PageIml, {categoryId: number, categoryName: string}>({
-            query: ({categoryId, categoryName}) => `filter?categoryId=${categoryId}&categoryName=${categoryName}`
+        getProductByCategoryId: builder.query<PageIml, { categoryId: number, categoryName: string }>({
+            query: ({ categoryId, categoryName }) => `filter?categoryId=${categoryId}&categoryName=${categoryName}`
         }),
-        
+
     }),
 })
-export const { useGetAllProductQuery, useGetProductByIdQuery, useGetProductByCategoryIdQuery } = productApi
+export const {useGetAllHotProductQuery, useGetAllProductQuery, useGetProductByIdQuery, useGetProductByCategoryIdQuery } = productApi

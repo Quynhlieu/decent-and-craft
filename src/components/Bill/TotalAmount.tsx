@@ -12,13 +12,15 @@ const formatCurrency = (amount: number): string => {
 
 const TotalAmount: React.FC<TotalAmountProps> = ({ order }) => {
     if (!order) return null;
-
-    const totalItemsPrice = order.orderDetail.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalItemsPrice = order.orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shippingFee = order.shippingFee;
-    const voucherDiscount = order.voucher ? order.voucher.discount : 0;
+    const voucherDiscount = order.voucher ? order.voucher.amount : 0;
     const finalPrice = totalItemsPrice + shippingFee - voucherDiscount;
-
-    const rows = [
+    type RowsType = {
+        name: string,
+        value: string,
+    }
+    let rows: RowsType[] = [
         {
             name: "Tổng tiền hàng",
             value: formatCurrency(totalItemsPrice),
@@ -28,21 +30,24 @@ const TotalAmount: React.FC<TotalAmountProps> = ({ order }) => {
             value: formatCurrency(shippingFee),
         },
         {
-            name: "Áp dụng Voucher",
-            value: formatCurrency(-voucherDiscount),
-        },
-        {
             name: "Thành tiền",
             value: formatCurrency(finalPrice),
         },
         {
             name: "Phương thức thanh toán:",
-            value: order.paymentMethod,
+            value: order.shipment,
         },
     ];
+    if (voucherDiscount) {
+        const voucherRow = {
+            name: "Áp dụng Voucher",
+            value: formatCurrency(-voucherDiscount)
+        };
+        rows.splice(2, 0, voucherRow)
+    }
 
     return (
-        <Box sx={{ padding: '16px', borderBottom: '1px solid #ddd'}}>
+        <Box sx={{ padding: '16px', borderBottom: '1px solid #ddd' }}>
             <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', marginBottom: '10px' }}>
                 Tổng tiền
             </Typography>
@@ -54,7 +59,10 @@ const TotalAmount: React.FC<TotalAmountProps> = ({ order }) => {
                                 <TableCell component="th" scope="row">
                                     {row.name}
                                 </TableCell>
-                                <TableCell align="right" sx={row.name === "Thành tiền" ? { color: "red", fontWeight: 'bold', fontSize: '20px' } : {}}>
+                                <TableCell align="right"
+                                    sx={row.name === "Thành tiền" ?
+                                        { color: "red", fontWeight: 'bold', fontSize: '20px' }
+                                        : {}}>
                                     {row.value}
                                 </TableCell>
                             </TableRow>

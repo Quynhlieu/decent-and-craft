@@ -4,11 +4,14 @@ import wishlistReducer from "../features/wishlist/wishlistSlice"
 import userReducer from "../features/user/userSlice.ts";
 import productDetailSlice from "../features/productDetail/productDetailSlice.ts";
 import reviewSlice from "../features/review/reviewSlice.ts";
+import orderReducer from "../features/order/orderSlice.ts";
 import { productApi } from "../api/productApi.ts";
 import { userApi } from "../api/userApi.ts";
 import { productDetailApi } from "../api/productDetailApi.ts";
 import { addressApi } from "../api/addressApi.ts";
 import { orderApi } from "../api/orderApi.ts";
+import saveCartMiddleware from "../features/cart/saveCartMiddleware.ts";
+import { voucherApi } from "../api/voucherApi.ts";
 import { blogApi } from "../api/blogApi.ts";
 import { feedbackApi } from "../api/feedackApi.ts";
 import { reviewApi } from "../api/reviewApi.ts";
@@ -17,6 +20,7 @@ export const store = configureStore({
         cart: cartReducer,
         wishlist: wishlistReducer,
         user: userReducer,
+        order: orderReducer,
         [userApi.reducerPath]: userApi.reducer,
         [addressApi.reducerPath]: addressApi.reducer,
         [orderApi.reducerPath]: orderApi.reducer,
@@ -26,7 +30,8 @@ export const store = configureStore({
         [blogApi.reducerPath]: blogApi.reducer,
         [feedbackApi.reducerPath]: feedbackApi.reducer,
         [productDetailApi.reducerPath]: productDetailApi.reducer,
-        [reviewApi.reducerPath]:reviewApi.reducer,
+        [voucherApi.reducerPath]: voucherApi.reducer,
+        [reviewApi.reducerPath]: reviewApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(productApi.middleware,
@@ -36,6 +41,8 @@ export const store = configureStore({
             orderApi.middleware,
             blogApi.middleware,
             feedbackApi.middleware,
+            voucherApi.middleware,
+            saveCartMiddleware,
             reviewApi.middleware)
 })
 export type RootState = ReturnType<typeof store.getState>

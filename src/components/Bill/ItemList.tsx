@@ -21,6 +21,7 @@ const ItemList: React.FC<ItemListProps> = ({ order }) => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ fontWeight: 'bold' }}>Mã sản phẩm</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Ảnh</TableCell>
                             <TableCell sx={{ fontWeight: 'bold' }}>Tên sản phẩm</TableCell>
                             <TableCell align="right" sx={{ fontWeight: 'bold' }}>Giá</TableCell>
                             <TableCell align="right" sx={{ fontWeight: 'bold' }}>Số lượng</TableCell>
@@ -28,10 +29,13 @@ const ItemList: React.FC<ItemListProps> = ({ order }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {order.orderDetail.map((item, index) => (
+                        {order.orderDetails.map((item, index) => (
                             <TableRow key={index}>
                                 <TableCell component="th" scope="row">
                                     {item.product.id}
+                                </TableCell>
+                                <TableCell>
+                                    <img width={50} src={item.product.thumbnail}  />
                                 </TableCell>
                                 <TableCell>{item.product.name}</TableCell>
                                 <TableCell align="right">{formatCurrency(item.price)}</TableCell>
