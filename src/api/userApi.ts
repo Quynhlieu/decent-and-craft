@@ -49,6 +49,13 @@ export const userApi = createApi({
                     body: userLogin,
                 })
             }),
+            googleLogin: builder.mutation<IUser, UserRegister>({
+                query: (userLogin) => ({
+                    url: 'users/login-google',
+                    method: 'POST',
+                    body: userLogin,
+                })
+            }),
             changePassword: builder.mutation<IUser, UserChangePassword>({
                 query: (userChangePassword) => ({
                     url: `users/${userChangePassword.userId}/change-password`,
@@ -79,5 +86,6 @@ export const { useRegisterMutation,
     useLoginMutation,
     useChangePasswordMutation,
     useUpdateInfoUserMutation,
-    useCreateOrderMutation
+    useCreateOrderMutation,
+    useGoogleLoginMutation
 } = userApi;
