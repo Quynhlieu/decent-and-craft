@@ -3,6 +3,7 @@ import BASE_URL from "./url";
 import IUser from "../interfaces/IUser"
 import { OrderAddDto } from "../features/order/orderSlice";
 import IOrder from "../interfaces/IOrder";
+import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 export interface UserRegister {
     email: string
@@ -70,6 +71,13 @@ export const userApi = createApi({
                     body: orderAddDto
                 }),
                 invalidatesTags: ["POST"]
+            }),
+            forgotPassword: builder.mutation<>({
+                query: () =>({
+                    url: ,
+                    method: ,
+                    body:
+                })
             })
         });
     },

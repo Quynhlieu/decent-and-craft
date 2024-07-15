@@ -1,4 +1,4 @@
-import { Badge, Box, Card, CardContent, CardMedia, Dialog, DialogContent, DialogActions, DialogTitle, Divider, Grid, Skeleton, Stack, TextField, Typography } from '@mui/material';
+import { Badge, Box, Card, CardContent, CardMedia, Dialog, DialogContent, DialogActions, DialogTitle, Divider, Grid, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from "react";
 import PurchaseInformation from "../components/Payment/PurchaseInformation.tsx";
 import Transport from "../components/Payment/Transport.tsx";
@@ -24,7 +24,7 @@ interface CardProductProps {
     detail: OrderDetail;
 }
 const VoucherList: React.FC = () => {
-    const { data, isLoading } = useGetAllVouchersQuery();
+    const { data } = useGetAllVouchersQuery();
     const [open, setOpen] = useState(false);
     const [selectedVoucher, setSelectedVoucher] = useState<IVoucher | null>(null);
     const MySwal = withReactContent(Swal)
@@ -40,7 +40,8 @@ const VoucherList: React.FC = () => {
         <>
             <Stack sx={{ ml: 1 }} spacing={2} direction="row">
                 {data && data.length > 0 &&
-                    data.map(v => <VoucherItem onClick={() => handleClickOpen(v)} key={v.id} voucher={v} />)
+                    data.map(v =>
+                        <VoucherItem onClick={() => handleClickOpen(v)} key={v.id} voucher={v} />)
                 }
             </Stack>
             <Dialog open={open} onClose={handleClose}>

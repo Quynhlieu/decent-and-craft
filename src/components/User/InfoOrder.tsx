@@ -28,10 +28,6 @@ const InfoOrder: React.FC<InfoOrderProps> = ({ order }) => {
             value: formatCurrency(- shippingFee),
         },
         {
-            name: "Voucher",
-            value: formatCurrency(- voucherDiscount),
-        },
-        {
             name: "Thành tiền",
             value: formatCurrency(finalPrice),
         },
@@ -40,6 +36,12 @@ const InfoOrder: React.FC<InfoOrderProps> = ({ order }) => {
             value: order.shipment
         },
     ];
+    if (order.voucher) {
+        rows.splice(2, 0, {
+            name: "Voucher",
+            value: formatCurrency(-voucherDiscount),
+        });
+    }
 
     return (
         <Box sx={{ width: '100%', marginY: 3 }}>

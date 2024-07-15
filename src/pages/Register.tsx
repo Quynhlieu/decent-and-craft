@@ -185,9 +185,15 @@ function RegisterBtn({ isLoading }: { isLoading: boolean }) {
 
 const ForgotPasswordRegisterBtns = () => {
     return (
-        <Grid container justifyContent="flex-end">
+        <Grid container justifyContent="flex-end" sx={{ marginTop: 2 }}>
             <Grid item>
-                <Link to="/login">
+                <Link
+                    to="/login"
+                    style={{
+                        textDecoration: 'none',
+                        color: '#3f51b5',
+                    }}
+                >
                     Bạn đã có tài khoản? Đăng nhập
                 </Link>
             </Grid>

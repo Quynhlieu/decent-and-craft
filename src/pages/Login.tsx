@@ -63,12 +63,21 @@ const ForgotPasswordRegisterBtns = () => {
     return (
         <Grid container>
             <Grid item xs>
-                <Link to="/forgotPassword">
+                <Link to="/forgotPassword"
+                      style={{
+                          textDecoration: 'none',
+                          color: '#3f51b5',
+                      }}
+                >
                     Quên mật khẩu?
                 </Link>
             </Grid>
             <Grid item>
-                <Link to="/register">
+                <Link to="/register"
+                      style={{
+                          textDecoration: 'none',
+                          color: '#3f51b5',
+                      }}>
                     {"Bạn chưa có tài khoản? Đăng ký"}
                 </Link>
             </Grid>

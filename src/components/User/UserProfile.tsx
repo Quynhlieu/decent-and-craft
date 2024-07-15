@@ -1,13 +1,4 @@
-import {
-    Box,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-    Button,
-} from '@mui/material';
+import {Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, Button} from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PasswordIcon from '@mui/icons-material/Password';
@@ -26,6 +17,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import {useGetAddressListQuery} from "../../api/addressApi.ts";
 import {Controller, useForm} from "react-hook-form";
 import {UserStatus} from "../../interfaces/IUser.ts";
+import Swal from 'sweetalert2';
 
 interface FormData {
     fullName: string;
@@ -34,8 +26,8 @@ interface FormData {
 const UserProfile: React.FC  = () => {
     const { handleSubmit, control, formState: { errors } } = useForm<FormData>();
     const [open, setOpen] = React.useState<boolean>(false);
-    const[phone,setPhone] = useState<string>("");
-    const[fullName,setFullName] = useState<string>("");
+    const [phone,setPhone] = useState<string>("");
+    const [fullName,setFullName] = useState<string>("");
     const user = useSelector((state: RootState) => state.user.user);
     const {data : addressList} = useGetAddressListQuery(user?.id ?? 0);
     const [userUpdate, { isLoading,data, isError, error}] = useUpdateInfoUserMutation();
@@ -58,9 +50,23 @@ const UserProfile: React.FC  = () => {
         };
         try {
             await userUpdate(userInfo);
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Cập nhật thông tin thành công !",
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
         catch (e) {
             console.error('Update error:', error);
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Cập nhật thông tin thất bại !",
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
         setOpen(false);
     };
@@ -77,12 +83,15 @@ const UserProfile: React.FC  = () => {
             dispatch(updateInfo(data));
         }
     }, [data, dispatch]);
-    let displayError: string | undefined;
     if (isError) {
         if ('status' in error) {
-            displayError = 'Cập nhật không thành công !';
-        } else {
-            displayError = error.message;
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Cập nhật thông tin thất bại !",
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
     }
 
@@ -99,10 +108,6 @@ const UserProfile: React.FC  = () => {
             }}>
                 Thông tin tài khoản
             </Typography>
-            {isError &&
-                    <Typography color="error" sx={{ m: 1 }}>
-                        {displayError}
-                    </Typography>}
             <List
                 sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper' }}
                 aria-label="contacts"
