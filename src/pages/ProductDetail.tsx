@@ -21,7 +21,7 @@ import { cartItemAdd } from "../features/cart/cartSlice.ts";
 import { RoundedNumericFormat, VNDNumericFormat } from "../components/ProductCard.tsx";
 import { RootState } from "../app/store";
 import { Product } from "../interfaces/Product.ts";
-import { useGetAllProductQuery } from "../api/productApi.ts";
+import { useGetAllProductQuery, useGetProductByCategoryIdQuery } from "../api/productApi.ts";
 import { IProductDetail } from "../interfaces/ProductDetail.ts";
 
 // Line icon
@@ -289,8 +289,10 @@ const SimilarProductList = (prop: { similarProducts: Product[] }) => {
 // Chi tiet san pham
 const Detail = (prop: { productDetail: IProductDetail }) => {
     const { productDetail } = prop;
-    const { data } = useGetAllProductQuery();
-    const products = data;
+    const { data } = useGetProductByCategoryIdQuery(1);
+    console.log("So luong san pham tuong tu",data?.content.length);
+    
+    const products = data?.content.filter((p) => p.id  !== productDetail.id);
     return (
         <Box component="div">
             <Grid container spacing={2}>
@@ -335,3 +337,4 @@ const ProductDetail = () => {
 }
 
 export default ProductDetail;
+

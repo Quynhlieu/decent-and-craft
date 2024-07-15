@@ -2,6 +2,7 @@ import { Box, Pagination, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { ReviewItem } from "./Review.tsx";
 import { IReview } from "../../features/productDetail/productDetailSlice.ts";
+import { Product } from "../../interfaces/Product.ts";
 interface Pagination {
     count: number;
 }
@@ -33,7 +34,7 @@ export const usePagination = (data:IReview[], itemsPerPage:number) => {
 }
 
 
-export default function MyPagination(prop: { data:IReview[] }) {
+export default function MyPagination(prop: { data:IReview[] | Product[] }) {
     const {data} = prop;
     const PER_PAGE = 10;
     const [page, setPage] = useState(1);

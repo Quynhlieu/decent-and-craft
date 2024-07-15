@@ -40,7 +40,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-      <ScrollToTop />
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -56,9 +56,11 @@ function App() {
             <Route path="blogs"  >
               <Route path=":blogId" element={<BlogDetail />} />
               <Route index element={<Blogs />} />
-              <Route path="category/:blogCategoryId" element={<Blogs />} />
+              <Route path="category=:blogCategoryId" element={<Blogs />} />
             </Route>
-            <Route path="search" element={<SearchPage />} />
+            <Route path="search" element={<SearchPage />}>
+              <Route path="filter?" element={<SearchPage />} />
+            </Route>
             <Route path="pay" element={<Payment />} />
             <Route path="bill" element={<Bill />} />
           </Route>
