@@ -10,7 +10,7 @@ import PaymentBtn from "../components/Payment/PaymentBtn.tsx";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store.ts';
 import TruncateText from '../components/TruncateText.tsx';
-import { OrderDetailDto, orderSetOrderDetails } from '../features/order/orderSlice.ts';
+import { getTotalPrice, OrderDetailDto, orderSetOrderDetails, orderSetVoucherId } from '../features/order/orderSlice.ts';
 import { useCreateOrderMutation } from '../api/userApi.ts';
 import { useNavigate } from 'react-router-dom';
 import { OrbitProgress } from 'react-loading-indicators';
@@ -20,10 +20,16 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import IVoucher from '../interfaces/IVoucher.ts';
 import { VNDNumericFormat } from '../components/ProductCard.tsx';
+import { cartClear } from '../features/cart/cartSlice.ts';
 interface CardProductProps {
     detail: OrderDetail;
 }
-const VoucherList: React.FC = () => {
+type VoucherListProps = {
+    handleApplyVoucher: (code: string) => void
+}
+const VoucherList: React.FC<VoucherListProps> = ({
+    handleApplyVoucher
+}) => {
     const { data, isLoading } = useGetAllVouchersQuery();
     const [open, setOpen] = useState(false);
     const [selectedVoucher, setSelectedVoucher] = useState<IVoucher | null>(null);
@@ -42,6 +48,7 @@ const VoucherList: React.FC = () => {
                 {data && data.length > 0 &&
                     data.map(v => <VoucherItem onClick={() => handleClickOpen(v)} key={v.id} voucher={v} />)
                 }
+                {isLoading && <Skeleton width={100} height={50}></Skeleton>}
             </Stack>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle align='center'  >Chi tiết voucher</DialogTitle>
@@ -65,14 +72,15 @@ const VoucherList: React.FC = () => {
                 <DialogActions>
                     <Button onClick={() => {
                         const code = selectedVoucher?.voucherCode ?? "";
+                        handleApplyVoucher(code);
                         navigator.clipboard.writeText(code);
                         MySwal.fire({
-                            title: "Sử dụng mã giảm giá thành công",
+                            title: "Sử dụng giảm giá thành công",
                             icon: "success",
                         })
                         handleClose();
                     }} variant='contained' color="primary">
-                        Lưu mã
+                        Sử dụng
                     </Button>
                     <Button onClick={handleClose} color="primary">
                         Đóng
@@ -160,13 +168,67 @@ const Payment: React.FC = () => {
     const order = useSelector((state: RootState) => state.order);
     const user = useSelector((state: RootState) => state.user);
     const [createOrder, { isLoading, error }] = useCreateOrderMutation();
+    const [voucherCode, setVoucherCode] = useState<string>("");
+    const [voucherError, setVouchError] = useState<string>("");
+    const [selectedVoucher, setSelectedVoucher] = useState<IVoucher | null>(null);
+    const { data } = useGetAllVouchersQuery();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const MySwal = withReactContent(Swal)
     const handleCreateOrder = async () => {
+        if (order.addressId == null) {
+            MySwal.fire({
+                title: "Vui lòng chọn ít nhất 1 địa chỉ",
+                icon: "warning",
+            })
+            return;
+        }
         const data = await createOrder(order).unwrap();
         if (!error && data && !isLoading) {
+            dispatch(cartClear())
             navigate(`/bill/${data.id}`, { state: { order: data, userInfo: user } });
         }
     }
+    const handleApplyVoucher = (code: string) => {
+        setVoucherCode(code);
+    }
+    const handleUseVoucher = () => {
+        if (data && data?.length > 0) {
+            const selectedVoucher = data.find(v => v.voucherCode === voucherCode);
+            const selectedVoucherId: number | undefined = selectedVoucher?.id;
+            const isValidCode = selectedVoucher != undefined
+            if (!isValidCode) {
+                setVouchError("Mã voucher không hợp lệ")
+                return;
+            }
+            const isEnough = selectedVoucher?.quantity > 0;
+            const isHigherThanMin = getTotalPrice(order.orderDetails) > selectedVoucher.conditions;
+            if (!isEnough) {
+                setVouchError("Mã voucher đã được sử dụng hết")
+                setSelectedVoucher(null);
+                return;
+            }
+            if (!isHigherThanMin) {
+                setVouchError("Tổng hóa đơn chưa đủ điều kiện sử dụng voucher")
+                setSelectedVoucher(null);
+                return;
+            }
+            if (selectedVoucherId != undefined) {
+                setVouchError("")
+                setSelectedVoucher(selectedVoucher);
+                dispatch(orderSetVoucherId(selectedVoucherId));
+                return;
+
+            }
+        }
+
+    }
+    function calculateTotalOrderPrice(): number {
+        const voucherAmount = selectedVoucher ? selectedVoucher.amount : 0;
+        return getTotalPrice(order.orderDetails) + order.shippingFee - voucherAmount;
+
+    }
+
     return (
         <Box sx={{ padding: 2 }}>
             <Grid container spacing={2}>
@@ -196,7 +258,7 @@ const Payment: React.FC = () => {
                                             <SellIcon fontSize='small' />
                                             <strong>Voucher</strong>
                                         </Typography>
-                                        <VoucherList />
+                                        <VoucherList handleApplyVoucher={handleApplyVoucher} />
                                     </Stack>
                                     <Grid item xs={8}>
                                         <TextField
@@ -204,6 +266,10 @@ const Payment: React.FC = () => {
                                             label="Nhập mã giảm giá"
                                             variant="outlined"
                                             fullWidth
+                                            value={voucherCode}
+                                            onChange={event => {
+                                                setVoucherCode(event.target.value)
+                                            }}
                                             InputProps={{
                                                 style: { backgroundColor: 'white', borderRadius: 4 }
                                             }}
@@ -213,6 +279,9 @@ const Payment: React.FC = () => {
                                         <Button
                                             type="submit"
                                             fullWidth
+                                            onClick={() => {
+                                                handleUseVoucher();
+                                            }}
                                             sx={{
                                                 backgroundColor: "rgb(77, 182, 172)",
                                                 padding: 1,
@@ -226,6 +295,9 @@ const Payment: React.FC = () => {
                                         </Button>
                                     </Grid>
                                 </Grid>
+                                <Typography color="red">
+                                    {voucherError}
+                                </Typography>
                             </Box>
                             <Divider orientation="horizontal" flexItem />
                             <Box sx={{ paddingY: 2 }}>
@@ -234,26 +306,40 @@ const Payment: React.FC = () => {
                                         Tạm tính:
                                     </Typography>
                                     <Typography variant="body2">
-                                        50000
+                                        <VNDNumericFormat price={getTotalPrice(order.orderDetails)} />
                                     </Typography>
                                 </Box>
                                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between", paddingTop: 2 }}>
                                     <Typography variant="body2">
                                         Phí vận chuyển:
                                     </Typography>
-                                    <Typography variant="body2">
-                                        40000
+                                    <Typography color="red" variant="body2">
+                                        <VNDNumericFormat price={20000} />
                                     </Typography>
                                 </Box>
-
+                                {selectedVoucher &&
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between", paddingTop: 2 }}>
+                                        <Typography variant="body2">
+                                            Giảm giá
+                                        </Typography>
+                                        <Typography color="green" variant="body2">
+                                            -<VNDNumericFormat price={selectedVoucher.amount} />
+                                        </Typography>
+                                    </Box>
+                                }
                             </Box>
                             <Divider orientation="horizontal" flexItem />
-                            <Typography variant="h6" sx={{ marginTop: 2 }}>
-                                Tổng thanh toán: 90000
-                            </Typography>
-                            <PaymentBtn handleCreateOrder={handleCreateOrder} />
+                            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between", paddingTop: 2 }}>
+                                <Typography variant="h6">
+                                    Tổng thanh toán:
+                                </Typography>
+                                <Typography variant="h6">
+                                    <VNDNumericFormat price={calculateTotalOrderPrice()} />
+                                </Typography>
+                            </Box>
+                            <PaymentBtn
+                                handleCreateOrder={handleCreateOrder} />
                         </CardContent>
-
                     </Card>
                 </Grid>
             </Grid>

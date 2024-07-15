@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -13,35 +13,63 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from '@mui/icons-material/Google';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
-import {IconButton} from "@mui/material";
+import { IconButton } from "@mui/material";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
-import {useLoginMutation} from "../api/userApi.ts";
-import {OrbitProgress} from "react-loading-indicators";
-import {updateInfo} from "../features/user/userSlice.ts";
-import {useDispatch} from "react-redux";
-// TODO remove, this demo shouldn't need to reset the theme.
+import { useGoogleLoginMutation, useLoginMutation } from "../api/userApi.ts";
+import { OrbitProgress } from "react-loading-indicators";
+import { setUserType, updateInfo } from "../features/user/userSlice.ts";
+import { useDispatch } from "react-redux";
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
 const FacebookGoogleBtns = () => {
+    const [googleLogin, { data }] = useGoogleLoginMutation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const handleFacebookLogin = () => {
         console.log('Logging in with Facebook');
     };
-
-    const handleGoogleLogin = () => {
-        console.log('Logging in with Google');
-    };
+    useEffect(() => {
+        if (data) {
+            sessionStorage.setItem('user', JSON.stringify(data));
+            dispatch(setUserType(2));
+            dispatch(updateInfo(data));
+            navigate('/user');
+        }
+    }, [data, navigate]);
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async credentialResponse => {
+            const token = credentialResponse.access_token;
+            const userInfo = await axios
+                .get('https://www.googleapis.com/oauth2/v3/userinfo',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                .then(res => res.data)
+            const email: string = userInfo.email;
+            const fullName: string = userInfo.name;
+            await googleLogin({
+                email: email,
+                fullName: fullName,
+                password: ""
+            }).unwrap();
+        },
+    });
     return (
-        <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%', marginY: 2}}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginY: 2 }}>
             <Button
                 variant="contained"
                 color="primary"
-                startIcon={<FacebookIcon/>}
-                sx={{flex: 1, mr: 1}}
+                startIcon={<FacebookIcon />}
+                sx={{ flex: 1, mr: 1 }}
                 onClick={handleFacebookLogin}
             >
                 Facebook
@@ -49,9 +77,11 @@ const FacebookGoogleBtns = () => {
             <Button
                 variant="contained"
                 color="error"
-                startIcon={<GoogleIcon/>}
-                sx={{flex: 1, ml: 1}}
-                onClick={handleGoogleLogin}
+                startIcon={<GoogleIcon />}
+                sx={{ flex: 1, ml: 1 }}
+                onClick={() => {
+                    handleGoogleLogin();
+                }}
             >
                 Google
             </Button>
@@ -79,15 +109,14 @@ const ForgotPasswordRegisterBtns = () => {
 export default function Login() {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [loginUser, {data, isLoading, isError, error}] = useLoginMutation();
+    const [loginUser, { data, isLoading, isError, error }] = useLoginMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const loginData = {email, password};
+        const loginData = { email, password };
         try {
             await loginUser(loginData).unwrap();
         } catch (error) {
@@ -99,6 +128,7 @@ export default function Login() {
         if (data) {
             sessionStorage.setItem('user', JSON.stringify(data));
             dispatch(updateInfo(data));
+            dispatch(setUserType(1));
             navigate('/user');
         }
     }, [data, navigate]);
@@ -113,7 +143,7 @@ export default function Login() {
     }
     return (
         <Container component="main" maxWidth="xs">
-            <CssBaseline/>
+            <CssBaseline />
             <Box
                 sx={{
                     marginTop: 8,
@@ -122,8 +152,8 @@ export default function Login() {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                    <LockOutlinedIcon/>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Đăng nhập
@@ -131,7 +161,7 @@ export default function Login() {
                 <Typography color="error">
                     {displayError}
                 </Typography>
-                <Box component="form" onSubmit={handleLogin} sx={{mt: 1}}>
+                <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
                         required
@@ -147,7 +177,7 @@ export default function Login() {
                             setEmail(event.target.value);
                         }}
                     />
-                    <FormControl sx={{width: '100%', mt: 1}} variant="outlined">
+                    <FormControl sx={{ width: '100%', mt: 1 }} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                         <OutlinedInput
                             id="password"
@@ -159,7 +189,7 @@ export default function Login() {
                                         onClick={handleClickShowPassword}
                                         edge="end"
                                     >
-                                        {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                             }
@@ -167,10 +197,10 @@ export default function Login() {
                             value={password}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setPassword(event.target.value);
-                            }}/>
+                            }} />
                     </FormControl>
                     <FormControlLabel
-                        control={<Checkbox value="remember" color="primary"/>}
+                        control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
                     <Button
@@ -178,13 +208,13 @@ export default function Login() {
                         fullWidth
                         variant="contained"
                         // disabled={!email && !password}
-                        sx={{mt: 3, mb: 1, backgroundColor: "rgb(77 182 172)"}}
+                        sx={{ mt: 3, mb: 1, backgroundColor: "rgb(77 182 172)" }}
                         disabled={isLoading}
                     >
                         Đăng nhập
                     </Button>
-                    <FacebookGoogleBtns/>
-                    <ForgotPasswordRegisterBtns/>
+                    <FacebookGoogleBtns />
+                    <ForgotPasswordRegisterBtns />
                 </Box>
             </Box>
             {isLoading && (
@@ -201,9 +231,10 @@ export default function Login() {
                     alignItems: 'center',
                     zIndex: 9999,
                 }}>
-                    <OrbitProgress color="primary.main" size="medium" text="" textColor=""/>
+                    <OrbitProgress color="primary.main" size="medium" text="" textColor="" />
                 </Box>
             )}
         </Container>
     );
 }
+

@@ -1,4 +1,4 @@
-import React, { useEffect  } from "react";
+import React, { useEffect } from "react";
 import {
     Card,
     CardContent,
@@ -9,6 +9,7 @@ import {
     Typography,
     Box,
     Grid,
+    Button,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import Address from "../../interfaces/IAddress.ts";
@@ -19,22 +20,6 @@ import { RootState } from "../../app/store.ts";
 import { useGetAddressListQuery } from "../../api/addressApi.ts";
 import { useNavigate } from "react-router-dom";
 import { orderSetAddressId, orderSetUserId } from "../../features/order/orderSlice.ts";
-
-interface FormValues {
-    fullName: string;
-    email: string;
-    phone: string;
-    address: string;
-}
-
-const DEFAULT_ADDRESS: Address = {
-    id: -1,
-    description: 'Khác',
-    ward: '',
-    district: '',
-    province: '',
-    defaultAddress: false
-};
 
 const PurchaseInformation: React.FC = () => {
     const navigate = useNavigate();
@@ -107,7 +92,7 @@ const PurchaseInformation: React.FC = () => {
                         type="text"
                     />
                 </Box>
-                {selectedAddress &&
+                {selectedAddress ?
                     <AddressSelect
                         handleChange={(event) => {
                             dispatch(orderSetAddressId(+event.target.value));
@@ -116,6 +101,11 @@ const PurchaseInformation: React.FC = () => {
                         selectedAddress={selectedAddress}
                         addresses={addresses}
                     />
+                    : <Button onClick={() => {
+                        navigate("/user");
+                    }} variant="contained">
+                        Thêm địa chỉ
+                    </Button>
                 }
                 <MinHeightTextarea />
             </CardContent>
@@ -141,7 +131,7 @@ const AddressSelect: React.FC<Props> = ({ addresses, selectedAddress, handleChan
             >
                 {addresses && addresses.map((addr, index) => (
                     <MenuItem key={addr.id} value={addr.id.toString()}>
-                        {`#${index} ${addr.description}, ${addr.ward}, ${addr.district}, ${addr.province}`}
+                        {`#${index + 1} ${addr.description}, ${addr.ward}, ${addr.district}, ${addr.province}`}
                     </MenuItem>
                 ))}
                 <MenuItem value="-1">Khác</MenuItem>

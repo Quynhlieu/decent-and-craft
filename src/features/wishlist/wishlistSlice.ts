@@ -1,6 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Product } from "../../interfaces/Product";
-const initialState: Product[] = [];
+
+const loadWishlistFromLocalStorage = (): Product[] => {
+    const saveWishlist = localStorage.getItem("wishlist");
+    return saveWishlist ? JSON.parse(saveWishlist) : [];
+}
+const initialState: Product[] = loadWishlistFromLocalStorage();
 const wishlistSlice = createSlice({
     name: "wishlist",
     initialState,

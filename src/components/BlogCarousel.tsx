@@ -95,7 +95,7 @@ const BlogTitle = styled(Typography)<TypographyProps>(() => ({
         textDecoration: "underline",
     }
 }));
-const StyledLink = styled(Link)<any>(() => ({
+export const StyledLink = styled(Link)<any>(() => ({
     textDecoration: "none",
     color: "black",
 
@@ -191,7 +191,7 @@ const BlogCarousel = () => {
                     setShow(false);
                 }}  >
                     <Slider   {...setting} >
-                        {blogs && blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
+                        {!isLoading && blogs && blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
                     </Slider>
                 </Box>
             </Grid>

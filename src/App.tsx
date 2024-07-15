@@ -19,7 +19,7 @@ import ProductManager from './components/Admin/Page/ProductManager.tsx';
 import CreateProduct from './components/Admin/Page/CreateProduct.tsx';
 import Page404 from "./pages/Page404.tsx";
 import BillContainer from './pages/Bill.tsx';
-
+import { GoogleOAuthProvider } from '@react-oauth/google'
 const theme = createTheme({
   palette: {
     primary: {
@@ -32,48 +32,52 @@ const theme = createTheme({
   },
   transitions: {
     duration: {
-      standard: 500,
+      standard: 500
     }
   }
 })
+const clientId = "" 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="user" element={<User />} />
-            <Route path="product" >
-              <Route path=":productId" element={<ProductDetail />} />
+    <GoogleOAuthProvider clientId={clientId}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="user" element={<User />} />
+              <Route path="product" >
+                <Route path=":productId" element={<ProductDetail />} />
+              </Route>
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="forgotPassword" element={<ForgotPassword />} />
+              <Route path="wishlist" element={<WishList />} />
+              <Route path="cart" element={<Cart />} />
+              <Route path="blogs"  >
+                <Route path=":blogId" element={<BlogDetail />} />
+                <Route index element={<Blogs />} />
+                <Route path="category/:blogCategoryId" element={<Blogs />} />
+              </Route>
+              <Route path="search" element={<SearchPage />} />
+              <Route path="pay" element={<Payment />} />
+              <Route path="bill"   >
+                <Route path=":orderId" element={<BillContainer />} />
+              </Route>
             </Route>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="forgotPassword" element={<ForgotPassword />} />
-            <Route path="wishlist" element={<WishList />} />
-            <Route path="cart" element={<Cart />} />
-            <Route path="blogs"  >
-              <Route path=":blogId" element={<BlogDetail />} />
-              <Route index element={<Blogs />} />
-              <Route path="category/:blogCategoryId" element={<Blogs />} />
+            <Route path="/admin" element={<AdminLayout />} >
+              <Route path='products'  >
+                <Route index element={<ProductManager />} />
+                <Route path="create" element={<CreateProduct />} />
+              </Route>
             </Route>
-            <Route path="search" element={<SearchPage />} />
-            <Route path="pay" element={<Payment />} />
-            <Route path="bill"   >
-              <Route path=":orderId" element={<BillContainer />} />
-            </Route>
-          </Route>
-          <Route path="/admin" element={<AdminLayout />} >
-            <Route path='products'  >
-              <Route index element={<ProductManager />} />
-              <Route path="create" element={<CreateProduct />} />
-            </Route>
-          </Route>
-          <Route path="page404" element={<Page404 />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+            <Route path="page404" element={<Page404 />} />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+
+    </GoogleOAuthProvider>
   )
 }
 
