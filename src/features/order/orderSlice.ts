@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import OrderDetail from "../../interfaces/IOrderDetail";
 export interface OrderAddDto {
     "voucherId": number | null;
     "addressId": number | null;
@@ -9,6 +10,7 @@ export interface OrderAddDto {
     "orderDetails": OrderDetailDto[]
 }
 export interface OrderDetailDto {
+
     productId: number;
     price: number;
     quantity: number;
@@ -51,3 +53,7 @@ export const {
     orderSetNotice,
     orderSetOrderDetails
 } = orderSlice.actions;
+export const getTotalPrice = (orderDetails: OrderDetailDto[]) => {
+    return orderDetails.reduce((total, orderDetail) => total + (orderDetail.price * orderDetail.quantity), 0);
+
+}

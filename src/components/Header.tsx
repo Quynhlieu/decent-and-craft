@@ -1,4 +1,4 @@
-import { AppBar, Badge, Box, Button, Divider, IconButton, Stack, Toolbar, Tooltip, Typography } from '@mui/material'
+import { AppBar, Badge, Box, Button, Divider, IconButton, Slide, Stack, Toolbar, Tooltip, Typography, useScrollTrigger } from '@mui/material'
 import React, { useState } from 'react'
 import SeachBar from './SeachBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
@@ -11,6 +11,7 @@ import { VNDNumericFormat } from './ProductCard';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CartContainer from './Cart/CartContainer';
 import { logout } from "../features/user/userSlice.ts";
+import useScrollDirection from '../hooks/useScrollDirection.ts';
 interface NavItemProps {
     active?: boolean,
     children: React.ReactNode
@@ -38,7 +39,7 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
 
 const NavBar = () => {
     return (
-        <Stack direction="row" spacing={0} sx={{ padding: 0, mt: 3 }} >
+        <Stack direction="row" spacing={0} sx={{ padding: 0, mt: 1}} >
             <Link to="/"  >
                 <NavItem active={true} >Trang chủ</NavItem>
             </Link>
@@ -65,19 +66,23 @@ const Header = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const trigger = useScrollTrigger({
+        disableHysteresis: true,
+        threshold: 120,
+    });
     const handleLogout = () => {
         dispatch(logout());
         navigate("/");
     };
+    const scrollDirection = useScrollDirection();
     return (
-        <Box sx={{
-            padding: 0,
-            margin: 0,
-        }} >
-            <AppBar position='static' sx={{ boxShadow: "none" }} color='transparent'>
+        <Slide appear={false} direction='down' in={scrollDirection === "up" || !trigger}  >
+            <AppBar position="sticky" sx={{
+
+                boxShadow: "none",
+                transition: 'transform 0.3s ease-in-out', // Smooth transition
+            }} color='inherit'>
                 <Toolbar sx={{
-                    padding: 0,
-                    margin: 0,
                 }} >
                     <Typography variant='h4'>
                         Decent&Craft
@@ -178,7 +183,7 @@ const Header = () => {
                 </Toolbar>
                 <NavBar />
             </AppBar>
-        </Box>
+        </Slide>
     )
 }
 

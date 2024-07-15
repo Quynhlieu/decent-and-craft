@@ -36,7 +36,7 @@ const theme = createTheme({
     }
   }
 })
-const clientId = "" 
+const clientId = "1036046508854-680pfv5fr0inbmapvs2kfn02h06sdhji.apps.googleusercontent.com" 
 function App() {
   return (
     <GoogleOAuthProvider clientId={clientId}>
