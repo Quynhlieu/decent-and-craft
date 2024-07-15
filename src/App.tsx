@@ -19,7 +19,7 @@ import ProductManager from './components/Admin/Page/ProductManager.tsx';
 import CreateProduct from './components/Admin/Page/CreateProduct.tsx';
 import Page404 from "./pages/Page404.tsx";
 import BillContainer from './pages/Bill.tsx';
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const theme = createTheme({
   palette: {
     primary: {
@@ -36,7 +36,7 @@ const theme = createTheme({
     }
   }
 })
-const clientId = "" 
+const clientId = "1036046508854-680pfv5fr0inbmapvs2kfn02h06sdhji.apps.googleusercontent.com"
 function App() {
   return (
     <GoogleOAuthProvider clientId={clientId}>

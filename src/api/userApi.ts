@@ -3,8 +3,6 @@ import BASE_URL from "./url";
 import IUser from "../interfaces/IUser"
 import { OrderAddDto } from "../features/order/orderSlice";
 import IOrder from "../interfaces/IOrder";
-import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
-
 export interface UserRegister {
     email: string
     password: string
@@ -79,12 +77,12 @@ export const userApi = createApi({
                 }),
                 invalidatesTags: ["POST"]
             }),
-            forgotPassword: builder.mutation<>({
-                query: () =>({
-                    url: ,
-                    method: ,
-                    body:
-                })
+            forgotPassword: builder.mutation<IUser, string>({
+                query: (email) => ({
+                    url: 'users/forgot-password',
+                    method: 'POST',
+                    body: { email },
+                }),
             })
         });
     },
@@ -95,5 +93,6 @@ export const { useRegisterMutation,
     useChangePasswordMutation,
     useUpdateInfoUserMutation,
     useCreateOrderMutation,
-    useGoogleLoginMutation
+    useGoogleLoginMutation,
+    useForgotPasswordMutation
 } = userApi;
