@@ -12,8 +12,7 @@ import { cartItemAdd } from '../features/cart/cartSlice';
 import { wishlistAdd, wishlistRemove } from '../features/wishlist/wishlistSlice';
 import { Product } from '../interfaces/Product';
 import { Price } from '../pages/ProductDetail';
-import { Padding } from '@mui/icons-material';
-
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
         <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
@@ -32,7 +31,7 @@ const InfomationHover = (props: { product: Product }) => {
 };
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} sx={{paddingX:10}} TransitionComponent={Fade}
+    <Tooltip {...props} sx={{ paddingX: 10 }} TransitionComponent={Fade}
         TransitionProps={{ timeout: 400 }}
         slotProps={{
             popper: {
@@ -53,7 +52,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
         color: 'rgba(0, 0, 0, 0.87)',
         boxShadow: theme.shadows[1],
         fontSize: 11,
-        padding:`10px 20px`
+        padding: `10px 20px`
     },
 }));
 
@@ -69,7 +68,9 @@ const StyledCardWrapper = styled('div')(({ theme }) => ({
 const ProductCard = ({ data: product }: { data: Product }) => {
     const { id, name, price, thumbnail, origin } = product;
     const wishlist = useSelector((state: RootState) => state.wishlist);
+    const cart = useSelector((state: RootState) => state.cart);
     const isInWishList = wishlist.some(p => p.id === id);
+    const isInCart = cart.some(p => p.product.id === id);
     const dispatch = useDispatch();
     const quantitySold = 10;
 
@@ -142,7 +143,7 @@ const ProductCard = ({ data: product }: { data: Product }) => {
                                     borderRadius: 5,
                                     fontSize: 10,
                                 }}
-                                color="primary"
+                                color={isInCart ? "warning" : "primary"}
                                 onClick={() => {
                                     dispatch(cartItemAdd({
                                         product,
@@ -151,7 +152,11 @@ const ProductCard = ({ data: product }: { data: Product }) => {
                                     toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" });
                                 }}
                             >
-                                {<AddShoppingCartIcon />}
+                                {!isInCart ?
+                                    <AddShoppingCartIcon />
+                                    :
+                                    <ShoppingCartCheckoutIcon />
+                                }
                                 {/* Thêm vào giỏ */}
                             </Button>
                         </LightTooltip>
