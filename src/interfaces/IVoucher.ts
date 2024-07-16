@@ -1,7 +1,11 @@
 export default interface Voucher{
-    id: number;
-    code: string;
-    discount: number;
-    expirationDate: Date;
-    isActive: boolean;
+    createdDate: string
+    modifiedDate: string
+    id: number
+    voucherCode: string
+    description: string
+    quantity: number
+    amount: number
+    conditions: number
+    expirationDate: string
 }

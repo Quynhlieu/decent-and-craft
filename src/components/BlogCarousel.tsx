@@ -1,6 +1,5 @@
 import { Box, Grid, Stack, Typography, TypographyProps } from '@mui/material'
 import TitleBar from './TitleBar'
-import { blogs } from "../data/blogs";
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import Slider from 'react-slick';
@@ -8,6 +7,8 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useState } from 'react';
 import BlogCategory from '../interfaces/IBlogCategory';
+import { formatDate, formatDatetime } from '../utils/DateFormater';
+import { useGetAllblogsQuery } from '../api/blogApi';
 type BlogItemProps = {
     tag?: string,
     title: string,
@@ -94,7 +95,7 @@ const BlogTitle = styled(Typography)<TypographyProps>(() => ({
         textDecoration: "underline",
     }
 }));
-const StyledLink = styled(Link)<any>(() => ({
+export const StyledLink = styled(Link)<any>(() => ({
     textDecoration: "none",
     color: "black",
 
@@ -109,7 +110,7 @@ const BlogItem = (props: BlogItemProps) => {
                 </BlogTitle>
             </StyledLink>
             <Typography fontStyle="italic" sx={{ textDecoration: "underline" }} >
-                <small>{date}</small>
+                <small>{formatDatetime(date)}</small>
             </Typography>
         </Box >
     )
@@ -159,7 +160,7 @@ const BlogCarouselItem = (props: BlogItemProps) => {
                         {title}
                     </Typography>
                     <Typography color="white">
-                        {date}
+                        {formatDate(date)}
                     </Typography>
                 </Stack >
             </Box>
@@ -168,6 +169,8 @@ const BlogCarouselItem = (props: BlogItemProps) => {
     )
 }
 const BlogCarousel = () => {
+    const { data, isLoading } = useGetAllblogsQuery();
+    const blogs = data;
     const [show, setShow] = useState<boolean>(false);
     let setting = {
         infinite: true,
@@ -178,7 +181,6 @@ const BlogCarousel = () => {
         autoplaySpeed: 4000,
         prevArrow: <PrevArrow show={show} />,
         nextArrow: <NextArrow show={show} />,
-
     }
     return (
         <Grid container sx={{ mt: 5 }} spacing={2}>
@@ -189,7 +191,7 @@ const BlogCarousel = () => {
                     setShow(false);
                 }}  >
                     <Slider   {...setting} >
-                        {blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
+                        {!isLoading && blogs && blogs.map(blog => <BlogCarouselItem key={blog.id} categories={blog.categories} thumb={blog.thumbnail} date={blog.createdDate} show={show} title={blog.title} />)}
                     </Slider>
                 </Box>
             </Grid>
@@ -198,7 +200,7 @@ const BlogCarousel = () => {
                 <Box>
                     <TitleBar variant='h4' title='Ý TƯỞNG/BÀI HƯỚNG DẪN' />
                     <Stack sx={{ ml: 2 }} spacing={1}>
-                        {blogs.map(blog => <BlogItem key={blog.id}  date={blog.createdDate} title={blog.title} />)}
+                        {blogs && blogs.map(blog => <BlogItem key={blog.id} date={blog.createdDate} title={blog.title} />)}
                     </Stack>
                 </Box>
             </Grid>

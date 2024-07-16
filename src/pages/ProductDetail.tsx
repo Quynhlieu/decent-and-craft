@@ -1,4 +1,4 @@
-import { Box, Button, colors, Divider, Grid, Rating, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Box, Button, colors, Divider, Grid, Rating, Skeleton, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
 import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
@@ -18,11 +18,12 @@ import { useGetAverageRatingQuery, useGetProductDetailByIdQuery } from "../api/p
 import { addCartItem, productDetailLoad, updateCartItem } from "../features/productDetail/productDetailSlice.ts";
 import { toast } from "react-toastify";
 import { cartItemAdd } from "../features/cart/cartSlice.ts";
-import { RoundedNumericFormat, VNDNumericFormat } from "../components/ProductCard.tsx";
+import { VNDNumericFormat } from "../components/ProductCard.tsx";
 import { RootState } from "../app/store";
 import { Product } from "../interfaces/Product.ts";
 import { useGetAllProductQuery, useGetProductByCategoryIdQuery } from "../api/productApi.ts";
 import { IProductDetail } from "../interfaces/ProductDetail.ts";
+import { OrbitProgress } from "react-loading-indicators";
 
 // Line icon
 export const LineIcon = () => {
@@ -137,7 +138,7 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
                 {averageRating !== 0 ? (
                     <Stack direction="row" alignItems="center">
                         <Typography>
-                            <RoundedNumericFormat value={averageRating} />
+                            {averageRating.toFixed(1)}
                         </Typography>
                         <Rating
                             name="half-read-only"
@@ -321,14 +322,21 @@ const ProductDetail = () => {
             navigate("/");
         }
     }, [productId, navigate]);
-    const { data: productDetail } = useGetProductDetailByIdQuery(Number(productId));
+    const { data: productDetail, isLoading } = useGetProductDetailByIdQuery(Number(productId));
     const dispatch = useDispatch();
     productDetail && dispatch(productDetailLoad(productDetail));
     console.log(productDetail);
     return (
         <Box sx={{ mb: 10 }}>
-            <BreadcrumbHeader />
-            {productDetail && <Detail productDetail={productDetail} />}
+            {isLoading
+                ? <Skeleton width={900} height={220} />
+                : <BreadcrumbHeader />}
+            {productDetail && !isLoading
+                ?
+                < Detail productDetail={productDetail} />
+                :
+                <Skeleton width={1200} height={400} />
+            }
             <ProductSection />
             <BreadcrumbFooter />
             <Outlet />

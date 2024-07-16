@@ -1,22 +1,19 @@
-import {Box, Button, Divider, Grid, Stack, TextField, Typography} from '@mui/material'
-import React, {useState} from 'react'
+import { Box, Button, Divider, Grid, Stack, TextField, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import DataTable from 'react-data-table-component'
-import {useDispatch, useSelector} from 'react-redux'
-import {RootState} from '../app/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../app/store'
 import CancelIcon from '@mui/icons-material/Cancel';
-import {CartItem, cartItemRemove, cartUpdate, getTotalPrice} from '../features/cart/cartSlice'
-import {toast} from 'react-toastify'
-import {VNDNumericFormat} from '../components/ProductCard'
-import {grey} from '@mui/material/colors'
+import { CartItem, cartItemRemove, cartUpdate, getTotalPrice } from '../features/cart/cartSlice'
+import { toast } from 'react-toastify'
+import { VNDNumericFormat } from '../components/ProductCard'
+import { grey } from '@mui/material/colors'
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import SellIcon from '@mui/icons-material/Sell';
-import {useNavigate} from 'react-router-dom'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import { useNavigate } from 'react-router-dom'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-
+import { StyledLink } from '../components/BlogCarousel'
 const QuantityButton = (prop: { cartItem: CartItem }) => {
     const { cartItem } = prop;
     const dispatch = useDispatch();
@@ -83,10 +80,10 @@ const CartTable = () => {
                                 { autoClose: 1000, position: "bottom-left" })
                         }} color='warning' sx={{ "&:hover": { color: "black" } }} />
                         <img width={60} height={60} src={row.product.thumbnail} />
-                        <Typography>
+                        <StyledLink to={"/product/" + row.product.id} >
                             {row.product.name}
-                        </Typography>
-                    </Stack>
+                        </StyledLink>
+                    </Stack >
                 )
             }
         },
@@ -123,38 +120,10 @@ const PriceRow = (prop: { name: string, price: number, styled?: React.CSSPropert
         </Box>
     )
 }
-const VoucherItem = () => {
-    const MySwal = withReactContent(Swal)
-    return (
-        <Button onClick={() => {
-            navigator.clipboard.writeText("DBT19");
-            MySwal.fire({
-                title: "Lưu mã giảm giá thành công",
-                icon: "success",
-            })
-        }} size='small' variant='outlined'>
-            DBT19
-        </Button>
-    )
-}
 
 const Cart = () => {
-    const MySwal = withReactContent(Swal)
-
     const navigate = useNavigate();
     const cart = useSelector((state: RootState) => state.cart);
-    const [discount, setDiscount] = useState<number>(0);
-    const [voucherCode, setVoucherCode] = useState<string>("");
-    const handleApplyVoucher = () => {
-        if (voucherCode === "DBT19") {
-
-            MySwal.fire({
-                title: "Sử dụng mã giảm giá thành công",
-                icon: "success",
-            })
-            setDiscount(20000);
-        }
-    }
     return (
         cart.length ? <Grid sx={{ mt: 3, mb: 20 }} spacing={3} container>
             <Grid xs={8} sx={{ pr: 2 }} item>
@@ -190,33 +159,9 @@ const Cart = () => {
                     </Typography>
                     <PriceRow name='Tổng phụ' price={getTotalPrice(cart)} />
                     <Divider sx={{ mt: 1 }} />
-                    {discount > 0 && <Box>
-                        <PriceRow styled={{ color: "red" }} name='Voucher giảm giá' price={-discount} /> <Divider sx={{ mt: 1 }} />
-                    </Box>}
-                    <PriceRow name='Tổng cộng' price={getTotalPrice(cart) - discount} />
-                    <Divider sx={{ mt: 1, borderBottomWidth: 3 }} />
-                    <Stack direction="row" sx={{ mt: 2 }}>
-                        <Typography color="secondary.main" >
-                            <SellIcon fontSize='small' />
-                            <strong>Voucher</strong>
-                        </Typography>
-                        <Stack sx={{ ml: 3 }} spacing={2} direction="row">
-                            <VoucherItem />
-                            <VoucherItem />
-                            <VoucherItem />
-                        </Stack>
-                    </Stack>
-                    <Divider sx={{ mt: 1, borderBottomWidth: 3 }} />
-                    <TextField sx={{ mt: 2 }}
-                        size='small'
-                        placeholder='Mã giảm giá'
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setVoucherCode(event.target.value);
-                        }}>
-                    </TextField>
-                    <Button onClick={handleApplyVoucher} sx={{ mt: 2 }} variant='contained'>
-                        Áp dụng
-                    </Button>
+                    <PriceRow name='Phí vận chuyển' styled={{ color: "red" }} price={20000} />
+                    <Divider sx={{ mt: 1 }} />
+                    <PriceRow name='Tổng cộng' price={getTotalPrice(cart) + 20000} />
                     <Divider sx={{ mt: 1, borderBottomWidth: 3 }} />
                     <Button sx={{ mt: 2 }} color='warning' variant='contained' onClick={() => { navigate("/pay") }}>
                         <strong>  TIẾN HÀNH THANH TOÁN</strong>

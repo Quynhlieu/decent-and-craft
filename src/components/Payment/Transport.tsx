@@ -2,7 +2,7 @@ import {Box, Card, CardContent, FormControl, Radio, Typography} from "@mui/mater
 import FormControlLabel from "@mui/material/FormControlLabel";
 
 const Transport = () => {
-    const shippingCost = 40000;
+    const shippingCost = 20000;
 
     return (
         <Card sx={{ marginBottom: 2 }}>
@@ -20,13 +20,13 @@ const Transport = () => {
                 }}>
                     <FormControl>
                         <FormControlLabel
-                            value="female"
                             control={<Radio checked={true}/>}
-                            label="Giao hàng tận nơi"
+                            label="Giao hàng tiết kiệm"
                         />
                     </FormControl>
-                    <Typography variant="h6" gutterBottom sx={{ marginTop: 2 }}>
-                        {shippingCost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                    <Typography variant="body1" gutterBottom >
+                        {shippingCost.toLocaleString('vi-VN',
+                             { style: 'currency', currency: 'VND' })}
                     </Typography>
                 </Box>
             </CardContent>

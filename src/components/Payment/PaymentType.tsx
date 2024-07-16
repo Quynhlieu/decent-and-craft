@@ -22,8 +22,20 @@ const PaymentType = () => {
                             defaultValue="female"
                             name="payment-type-group"
                         >
-                            <FormControlLabel value="paypal" control={<Radio />} label="Thanh toán qua Paypal" />
-                            <FormControlLabel value="VNpay" control={<Radio />} label="Thanh toán qua VNPay" />
+                            <FormControlLabel
+                                disabled
+                                value="paypal"
+                                control={<Radio />} label="Thanh toán qua Paypal (Bảo trì)" />
+                            <FormControlLabel
+                                value="VNpay"
+                                disabled
+                                control={<Radio />}
+                                label="Thanh toán qua VNPay (Bảo trì)" />
+                            <FormControlLabel
+                                value="COD"
+                                checked
+                                control={<Radio />}
+                                label="Thanh toán qua khi nhận hàng" />
                         </RadioGroup>
                     </FormControl>
                 </Box>

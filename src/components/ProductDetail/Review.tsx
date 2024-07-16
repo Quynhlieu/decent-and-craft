@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Grid, IconButton, Rating, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import React, { useEffect, useRef, useState} from "react";
-import {  AddReviewDto, IReview, reviewsLoad, UpdateReviewDto } from "../../features/productDetail/productDetailSlice.ts";
+import React, { useEffect, useRef, useState } from "react";
+import { AddReviewDto, IReview, reviewsLoad, UpdateReviewDto } from "../../features/productDetail/productDetailSlice.ts";
 import MyPagination from "./MyPagination.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import SendIcon from "@mui/icons-material/Send";
@@ -11,6 +11,7 @@ import { setContents, setIsShow, setKey, setRating } from "../../features/review
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAddReviewMutation, useGetAllReviewsByProductIdQuery, useGetUserQuery, useUpdateReviewMutation } from "../../api/reviewApi.ts";
+import { formatDatetime } from "../../utils/DateFormater.ts";
 
 const userLoginId = 20;
 
@@ -26,7 +27,7 @@ export const ReviewItem = (prop: { reviewData: IReview }) => {
         navigate('#reviewForm');
     }
     return (
-        <Box sx={{pt: 2, borderBottom: '1px solid', borderColor: ' #e0e0e0' }}>
+        <Box sx={{ pt: 2, borderBottom: '1px solid', borderColor: ' #e0e0e0' }}>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
                     <Avatar sx={{ marginLeft: "20%" }} alt={reviewData.userId && reviewData.userFullName || 'Avatar'} />
@@ -44,7 +45,7 @@ export const ReviewItem = (prop: { reviewData: IReview }) => {
                         readOnly
                         sx={{ fontSize: 15 }}
                     />
-                    <Typography sx={{ fontSize: 10, color: grey[500] }}>{reviewData.modifiedDate}</Typography>
+                    <Typography sx={{ fontSize: 10, color: grey[500] }}>{formatDatetime(reviewData.modifiedDate)}</Typography>
                     <Typography sx={{ mt: 1, mb: 3 }}>{reviewData.comments}</Typography>
                 </Grid>
             </Grid>
@@ -58,7 +59,7 @@ export const ReviewForm = () => {
     const reviewsState = useSelector((state: RootState) => state.productDetail);
     const productId = reviewsState.productDetail?.product.id;
     const reviewList = reviewsState.reviews;
-    const { data: customer } = useGetUserQuery(userLoginId);    
+    const { data: customer } = useGetUserQuery(userLoginId);
     const [addReview] = useAddReviewMutation();
     const [updateReview] = useUpdateReviewMutation();
     const dispatch = useDispatch();
@@ -82,7 +83,7 @@ export const ReviewForm = () => {
         }
         const newReview: AddReviewDto = {
             userId: customer.id,
-            productId: (productId)? productId : 0,
+            productId: (productId) ? productId : 0,
             rating: reviewFormState.rating,
             text: reviewFormState.contents
         };
@@ -106,7 +107,7 @@ export const ReviewForm = () => {
         toast.success("Thêm đánh giá thành công!",
             { autoClose: 1000, position: "top-right" });
         return;
-        
+
     };
 
     // Kiểm tra người dùng có review chưa?
@@ -128,7 +129,7 @@ export const ReviewForm = () => {
                 <Rating
                     name="rating"
                     value={(reviewFormState.rating) && reviewFormState.rating}
-                    onChange={(_event:React.SyntheticEvent<Element, Event>, newValue:number|null) => dispatch(setRating(newValue ? newValue : 0))}
+                    onChange={(_event: React.SyntheticEvent<Element, Event>, newValue: number | null) => dispatch(setRating(newValue ? newValue : 0))}
                     sx={{ mb: 2 }}
                     size="large"
                 />
@@ -136,7 +137,7 @@ export const ReviewForm = () => {
                     label="Nội dung"
                     value={reviewFormState.contents}
                     key={reviewFormState.key}
-                    onChange={(e) =>{ dispatch(setContents(e.target.value))}}
+                    onChange={(e) => { dispatch(setContents(e.target.value)) }}
                     multiline
                     rows={1}
                     sx={{ mb: 2, width: '80%' }}
@@ -178,7 +179,7 @@ export const RatingOverview = (prop: { productId: number, handleFilter: unknown 
 
     const getQuantityReview = (rating: number): number => {
         const reviews: (IReview[] | undefined) = reviewList.filter(r => r.rating === rating);
-        if(reviews) return reviews.length;
+        if (reviews) return reviews.length;
         return 0;
     }
 
@@ -250,40 +251,40 @@ export const RatingOverview = (prop: { productId: number, handleFilter: unknown 
     )
 };
 
-    const Review = (prop: { productId: number }) => {
-        const { productId } = prop;
-        // Lấy danh sách review từ server
-        const dispatch = useDispatch();
-        // Lấy danh sách review từ server
-        const { data: reviewList, error, isLoading } = useGetAllReviewsByProductIdQuery(productId, { refetchOnMountOrArgChange: true });
-        // reviewList && dispatch(reviewsLoad(reviewList));
-        // const productDetailState = useSelector((state: RootState) => state.productDetail);
-        // dispatch(reviewsLoad(productDetailState.reviews))
+const Review = (prop: { productId: number }) => {
+    const { productId } = prop;
+    // Lấy danh sách review từ server
+    const dispatch = useDispatch();
+    // Lấy danh sách review từ server
+    const { data: reviewList, error, isLoading } = useGetAllReviewsByProductIdQuery(productId, { refetchOnMountOrArgChange: true });
+    // reviewList && dispatch(reviewsLoad(reviewList));
+    // const productDetailState = useSelector((state: RootState) => state.productDetail);
+    // dispatch(reviewsLoad(productDetailState.reviews))
 
-        // thêm vào slice
-        const [filterReviewList, setFilterReviewList] = useState<IReview[]>(reviewList ? reviewList : []);
-        useEffect(() => {
-            if (reviewList) {
-                setFilterReviewList(reviewList);
-                dispatch(reviewsLoad(reviewList));
-            }
-        }, [reviewList, dispatch]);
-        const reviewFilterByStar = (rating: number) => {
-            if (rating === 0) {
-                (reviewList && setFilterReviewList(reviewList));
-                return;
-            }        
-            (reviewList && setFilterReviewList(reviewList.filter(r => r.rating === rating)));
+    // thêm vào slice
+    const [filterReviewList, setFilterReviewList] = useState<IReview[]>(reviewList ? reviewList : []);
+    useEffect(() => {
+        if (reviewList) {
+            setFilterReviewList(reviewList);
+            dispatch(reviewsLoad(reviewList));
         }
-        return (
-            <div>
-                <ReviewForm />
-                <Box>
-                    <RatingOverview handleFilter={reviewFilterByStar} productId={productId} />
-                </Box>
-                <MyPagination data={filterReviewList} />
-            </div>
-        );
-    };
+    }, [reviewList, dispatch]);
+    const reviewFilterByStar = (rating: number) => {
+        if (rating === 0) {
+            (reviewList && setFilterReviewList(reviewList));
+            return;
+        }
+        (reviewList && setFilterReviewList(reviewList.filter(r => r.rating === rating)));
+    }
+    return (
+        <div>
+            <ReviewForm />
+            <Box>
+                <RatingOverview handleFilter={reviewFilterByStar} productId={productId} />
+            </Box>
+            <MyPagination data={filterReviewList} />
+        </div>
+    );
+};
 
 export default Review;

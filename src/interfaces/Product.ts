@@ -1,4 +1,4 @@
-export interface Product{
+export interface Product {
     createdDate: string
     modifiedDate: string
     id: number
@@ -7,5 +7,7 @@ export interface Product{
     price: number
     origin: number
     status: string
+    views: number
+    soldQuantity: number
     unitInStock: number
 }

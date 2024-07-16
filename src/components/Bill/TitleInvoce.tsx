@@ -1,5 +1,6 @@
-import {Box, Typography} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Order from "../../interfaces/IOrder.ts";
+import { formatDate } from "../../utils/DateFormater.ts";
 
 interface TitleInvoiceProps {
     order: Order;
@@ -21,7 +22,7 @@ const TitleInvoice: React.FC<TitleInvoiceProps> = ({ order }) => {
                     Mã hóa đơn: <span style={{ fontWeight: "normal" }}>{order.id}</span>
                 </Typography>
                 <Typography variant="body1" sx={{ fontWeight: "bold", color: "#333" }}>
-                    Ngày xuất hóa đơn: <span style={{ fontWeight: "normal" }}>{order.orderDate}</span>
+                    Ngày xuất hóa đơn: <span style={{ fontWeight: "normal" }}>{formatDate(order.createdDate)}</span>
                 </Typography>
             </Box>
         </Box>

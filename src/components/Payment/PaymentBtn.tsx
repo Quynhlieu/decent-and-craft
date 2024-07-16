@@ -2,10 +2,12 @@ import { Link as RouterLink } from 'react-router-dom';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import { Box, Link, Typography, Button } from '@mui/material';
 
-
-const PaymentBtn = () =>{
+interface PaymentBtnProps {
+    handleCreateOrder: () => void
+}
+const PaymentBtn: React.FC<PaymentBtnProps> = ({ handleCreateOrder }) => {
     return (
-        <Box sx={{display: "flex" , justifyContent: "space-between"}}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Link component={RouterLink} to="/cart" sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
                 <KeyboardDoubleArrowLeftIcon />
                 <Typography sx={{ ml: 1 }}>
@@ -15,8 +17,7 @@ const PaymentBtn = () =>{
             <Button
                 type="submit"
                 variant="contained"
-                component={RouterLink}
-                to="/bill"
+                onClick={handleCreateOrder}
                 sx={{ mt: 3, mb: 1, backgroundColor: "rgb(77 182 172)" }}
             >
                 Thanh toán

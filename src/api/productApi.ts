@@ -14,6 +14,9 @@ export const productApi = createApi({
         getAllProduct: builder.query<Product[], void>({
             query: () => `products`,
         }),
+        getAllHotProduct: builder.query<Product[], void>({
+            query: () => `products/hot-products`,
+        }),
         getProductById: builder.query<Product, number>({
             query: (id) => `products/${id}`,
         }),
@@ -54,4 +57,4 @@ export const productApi = createApi({
         }),
     }),
 })
-export const { useGetAllProductQuery, useGetProductByIdQuery, useGetProductByCategoryIdQuery, useGetProductByCategoryListQuery, useGetProductFiltersQuery } = productApi
+export const { useGetAllProductQuery, useGetProductByIdQuery, useGetProductByCategoryIdQuery, useGetProductByCategoryListQuery, useGetProductFiltersQuery, useGetAllHotProductQuery } = productApi

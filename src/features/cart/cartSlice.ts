@@ -5,15 +5,19 @@ export type CartItem = {
     product: Product,
     quantity: number
 }
-
-const initialState: CartItem[] = [];
+const loadCartFromLocalStorage = (): CartItem[] => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+}
+const initialState: CartItem[] = loadCartFromLocalStorage();
 
 const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        cartLoad(state) {
-            return state
+        cartClear(state) {
+            localStorage.removeItem("cart");
+            state.length = 0;
         },
         cartItemAdd(state, action: PayloadAction<CartItem>) {
             const isExist = state.some(i => i.product.id === action.payload.product.id)
@@ -39,7 +43,7 @@ const cartSlice = createSlice({
     }
 
 })
-export const { cartLoad, cartItemAdd, cartItemRemove, cartUpdate } = cartSlice.actions
+export const { cartClear, cartItemAdd, cartItemRemove, cartUpdate } = cartSlice.actions
 export default cartSlice.reducer
 export const getCount = (cart: CartItem[]) => {
     return cart.length

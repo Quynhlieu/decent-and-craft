@@ -1,7 +1,7 @@
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Fade, IconButton, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@mui/material';
 import React from 'react';
 import { NumericFormat } from 'react-number-format';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,41 +12,47 @@ import { cartItemAdd } from '../features/cart/cartSlice';
 import { wishlistAdd, wishlistRemove } from '../features/wishlist/wishlistSlice';
 import { Product } from '../interfaces/Product';
 import { Price } from '../pages/ProductDetail';
-
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 export const VNDNumericFormat = (prop: { price: number, styled?: React.CSSProperties }) => {
     return (
         <NumericFormat style={{ ...prop.styled }} value={prop.price} displayType={'text'} thousandSeparator={true} suffix={'đ'} />
     );
 };
 
-export const RoundedNumericFormat = (prop: { value: number, styled?: React.CSSProperties }) => {
-    const { value, styled } = prop;
-    return (
-        <NumericFormat style={{ ...styled }} value={value} displayType='text' />
-    );
-};
 
 const InfomationHover = (props: { product: Product }) => {
     const { product } = props;
-    const quantitySold = 10;
-
     return (
         <Box>
             <Typography>Số lượng trong kho: {product.unitInStock}</Typography>
-            <Typography>Lượt xem: 25000</Typography>
-            <Typography>Đã bán: {quantitySold}</Typography>
+            <Typography>Lượt xem: {product.views}</Typography>
         </Box>
     );
 };
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} placement='top' />
+    <Tooltip {...props} sx={{ paddingX: 10 }} TransitionComponent={Fade}
+        TransitionProps={{ timeout: 400 }}
+        slotProps={{
+            popper: {
+                modifiers: [
+                    {
+                        name: "offset",
+                        options: {
+                            offset: [0, -80],
+                        }
+                    }
+                ]
+            }
+        }}
+        classes={{ popper: className }} placement='top' />
 ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: `rgba(255,255,255,0.8)`,
         color: 'rgba(0, 0, 0, 0.87)',
         boxShadow: theme.shadows[1],
         fontSize: 11,
+        padding: `10px 20px`
     },
 }));
 
@@ -62,15 +68,17 @@ const StyledCardWrapper = styled('div')(({ theme }) => ({
 const ProductCard = ({ data: product }: { data: Product }) => {
     const { id, name, price, thumbnail, origin } = product;
     const wishlist = useSelector((state: RootState) => state.wishlist);
+    const cart = useSelector((state: RootState) => state.cart);
     const isInWishList = wishlist.some(p => p.id === id);
+    const isInCart = cart.some(p => p.product.id === id);
     const dispatch = useDispatch();
     const quantitySold = 10;
 
     return (
         <StyledCardWrapper>
-            <Card sx={{ 
-                minWidth: 150, 
-                height: "auto", 
+            <Card sx={{
+                minWidth: 150,
+                height: "auto",
                 transition: "border-color 0.3s",
                 borderColor: "transparent",
                 "&:hover": {
@@ -88,7 +96,8 @@ const ProductCard = ({ data: product }: { data: Product }) => {
                                 sx={{
                                     transition: "all 0.5s ease",
                                     "&:hover": {
-                                        transform: "rotate(15deg) scale(0.8)",
+                                        // transform: "rotate(15deg) scale(0.8)",
+                                        transform: "scale(1.1)",
                                     }
                                 }}
                             />
@@ -134,7 +143,7 @@ const ProductCard = ({ data: product }: { data: Product }) => {
                                     borderRadius: 5,
                                     fontSize: 10,
                                 }}
-                                color="primary"
+                                color={isInCart ? "warning" : "primary"}
                                 onClick={() => {
                                     dispatch(cartItemAdd({
                                         product,
@@ -143,7 +152,11 @@ const ProductCard = ({ data: product }: { data: Product }) => {
                                     toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" });
                                 }}
                             >
-                                {<AddShoppingCartIcon />}
+                                {!isInCart ?
+                                    <AddShoppingCartIcon />
+                                    :
+                                    <ShoppingCartCheckoutIcon />
+                                }
                                 {/* Thêm vào giỏ */}
                             </Button>
                         </LightTooltip>

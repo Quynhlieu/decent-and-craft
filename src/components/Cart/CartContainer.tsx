@@ -6,6 +6,7 @@ import { CartItem, cartItemRemove, getTotalPrice } from '../../features/cart/car
 import CancelIcon from '@mui/icons-material/Cancel';
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import TruncateText from '../TruncateText'
 
 type CartItemListType = {
     cartItems: CartItem[];
@@ -23,13 +24,13 @@ const CartItemComponent = (prop: { cartItem: CartItem }) => {
             <Box textAlign="left" minWidth={250}>
                 <Typography>
                     <strong>
-                        {cartItem.product.name}
+                        <TruncateText maxLength={50} >
+                            {cartItem.product.name}
+                        </TruncateText>
                     </strong>
                 </Typography>
                 <Stack direction="row" >
-                    <Typography>
-                        {cartItem.quantity}x
-                    </Typography>
+                    {cartItem.quantity}x
                     <VNDNumericFormat price={cartItem.product.price} />
                 </Stack>
             </Box>
@@ -44,8 +45,12 @@ const CartItemComponent = (prop: { cartItem: CartItem }) => {
 const CartItemList = (prop: CartItemListType) => {
     const cartItems = prop.cartItems;
     return (
-        <Stack spacing={2}>
-            {cartItems.map(cartItem => <CartItemComponent cartItem={cartItem} />)}
+        <Stack sx={{
+            overflowX:"hidden",
+            overflowY:"scroll",
+            maxHeight:"400px"
+        }} spacing={2}>
+            {cartItems.map((cartItem, index) => <CartItemComponent key={index} cartItem={cartItem} />)}
         </Stack>
     )
 
@@ -55,27 +60,27 @@ const CartContainer = (prop: { showCart: boolean, onMouseOut: () => void }) => {
     const cart = useSelector((state: RootState) => state.cart)
     const navigate = useNavigate();
     return (
-        <Paper
-            onMouseOut={prop.onMouseOut}
-            elevation={5}
-            className='p-absolute'
-            sx={{
-                p: 2,
-                minWidth: 250,
-                top: 30,
-                right: 0,
-                zIndex: 10,
-                visibility: showCart ? "visible" : "hidden"
-            }} >
-            {cart.length ? <Stack spacing={2} >
-                <CartItemList cartItems={cart} />
-                <Typography>Tong tien: <strong><VNDNumericFormat price={getTotalPrice(cart)} /></strong></Typography>
-                <Button onClick={() => { navigate("cart") }} variant='contained'>Xem gio hang</Button>
-                <Button onClick={() => { navigate("pay") }} color="error" variant='contained'>Thanh Toan</Button>
-            </Stack> : <Typography>
-                Chưa có sản phẩm trong giỏ hàng
-            </Typography>}
-        </Paper>
+            <Paper
+                elevation={5}
+                className='p-absolute'
+                sx={{
+                    p: 2,
+                    maxWidth: 380,
+                    top: 30,
+                    right: 0,
+                    zIndex: 10,
+                    visibility: showCart ? "visible" : "hidden"
+                }} >
+                {cart.length ? <Stack spacing={2} >
+                    <CartItemList cartItems={cart} />
+                    <Typography>Tổng tiền: <strong><VNDNumericFormat price={getTotalPrice(cart)} /></strong></Typography>
+                    <Button onClick={() => { navigate("cart") }}
+                        variant='contained'>Xem giỏ hàng</Button>
+                </Stack> : <Typography>
+                    Chưa có sản phẩm trong giỏ hàng
+                </Typography>}
+
+            </Paper>
     )
 }
 

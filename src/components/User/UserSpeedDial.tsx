@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Fab, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -7,11 +7,11 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PasswordIcon from '@mui/icons-material/Password';
 import '../../assets/user.css';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import {RootState} from "../../app/store.ts";
-import {useDispatch, useSelector} from "react-redux";
-import {logout} from "../../features/user/userSlice.ts";
+import { RootState } from "../../app/store.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../features/user/userSlice.ts";
 
 interface UserSpeedDialProps {
     onComponentChange: (componentName: string) => void;
@@ -23,7 +23,7 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector((state: RootState) => state.user.user);
-
+    const userType = useSelector((state: RootState) => state.user.type);
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
     };
@@ -48,9 +48,9 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                 <Box className={isExpanded ? 'expanded' : 'collapsed'} sx={{ width: '100%', bgcolor: 'background.paper' }} style={{ display: isExpanded ? 'block' : 'none' }}>
                     <nav aria-label="main mailbox folders">
                         <List>
-                            <ListItem disablePadding sx={{my: 2}}>
+                            <ListItem disablePadding sx={{ my: 2 }}>
                                 Xin chào
-                                <Typography sx={{mx:1, color: "red"}}>{user?.fullName} !</Typography>
+                                <Typography sx={{ mx: 1, color: "red" }}>{user?.fullName} !</Typography>
                             </ListItem>
 
                             <ListItem disablePadding>
@@ -107,24 +107,27 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                                     <ListItemText primary="Địa chỉ" />
                                 </ListItemButton>
                             </ListItem>
-                            <ListItem disablePadding>
-                                <ListItemButton
-                                    onClick={() => handleItemClick('ChangePassword')}
-                                    selected={selectedComponent === 'ChangePassword'}
-                                    sx={{
-                                        '&.Mui-selected': {
-                                            bgcolor: 'primary.main',
-                                            color: 'white',
-                                            '& .MuiListItemIcon-root': { color: 'white' }
-                                        }
-                                    }}
-                                >
-                                    <ListItemIcon>
-                                        <PasswordIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Đổi mật khẩu" />
-                                </ListItemButton>
-                            </ListItem>
+                            {userType === 1 &&
+                                <ListItem disablePadding>
+                                    <ListItemButton
+                                        onClick={() => handleItemClick('ChangePassword')}
+                                        selected={selectedComponent === 'ChangePassword'}
+                                        sx={{
+                                            '&.Mui-selected': {
+                                                bgcolor: 'primary.main',
+                                                color: 'white',
+                                                '& .MuiListItemIcon-root': { color: 'white' }
+                                            }
+                                        }}
+                                    >
+                                        <ListItemIcon>
+                                            <PasswordIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Đổi mật khẩu" />
+                                    </ListItemButton>
+                                </ListItem>
+
+                            }
                         </List>
                     </nav>
                     <Divider />
@@ -138,8 +141,8 @@ const UserSpeedDial: React.FC<UserSpeedDialProps> = ({ onComponentChange }) => {
                         </List>
                     </nav>
                 </Box>
-            </div>
-        </Box>
+            </div >
+        </Box >
     );
 }
 

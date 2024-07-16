@@ -1,27 +1,43 @@
-import React from 'react';
-import {Box, Button, Paper, Typography} from "@mui/material";
-
-import BillDetails from "../components/Bill/BillDetails.tsx";
+import React, { useRef } from 'react';
+import { Box, Button, Paper, Typography } from "@mui/material";
 import ItemList from "../components/Bill/ItemList.tsx";
 import TotalAmount from "../components/Bill/TotalAmount.tsx";
 import TitleInvoce from "../components/Bill/TitleInvoce.tsx";
-import {orders} from "../data/order.ts";
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
-import {useNavigate} from "react-router-dom";
-const Bill: React.FC = () => {
+import { useLocation, useNavigate } from "react-router-dom";
+import BillDetails from '../components/Bill/BillDetails.tsx';
+import { useReactToPrint } from 'react-to-print';
+const BillContainer = () => {
     const navigate = useNavigate();
-    const handlePrint = () => {
-        window.print();
-    };
-
+    const componentRef = useRef(null);
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    })
     const handleClose = () => {
-
         navigate('/');
     };
     return (
         <Paper elevation={3} sx={{ padding: 2 }}>
+            <Bill ref={componentRef} />
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <Button variant="contained" sx={{ backgroundColor: "red", marginRight: 4 }} onClick={handleClose}>
+                    Đóng
+                </Button>
+                <Button variant="contained" color="primary" onClick={handlePrint}>
+                    <LocalPrintshopIcon />
+                </Button>
+            </Box>
+        </Paper>
+    )
+}
+
+const Bill = React.forwardRef<HTMLDivElement>((props,ref) => {
+    const location = useLocation();
+    const order = location.state?.order;
+    return (
+        <div ref={ref}>
             <Box sx={{ minHeight: 320 }}>
-                <TitleInvoce order = {orders[0]}/>
+                <TitleInvoce order={order} />
                 <Typography
                     variant='h4'
                     sx={{
@@ -32,25 +48,12 @@ const Bill: React.FC = () => {
                 >
                     Hóa đơn mua hàng
                 </Typography>
-                <BillDetails  order = {orders[0]}/>
-                <ItemList order = {orders[0]}/>
-                <TotalAmount order = {orders[0]}/>
-
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                    <Button variant="contained" sx={{backgroundColor: "red", marginRight: 4}}  onClick={handleClose}>
-                        Đóng
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={handlePrint}>
-                        <LocalPrintshopIcon />
-                    </Button>
-
-                </Box>
+                <BillDetails order={order} />
+                <ItemList order={order} />
+                <TotalAmount order={order} />
             </Box>
-        </Paper>
-
-
-
+        </div>
     );
-};
+});
 
-export default Bill;
+export default BillContainer;
