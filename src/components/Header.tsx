@@ -39,7 +39,7 @@ const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
 
 const NavBar = () => {
     return (
-        <Stack direction="row" spacing={0} sx={{ padding: 0, mt: 1}} >
+        <Stack direction="row" spacing={0} sx={{ padding: 0, mt: 1 }} >
             <Link to="/"  >
                 <NavItem active={true} >Trang chủ</NavItem>
             </Link>
@@ -78,8 +78,8 @@ const Header = () => {
     return (
         <Slide appear={false} direction='down' in={scrollDirection === "up" || !trigger}  >
             <AppBar position="sticky" sx={{
-
                 boxShadow: "none",
+                zIndex: 1004,
                 transition: 'transform 0.3s ease-in-out', // Smooth transition
             }} color='inherit'>
                 <Toolbar sx={{

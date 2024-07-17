@@ -291,9 +291,9 @@ const SimilarProductList = (prop: { similarProducts: Product[] }) => {
 const Detail = (prop: { productDetail: IProductDetail }) => {
     const { productDetail } = prop;
     const { data } = useGetProductByCategoryIdQuery(1);
-    console.log("So luong san pham tuong tu",data?.content.length);
-    
-    const products = data?.content.filter((p) => p.id  !== productDetail.id);
+    console.log("So luong san pham tuong tu", data?.content.length);
+
+    const products = data?.content.filter((p) => p.id !== productDetail.id);
     return (
         <Box component="div">
             <Grid container spacing={2}>
@@ -320,20 +320,20 @@ const ProductDetail = () => {
     const dispatch = useDispatch();
     const [putViewsProductById] = usePutViewsProductByIdMutation();
 
-    const [hasPutViews, setHasPutViews] = useState(false); 
-    
+    const [hasPutViews, setHasPutViews] = useState(false);
+
 
     useEffect(() => {
         if (!productId) {
             navigate("/");
-        }if(!hasPutViews){
+        } if (!hasPutViews) {
             putViewsProductById(Number(productId));
             setHasPutViews(true);
         }
     }, [productId, navigate]);
 
 
-   
+
 
     const { data: productDetail, isLoading } = useGetProductDetailByIdQuery(Number(productId));
 
@@ -361,4 +361,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-
