@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "../features/cart/cartSlice";
 import wishlistReducer from "../features/wishlist/wishlistSlice"
+import productViewedHistoryReducer from "../features/history/productViewedHistorySlice"
 import userReducer from "../features/user/userSlice.ts";
 import filterReducer from "../features/filter/filterSlice.ts";
 import productDetailSlice from "../features/productDetail/productDetailSlice.ts";
@@ -21,6 +22,7 @@ export const store = configureStore({
     reducer: {
         cart: cartReducer,
         wishlist: wishlistReducer,
+        history: productViewedHistoryReducer,
         user: userReducer,
         filter: filterReducer,
         order: orderReducer,
@@ -33,8 +35,8 @@ export const store = configureStore({
         [blogApi.reducerPath]: blogApi.reducer,
         [feedbackApi.reducerPath]: feedbackApi.reducer,
         [productDetailApi.reducerPath]: productDetailApi.reducer,
-        [reviewApi.reducerPath]:reviewApi.reducer,
-        [categoryApi.reducerPath]:categoryApi.reducer,
+        [reviewApi.reducerPath]: reviewApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer,
         [voucherApi.reducerPath]: voucherApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>

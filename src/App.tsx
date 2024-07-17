@@ -62,6 +62,7 @@ function App() {
               </Route>
               <Route path="search" element={<SearchPage />}>
                 <Route path="filter?" element={<SearchPage />} />
+                <Route path="category/:categoryId" element={<SearchPage />} />
               </Route>
               <Route path="pay" element={<Payment />} />
               <Route path="bill"   >
@@ -74,7 +75,7 @@ function App() {
                 <Route path="create" element={<CreateProduct />} />
               </Route>
             </Route>
-            <Route path="page404" element={<Page404 />} />
+            <Route path="*" element={<Page404 />} />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

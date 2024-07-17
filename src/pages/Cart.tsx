@@ -1,5 +1,7 @@
 import { Box, Button, Divider, Grid, Stack, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import React from 'react'
 import DataTable from 'react-data-table-component'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../app/store'
@@ -123,7 +125,9 @@ const PriceRow = (prop: { name: string, price: number, styled?: React.CSSPropert
 
 const Cart = () => {
     const navigate = useNavigate();
+    const MySwal = withReactContent(Swal)
     const cart = useSelector((state: RootState) => state.cart);
+    const user = useSelector((state: RootState) => state.user);
     return (
         cart.length ? <Grid sx={{ mt: 3, mb: 20 }} spacing={3} container>
             <Grid xs={8} sx={{ pr: 2 }} item>
@@ -163,7 +167,20 @@ const Cart = () => {
                     <Divider sx={{ mt: 1 }} />
                     <PriceRow name='Tổng cộng' price={getTotalPrice(cart) + 20000} />
                     <Divider sx={{ mt: 1, borderBottomWidth: 3 }} />
-                    <Button sx={{ mt: 2 }} color='warning' variant='contained' onClick={() => { navigate("/pay") }}>
+                    <Button sx={{ mt: 2 }} color='warning'
+                        variant='contained'
+                        onClick={() => {
+                            if (!user.user) {
+                                MySwal.fire({
+                                    title: "Vui lòng đăng nhập để có thể thanh toán",
+                                    icon: "warning",
+                                })
+                                navigate("/login")
+                                return;
+                            }
+                            navigate("/pay")
+
+                        }}>
                         <strong>  TIẾN HÀNH THANH TOÁN</strong>
                     </Button>
                 </Stack>

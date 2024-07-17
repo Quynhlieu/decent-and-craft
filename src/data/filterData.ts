@@ -68,14 +68,10 @@ export const relateFilters = [
 export const priceFilters = [
     {
         id: 0,
-        name: "Giá"
-    },
-    {
-        id: 1,
         name: "Giá: Thấp đến cao"
     },
     {
-        id: 2,
+        id: 1,
         name: "Giá: Cao đến thấp"
     },
 ]

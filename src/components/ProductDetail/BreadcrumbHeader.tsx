@@ -5,20 +5,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useRef } from "react";
 import { updateCategories } from "../../features/filter/filterSlice";
+import { IProductDetail } from "../../interfaces/ProductDetail";
+import React from "react";
 
-const BreadcrumbHeader = () => {
+type BreadcrumbHeaderProps = {
+    productDetail?: IProductDetail
+}
+const BreadcrumbHeader: React.FC<BreadcrumbHeaderProps> = ({ productDetail }) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const pathNames = location.pathname.split("/").filter(x => x);
     const websiteName = "Decent&Craft";
-
-    const productDetailState = useSelector((state: RootState) => state.productDetail);
     const filterState = useSelector((state: RootState) => state.filter);
-
-    const productDetail = productDetailState.productDetail;
-    const product = productDetailState.productDetail?.product;
     const firstCategory = productDetail?.categoryList[0];
-
+    const product = productDetail?.product;
     const containerRef = useRef<HTMLDivElement>(null);
     const breadcrumbsRef = useRef<HTMLDivElement[]>([]);
     const breadcrumbItemStyle = {
@@ -62,7 +62,6 @@ const BreadcrumbHeader = () => {
                 {firstCategory.name}
             </Link>
         );
-
         breadcrumbs.push(
             <Typography color="text.primary" sx={breadcrumbNameStyle} key="product" noWrap>
                 {product?.name}
