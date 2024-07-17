@@ -7,10 +7,11 @@ import { Box, Button, colors, Divider, Grid, Rating, Skeleton, Stack, Tab, Tabs,
 import { grey } from "@mui/material/colors";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGetProductByCategoryIdQuery, usePutViewsProductByIdMutation } from "../api/productApi.ts";
 import { useGetAverageRatingQuery, useGetProductDetailByIdQuery } from "../api/productDetailApi.ts";
+import { useGetAllReviewsByProductIdQuery } from "../api/reviewApi.ts";
 import { RootState } from "../app/store";
 import { VNDNumericFormat } from "../components/ProductCard.tsx";
 import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
@@ -20,10 +21,10 @@ import Review from "../components/ProductDetail/Review.tsx";
 import ProductList from "../components/ProductList.tsx";
 import ProductSection from "../components/ProductSection.tsx";
 import { cartItemAdd } from "../features/cart/cartSlice.ts";
-import { addCartItem, productDetailLoad, updateAverageRating, updateCartItem } from "../features/productDetail/productDetailSlice.ts";
+import { productViewedHistoryAdd } from "../features/history/productViewedHistorySlice.ts";
+import { addCartItem, updateCartItem } from "../features/productDetail/productDetailSlice.ts";
 import { Product } from "../interfaces/Product.ts";
 import { IProductDetail } from "../interfaces/ProductDetail.ts";
-import { useGetAllReviewsByProductIdQuery } from "../api/reviewApi.ts";
 
 // Line icon
 export const LineIcon = () => {
@@ -53,8 +54,8 @@ export const Price = (prop: { price: number, origin: number, fontSize: number })
 
     return (
         <Stack spacing={2} direction="row" sx={baseSx}>
-            <Typography sx={priceSx}><VNDNumericFormat price={price} /></Typography>
-            <Typography sx={discountSx}><VNDNumericFormat price={origin} /></Typography>
+            <Typography sx={priceSx}><VNDNumericFormat price={origin} /></Typography>
+            <Typography sx={discountSx}><VNDNumericFormat price={price} /></Typography>
         </Stack>
     );
 }
@@ -273,6 +274,18 @@ const DescriptionProduct = (prop: { productDetail: IProductDetail }) => {
     );
 };
 /* End Description Tab*/
+/*
+* Similar product list
+* */
+const HistoryProductList = () => {
+    const historyProducts = useSelector((state: RootState) => state.history);
+    return (
+        <Box sx={{ my: 5 }}>
+            <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM ĐÃ XEM</Typography>
+            <ProductList products={historyProducts} />
+        </Box>
+    )
+}
 
 /*
 * Similar product list
@@ -282,7 +295,7 @@ const SimilarProductList = (prop: { similarProducts: Product[] }) => {
     return (
         <Box sx={{ my: 5 }}>
             <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM TƯƠNG TỰ</Typography>
-            <ProductList products={similarProducts} isLoading={true} />
+            <ProductList products={similarProducts} />
         </Box>
     )
 }
@@ -290,9 +303,7 @@ const SimilarProductList = (prop: { similarProducts: Product[] }) => {
 // Chi tiet san pham
 const Detail = (prop: { productDetail: IProductDetail }) => {
     const { productDetail } = prop;
-    const { data } = useGetProductByCategoryIdQuery(1);
-    console.log("So luong san pham tuong tu", data?.content.length);
-
+    const { data } = useGetProductByCategoryIdQuery(productDetail.categoryList[0].id ?? 1);
     const products = data?.content.filter((p) => p.id !== productDetail.id);
     return (
         <Box component="div">
@@ -310,6 +321,7 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
                 </Grid>
             </Grid>
             <SimilarProductList similarProducts={products ?? []} />
+            <HistoryProductList />
         </Box>
     )
 }
@@ -319,43 +331,35 @@ const ProductDetail = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [putViewsProductById] = usePutViewsProductByIdMutation();
-
     const [hasPutViews, setHasPutViews] = useState(false);
-
-
+    const { data: productDetail, isLoading, error } = useGetProductDetailByIdQuery(Number(productId));
     useEffect(() => {
         if (!productId) {
             navigate("/");
-        } if (!hasPutViews) {
+        }
+        if (error) {
+            navigate("*");
+        }
+        if (!hasPutViews) {
             putViewsProductById(Number(productId));
             setHasPutViews(true);
         }
-    }, [productId, navigate]);
-
-
-
-
-    const { data: productDetail, isLoading } = useGetProductDetailByIdQuery(Number(productId));
-
-    useEffect(() => {
         if (productDetail) {
-            dispatch(productDetailLoad(productDetail));
+            dispatch(productViewedHistoryAdd(productDetail?.product))
         }
-    }, [productDetail, dispatch]);
+    }, [productId, navigate, error]);
 
-    console.log(productDetail);
 
     return (
         <Box sx={{ mb: 10 }}>
             {isLoading
                 ? <Skeleton width={900} height={220} />
-                : <BreadcrumbHeader />}
+                : productDetail && <BreadcrumbHeader productDetail={productDetail} />}
             {productDetail && !isLoading
                 ? <Detail productDetail={productDetail} />
                 : <Skeleton width={1200} height={400} />}
             <ProductSection />
             <BreadcrumbFooter />
-            <Outlet />
         </Box>
     );
 };

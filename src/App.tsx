@@ -62,6 +62,7 @@ function App() {
               </Route>
               <Route path="search" element={<SearchPage />}>
                 <Route path="filter?" element={<SearchPage />} />
+                <Route path="category/:categoryId" element={<SearchPage />} />
               </Route>
               <Route path="pay" element={<Payment />} />
               <Route path="bill"   >

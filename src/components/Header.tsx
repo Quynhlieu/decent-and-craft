@@ -1,60 +1,92 @@
-import { AppBar, Badge, Box, Button, Divider, IconButton, Slide, Stack, Toolbar, Tooltip, Typography, useScrollTrigger } from '@mui/material'
-import React, { useState } from 'react'
-import SeachBar from './SearchBar'
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Link, useNavigate } from 'react-router-dom';
+import { AppBar, Badge, Button, Divider, IconButton, Slide, Stack, styled, Toolbar, Tooltip, Typography, useScrollTrigger } from '@mui/material';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { RootState } from '../app/store';
 import { getCount, getTotalPrice } from '../features/cart/cartSlice';
-import { VNDNumericFormat } from './ProductCard';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import CartContainer from './Cart/CartContainer';
 import { logout } from "../features/user/userSlice.ts";
 import useScrollDirection from '../hooks/useScrollDirection.ts';
-interface NavItemProps {
-    active?: boolean,
-    children: React.ReactNode
-}
+import CartContainer from './Cart/CartContainer';
+import { VNDNumericFormat } from './ProductCard';
+import SeachBar from './SearchBar';
 
-const NavItem: React.FC<NavItemProps> = ({ active, children }) => {
-    const baseSx = {
-        textTransform: "none",
-        color: "secondary",
-        fontSize: 20,
-    }
-    const activeSx = active ? {
-        fontWeight: "bold",
-        textDecoration: "underline"
 
-    } : {};
-    const style: object = { ...baseSx, ...activeSx };
-    return (
-        <Button
-            size='large'
-            color={active ? "primary" : "secondary"}
-            sx={style} style={{ marginLeft: '43px' }}> {children} </Button >
-    )
-}
+const StyledNavLink = styled(NavLink)(({ theme }) => ({
+    textDecoration: 'none',
+    fontSize: 30,
+    padding: 10,
+    color: 'inherit',
+    '&.active': {
+        fontWeight: 'bold',
+        color: theme.palette.primary.main,
+    },
+    '&.inactive': {
+        fontWeight: 'normal',
+    },
+    '&.visited': {
+        color: "white",
+        fontWeight: 'normal',
+    },
+}));
 
 const NavBar = () => {
+
     return (
-        <Stack direction="row" spacing={0} sx={{ padding: 0, mt: 1 }} >
-            <Link to="/"  >
-                <NavItem active={true} >Trang chủ</NavItem>
-            </Link>
-            <NavItem >Gift Sets</NavItem>
-            <NavItem >Album</NavItem>
-            <NavItem >Khung hình</NavItem>
-            <NavItem >Quà tặng</NavItem>
-            <NavItem >Thiệp</NavItem>
-            <NavItem >Nguyên liệu</NavItem>
-            <Link to={'/blogs'}>
-                <NavItem >Blogs</NavItem>
-            </Link>
+        <Stack direction="row" spacing={0} sx={{ paddingY: 2, mt: 1, justifyContent: "space-around" }}>
+            <StyledNavLink to="/"
+                className={({ isActive, isPending }) =>
+                    isPending ? "pending" : isActive ? "active" : ""
+                }
+            >
+                Trang chủ
+            </StyledNavLink>
+            <StyledNavLink
+                to="/search/category/1"
+                className={({ isActive, isPending }) =>
+                    isPending ? "pending" : isActive ? "active" : ""
+                }
+            >
+                Gift sets
+            </StyledNavLink>
+            <StyledNavLink
+                to="/search/category/2"
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            >
+                Album
+            </StyledNavLink>
+            <StyledNavLink
+                to="/search/category/3"
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            >
+                Khung hình
+            </StyledNavLink>
+            <StyledNavLink
+                to="/search/category/4"
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            >
+                Quà tặng
+            </StyledNavLink>
+            <StyledNavLink
+                to="/search/category/5"
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            >
+                Thiệp
+            </StyledNavLink>
+            <StyledNavLink
+                to="/search/category/6"
+                className={({ isActive }) => (isActive ? 'active' : 'inactive')}
+            >
+                Nguyên liệu
+            </StyledNavLink>
+            <StyledNavLink to="/blogs" className={({ isActive }) => (isActive ? 'active' : 'inactive')}>
+                Blogs
+            </StyledNavLink>
         </Stack>
-    )
-}
+    );
+};
 
 
 

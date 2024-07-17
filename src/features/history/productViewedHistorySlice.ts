@@ -12,9 +12,6 @@ const productViewedHistorySlice = createSlice({
     name: "productViewedHistory",
     initialState,
     reducers: {
-        productViewedHistoryLoad(state) {
-            return state;
-        },
         productViewedHistoryAdd(state, action: PayloadAction<Product>) {
             const existingIndex = state.findIndex(p => p.id === action.payload.id);
             if (existingIndex >= 0) {
@@ -29,4 +26,4 @@ const productViewedHistorySlice = createSlice({
 });
 
 export default productViewedHistorySlice.reducer;
-export const { productViewedHistoryLoad, productViewedHistoryAdd } = productViewedHistorySlice.actions;
+export const {  productViewedHistoryAdd } = productViewedHistorySlice.actions;

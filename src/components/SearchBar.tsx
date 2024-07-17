@@ -34,6 +34,11 @@ const SeachBar = () => {
             <InputBase
                 sx={{ width: 300 }}
                 onChange={handleInputChange}
+                onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                        navigate("/search")
+                    }
+                }}
                 value={searchValue}
                 placeholder='Bạn cần tìm gì?'
             />

@@ -37,7 +37,6 @@ const Feedbacks = () => {
     const { data, isLoading } = useGetAllFeedbacksQuery();
     const feedbacks = data;
     let setting = {
-        dots: true,
         infinite: true,
         speed: 1000,
         slidesToShow: 3,
@@ -46,13 +45,12 @@ const Feedbacks = () => {
         autoplaySpeed: 3000,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
-
     }
     return (
-        <Box sx={{ mt: 5 }}>
+        <Box  sx={{ marginY: 5 }}>
             <TitleBar title='DECENT&CRAFT / KHÁCH HÀNG' />
-            {isLoading ? <Skeleton width={100} height={50}/>
-            : <Box sx={{ mt: 2 }}>
+            {isLoading ? <Skeleton width={100} height={50} />
+                : <Box sx={{ mt: 2 }}>
                     <Slider  {...setting} >
                         {feedbacks && feedbacks.map(f => {
                             return <FeedbackItem key={f.id} feedback={f} />
