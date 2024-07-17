@@ -1,28 +1,36 @@
 import { Product } from '../interfaces/Product'
-import { Grid } from '@mui/material'
+import { Grid, Skeleton } from '@mui/material'
 import ProductCard from './ProductCard'
 
 type ProductListProps = {
-    products: Product[] | undefined
+    products: Product[] | undefined | null,
+    isLoading?: boolean | undefined
 }
 const ProductList = (props: ProductListProps) => {
-    const { products } = props;
+    const { products, isLoading } = props;
     const isSearchPage = window.location.pathname.includes('search');
+    const gridSize = isSearchPage ? 4 : 5; // 
     return (
         <Grid container sx={{ mt: 2 }} spacing={2}>
-            {products&&   products.map(product => {
-                return (
-                    <Grid 
-                        xs={12 / (isSearchPage ? 4 : 5)} 
-                        key={product.id} 
+            {isLoading
+                ? Array.from(new Array(8)).map(index => (
+                    <Grid
                         item
-                    >
+                        xs={12 / gridSize}
+                        key={index}>
+                        <Skeleton variant="rectangular" width="100%" height={350} />
+                    </Grid>))
+                :
+                products?.map(product => (
+                    <Grid
+                        item
+                        xs={12 / gridSize}
+                        key={product.id}>
                         <ProductCard data={product} />
-                    </Grid>
-                )
-            })}
+                    </Grid>))
+
+            }
         </Grid>
     )
 }
-
 export default ProductList

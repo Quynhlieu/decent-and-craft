@@ -1,29 +1,30 @@
-import { Box, Button, colors, Divider, Grid, Rating, Skeleton, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
-import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
-import ProductSection from "../components/ProductSection.tsx";
-import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect } from "react";
-import { grey } from "@mui/material/colors";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import PinterestIcon from "@mui/icons-material/Pinterest";
-import ProductList from "../components/ProductList.tsx";
-import Review from "../components/ProductDetail/Review.tsx";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
-import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
-import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { useGetAverageRatingQuery, useGetProductDetailByIdQuery } from "../api/productDetailApi.ts";
-import { addCartItem, productDetailLoad, updateCartItem } from "../features/productDetail/productDetailSlice.ts";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import PinterestIcon from "@mui/icons-material/Pinterest";
+import RemoveIcon from "@mui/icons-material/Remove";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import { Box, Button, colors, Divider, Grid, Rating, Skeleton, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { cartItemAdd } from "../features/cart/cartSlice.ts";
-import { VNDNumericFormat } from "../components/ProductCard.tsx";
+import { useGetProductByCategoryIdQuery, usePutViewsProductByIdMutation } from "../api/productApi.ts";
+import { useGetAverageRatingQuery, useGetProductDetailByIdQuery } from "../api/productDetailApi.ts";
+import { useGetAllReviewsByProductIdQuery } from "../api/reviewApi.ts";
 import { RootState } from "../app/store";
+import { VNDNumericFormat } from "../components/ProductCard.tsx";
+import BreadcrumbFooter from "../components/ProductDetail/BreadcrumbFooter.tsx";
+import BreadcrumbHeader from "../components/ProductDetail/BreadcrumbHeader.tsx";
+import MySclickCarousel from "../components/ProductDetail/MySlickCarousel.tsx";
+import Review from "../components/ProductDetail/Review.tsx";
+import ProductList from "../components/ProductList.tsx";
+import ProductSection from "../components/ProductSection.tsx";
+import { cartItemAdd } from "../features/cart/cartSlice.ts";
+import { productViewedHistoryAdd } from "../features/history/productViewedHistorySlice.ts";
+import { addCartItem, updateCartItem } from "../features/productDetail/productDetailSlice.ts";
 import { Product } from "../interfaces/Product.ts";
-import { useGetAllProductQuery } from "../api/productApi.ts";
 import { IProductDetail } from "../interfaces/ProductDetail.ts";
-import { OrbitProgress } from "react-loading-indicators";
 
 // Line icon
 export const LineIcon = () => {
@@ -53,8 +54,8 @@ export const Price = (prop: { price: number, origin: number, fontSize: number })
 
     return (
         <Stack spacing={2} direction="row" sx={baseSx}>
-            <Typography sx={priceSx}><VNDNumericFormat price={price} /></Typography>
-            <Typography sx={discountSx}><VNDNumericFormat price={origin} /></Typography>
+            <Typography sx={priceSx}><VNDNumericFormat price={origin} /></Typography>
+            <Typography sx={discountSx}><VNDNumericFormat price={price} /></Typography>
         </Stack>
     );
 }
@@ -113,6 +114,7 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
     };
     const product = productDetail.product;
     let { data: averageRating } = useGetAverageRatingQuery(productDetail.id);
+    const { data: numberReviews } = useGetAllReviewsByProductIdQuery(productDetail.id);
 
     useEffect(() => {
         const cartItem = { product: product, quantity: 1 };
@@ -130,7 +132,6 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
     const productDetailState = useSelector((state: RootState) => state.productDetail);
     const currentCartItem = productDetailState.cartItem;
     averageRating = typeof averageRating === 'number' ? averageRating : 0;
-
     return (
         <Box flexDirection="column" letterSpacing={10}>
             <Typography sx={styleTitle}>{product.name}</Typography>
@@ -150,7 +151,7 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
                         />
                         <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
 
-                        <Typography>{productDetail.views || 0} Đánh giá</Typography>
+                        <Typography>{numberReviews?.length || 0} Đánh giá</Typography>
                     </Stack>
                 ) : (
                     <Stack direction="row" alignItems="center">
@@ -160,11 +161,11 @@ const InformationProduct: React.FC<{ productDetail: IProductDetail }> = ({ produ
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
 
-                <Typography>{productDetail.views || 0} Lượt xem</Typography>
+                <Typography>{product.views || 0} Lượt xem</Typography>
 
                 <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
 
-                <Typography>{productDetail.views || 0} Đã bán</Typography>
+                <Typography>{product.soldQuantity || 0} Đã bán</Typography>
             </Stack>
             <LineIcon />
             <Price price={product.price} origin={product.origin} fontSize={25} />
@@ -250,7 +251,7 @@ const DescriptionProduct = (prop: { productDetail: IProductDetail }) => {
     }
     // Show Review
     const showReviewTab = () => {
-        const content = <Review productId={productDetail.product.id} />;
+        const content = <Review productId={productDetail.id} />;
         return (
             <CustomTabPanel index={1} value={value}>
                 {content}
@@ -273,6 +274,18 @@ const DescriptionProduct = (prop: { productDetail: IProductDetail }) => {
     );
 };
 /* End Description Tab*/
+/*
+* Similar product list
+* */
+const HistoryProductList = () => {
+    const historyProducts = useSelector((state: RootState) => state.history);
+    return (
+        <Box sx={{ my: 5 }}>
+            <Typography sx={{ fontWeight: 'bold' }}>SẢN PHẨM ĐÃ XEM</Typography>
+            <ProductList products={historyProducts} />
+        </Box>
+    )
+}
 
 /*
 * Similar product list
@@ -290,8 +303,8 @@ const SimilarProductList = (prop: { similarProducts: Product[] }) => {
 // Chi tiet san pham
 const Detail = (prop: { productDetail: IProductDetail }) => {
     const { productDetail } = prop;
-    const { data } = useGetAllProductQuery();
-    const products = data;
+    const { data } = useGetProductByCategoryIdQuery(productDetail.categoryList[0].id ?? 1);
+    const products = data?.content.filter((p) => p.id !== productDetail.id);
     return (
         <Box component="div">
             <Grid container spacing={2}>
@@ -308,6 +321,7 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
                 </Grid>
             </Grid>
             <SimilarProductList similarProducts={products ?? []} />
+            <HistoryProductList />
         </Box>
     )
 }
@@ -315,31 +329,39 @@ const Detail = (prop: { productDetail: IProductDetail }) => {
 const ProductDetail = () => {
     const { productId } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [putViewsProductById] = usePutViewsProductByIdMutation();
+    const [hasPutViews, setHasPutViews] = useState(false);
+    const { data: productDetail, isLoading, error } = useGetProductDetailByIdQuery(Number(productId));
     useEffect(() => {
         if (!productId) {
             navigate("/");
         }
-    }, [productId, navigate]);
-    const { data: productDetail, isLoading } = useGetProductDetailByIdQuery(Number(productId));
-    const dispatch = useDispatch();
-    productDetail && dispatch(productDetailLoad(productDetail));
-    console.log(productDetail);
+        if (error) {
+            navigate("*");
+        }
+        if (!hasPutViews) {
+            putViewsProductById(Number(productId));
+            setHasPutViews(true);
+        }
+        if (productDetail) {
+            dispatch(productViewedHistoryAdd(productDetail?.product))
+        }
+    }, [productId, navigate, error]);
+
+
     return (
         <Box sx={{ mb: 10 }}>
             {isLoading
                 ? <Skeleton width={900} height={220} />
-                : <BreadcrumbHeader />}
+                : productDetail && <BreadcrumbHeader productDetail={productDetail} />}
             {productDetail && !isLoading
-                ?
-                < Detail productDetail={productDetail} />
-                :
-                <Skeleton width={1200} height={400} />
-            }
+                ? <Detail productDetail={productDetail} />
+                : <Skeleton width={1200} height={400} />}
             <ProductSection />
             <BreadcrumbFooter />
-            <Outlet />
         </Box>
-    )
-}
+    );
+};
 
 export default ProductDetail;

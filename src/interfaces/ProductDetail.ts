@@ -8,5 +8,5 @@ export interface IProductDetail {
     imageList: ImageList[];
     categoryList: CategoryList[];
     productBlog: ProductBlog;
-    views: number;
+    averageRating: number;
 }

@@ -66,13 +66,12 @@ const StyledCardWrapper = styled('div')(({ theme }) => ({
 }));
 
 const ProductCard = ({ data: product }: { data: Product }) => {
-    const { id, name, price, thumbnail, origin } = product;
+    const { id, name, price, thumbnail, origin, soldQuantity } = product;
     const wishlist = useSelector((state: RootState) => state.wishlist);
     const cart = useSelector((state: RootState) => state.cart);
     const isInWishList = wishlist.some(p => p.id === id);
     const isInCart = cart.some(p => p.product.id === id);
     const dispatch = useDispatch();
-    const quantitySold = 10;
 
     return (
         <StyledCardWrapper>
@@ -121,7 +120,7 @@ const ProductCard = ({ data: product }: { data: Product }) => {
                     </CardActionArea>
                 </Link>
                 <CardActions sx={{ padding: 2, paddingTop: 1, display: 'flex', justifyContent: 'space-between' }} disableSpacing>
-                    <Typography sx={{ fontSize: 13 }}>Đã bán {quantitySold}</Typography>
+                    <Typography sx={{ fontSize: 13 }}>Đã bán {soldQuantity}</Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <IconButton sx={{ alignItems: 'end' }} onClick={() => {
                             !isInWishList ? dispatch(wishlistAdd(product))

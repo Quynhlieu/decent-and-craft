@@ -36,7 +36,7 @@ const theme = createTheme({
     }
   }
 })
-const clientId = "1036046508854-680pfv5fr0inbmapvs2kfn02h06sdhji.apps.googleusercontent.com"
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 function App() {
   return (
     <GoogleOAuthProvider clientId={clientId}>
@@ -60,7 +60,10 @@ function App() {
                 <Route index element={<Blogs />} />
                 <Route path="category/:blogCategoryId" element={<Blogs />} />
               </Route>
-              <Route path="search" element={<SearchPage />} />
+              <Route path="search" element={<SearchPage />}>
+                <Route path="filter?" element={<SearchPage />} />
+                <Route path="category/:categoryId" element={<SearchPage />} />
+              </Route>
               <Route path="pay" element={<Payment />} />
               <Route path="bill"   >
                 <Route path=":orderId" element={<BillContainer />} />
@@ -72,7 +75,7 @@ function App() {
                 <Route path="create" element={<CreateProduct />} />
               </Route>
             </Route>
-            <Route path="page404" element={<Page404 />} />
+            <Route path="*" element={<Page404 />} />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
