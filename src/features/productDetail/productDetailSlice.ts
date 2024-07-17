@@ -68,10 +68,15 @@ const productDetailSlice = createSlice({
             state.cartItem && (state.cartItem.quantity + action.payload > 0)
             && (state.cartItem.quantity += action.payload)
          },
+         updateAverageRating(state, action: PayloadAction<number>) {
+            if (state.productDetail) {
+                state.productDetail.averageRating = action.payload;
+            }
+        },
     },
 });
 
-export const {productDetailLoad, reviewsLoad, reviewAdd, addCartItem, updateCartItem} = productDetailSlice.actions;
+export const {productDetailLoad, reviewsLoad, reviewAdd, addCartItem, updateCartItem, updateAverageRating} = productDetailSlice.actions;
 
 export default productDetailSlice.reducer
 

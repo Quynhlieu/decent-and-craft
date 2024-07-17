@@ -1,6 +1,6 @@
 import { AppBar, Badge, Box, Button, Divider, IconButton, Slide, Stack, Toolbar, Tooltip, Typography, useScrollTrigger } from '@mui/material'
 import React, { useState } from 'react'
-import SeachBar from './SeachBar'
+import SeachBar from './SearchBar'
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link, useNavigate } from 'react-router-dom';

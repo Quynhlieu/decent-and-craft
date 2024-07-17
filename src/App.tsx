@@ -36,7 +36,7 @@ const theme = createTheme({
     }
   }
 })
-const clientId = "" 
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 function App() {
   return (
     <GoogleOAuthProvider clientId={clientId}>
@@ -60,7 +60,9 @@ function App() {
                 <Route index element={<Blogs />} />
                 <Route path="category/:blogCategoryId" element={<Blogs />} />
               </Route>
-              <Route path="search" element={<SearchPage />} />
+              <Route path="search" element={<SearchPage />}>
+                <Route path="filter?" element={<SearchPage />} />
+              </Route>
               <Route path="pay" element={<Payment />} />
               <Route path="bill"   >
                 <Route path=":orderId" element={<BillContainer />} />

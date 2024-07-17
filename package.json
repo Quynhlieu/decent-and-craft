@@ -24,6 +24,7 @@
     "html-react-parser": "^5.1.10",
     "jspdf": "^2.5.1",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-data-table-component": "^7.6.2",
     "react-dom": "^18.2.0",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@mui/x-data-grid": "^6.20.0",
+    "@types/lodash": "^4.17.7",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/react-slick": "^0.23.13",

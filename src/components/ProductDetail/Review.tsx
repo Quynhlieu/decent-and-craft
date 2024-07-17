@@ -256,7 +256,7 @@ const Review = (prop: { productId: number }) => {
     // Lấy danh sách review từ server
     const dispatch = useDispatch();
     // Lấy danh sách review từ server
-    const { data: reviewList, error, isLoading } = useGetAllReviewsByProductIdQuery(productId, { refetchOnMountOrArgChange: true });
+    const { data: reviewList } = useGetAllReviewsByProductIdQuery(productId, { refetchOnMountOrArgChange: true });
     // reviewList && dispatch(reviewsLoad(reviewList));
     // const productDetailState = useSelector((state: RootState) => state.productDetail);
     // dispatch(reviewsLoad(productDetailState.reviews))
