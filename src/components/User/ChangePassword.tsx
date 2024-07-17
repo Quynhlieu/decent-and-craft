@@ -10,7 +10,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { UserChangePassword, useChangePasswordMutation } from "../../api/userApi.ts";
 import { OrbitProgress } from "react-loading-indicators";
 import IUser from "../../interfaces/IUser.ts";
-
+import Swal from 'sweetalert2';
 const ChangePassword: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [oldPassword, setOldPassword] = useState("");
@@ -51,7 +51,13 @@ const ChangePassword: React.FC = () => {
 
         try {
             await changePassword(changePasswordDto).unwrap();
-            setErrorz("Mật khẩu đã được thay đổi thành công");
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Đổi mật khẩu thành công !",
+                showConfirmButton: false,
+                timer: 1500
+            });
         } catch (error) {
             console.error('Change Password error:', error);
         }

@@ -19,7 +19,7 @@ import ProductManager from './components/Admin/Page/ProductManager.tsx';
 import CreateProduct from './components/Admin/Page/CreateProduct.tsx';
 import Page404 from "./pages/Page404.tsx";
 import BillContainer from './pages/Bill.tsx';
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const theme = createTheme({
   palette: {
     primary: {

@@ -150,6 +150,7 @@ const Footer = () => {
     return (
         <Box sx={{
             height: 400,
+            mt:4
         }}>
             <Grid container spacing={2}>
                 <Grid xs={3} item>

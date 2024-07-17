@@ -7,8 +7,6 @@ import Address from "../../interfaces/IAddress.ts";
 import Voucher from "../../interfaces/IVoucher.ts";
 import IUser from "../../interfaces/IUser.ts";
 import OrderDetail from "../../interfaces/IOrderDetail.ts";
-import {useSelector} from "react-redux";
-import {RootState} from "../../app/store.ts";
 
 interface DataType {
     createdDate: string;
@@ -28,7 +26,6 @@ interface AddressAndInfoOrderProps {
 }
 
 const AddressAndInfoOrder: React.FC<AddressAndInfoOrderProps> = ({order}) => {
-    const user = useSelector((state: RootState) => state.user.user);
     return (
         <Box sx={{width: "100%", flexGrow: 1}}>
             <Grid container spacing={1}>
@@ -37,10 +34,10 @@ const AddressAndInfoOrder: React.FC<AddressAndInfoOrderProps> = ({order}) => {
                         Địa chỉ nhận hàng
                     </Typography>
                     <Typography sx={{color: "black", paddingY: 1}}>
-                        <b>Tên người nhận:</b> {user?.fullName}
+                        <b>Tên người nhận:</b> {order?.address.fullName}
                     </Typography>
                     <Typography sx={{color: "#9a9393"}}>
-                        <b>Số điện thoại:</b> {user?.phone}
+                        <b>Số điện thoại:</b> {order?.address.phoneNumber}
                     </Typography>
                     <Typography sx={{color: "#9a9393", wordWrap: "break-word", wordBreak: "break-all"}}>
                         <b>Địa

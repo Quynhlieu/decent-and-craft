@@ -1,4 +1,20 @@
-import { Badge, Box, Card, CardContent, CardMedia, Dialog, DialogContent, DialogActions, DialogTitle, Divider, Grid, Skeleton, Stack, TextField, Typography } from '@mui/material';
+import {
+    Badge,
+    Box,
+    Card,
+    CardContent,
+    CardMedia,
+    Dialog,
+    DialogContent,
+    DialogActions,
+    DialogTitle,
+    Divider,
+    Grid,
+    Stack,
+    TextField,
+    Typography,
+    Skeleton
+} from '@mui/material';
 import React, { useEffect, useState } from "react";
 import PurchaseInformation from "../components/Payment/PurchaseInformation.tsx";
 import Transport from "../components/Payment/Transport.tsx";
@@ -46,7 +62,8 @@ const VoucherList: React.FC<VoucherListProps> = ({
         <>
             <Stack sx={{ ml: 1 }} spacing={2} direction="row">
                 {data && data.length > 0 &&
-                    data.map(v => <VoucherItem onClick={() => handleClickOpen(v)} key={v.id} voucher={v} />)
+                    data.map(v =>
+                        <VoucherItem onClick={() => handleClickOpen(v)} key={v.id} voucher={v} />)
                 }
                 {isLoading && <Skeleton width={100} height={50}></Skeleton>}
             </Stack>

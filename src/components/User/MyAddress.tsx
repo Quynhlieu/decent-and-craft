@@ -15,6 +15,7 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../app/store.ts";
 import {OrbitProgress} from "react-loading-indicators";
 import LocationSelector from "../Payment/LocationSelector.tsx";
+import Swal from "sweetalert2";
 
 interface AddressInfoProps {
     address: IAddress;
@@ -89,6 +90,13 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                     isDefault: formData.defaultAddress,
                 };
                 await updateAddress(updatedAddress).unwrap();
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Cập nhật địa chỉ thành công !",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
             else {
                 const newAddress = {
@@ -102,6 +110,13 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                     isDefault: formData.defaultAddress,
                 };
                 await addAddress(newAddress).unwrap();
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Thêm địa chỉ mới thành công !",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
             onBack();
         } catch (e) {

@@ -38,31 +38,9 @@ const Spinner = styled.div`
 
 // Cột mới: Tên sản phẩm
 const productNameColumn: TableColumn<DataType> = {
-    name: 'Tên sản phẩm',
-    selector: (row) => row.orderDetails.length > 0 ? row.orderDetails[0].product.name : '',
+    name: 'ID đơn hàng',
+    selector: (row) => row.id,
     sortable: true,
-    cell: (row) => {
-        const product = row.orderDetails.length > 0 ? row.orderDetails[0].product : null;
-        return (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                    src={product ? product.thumbnail : ''}
-                    alt={product ? product.name : ''}
-                    style={{marginRight: '10px', width: '40px', height: '40px', borderRadius: 20}}
-                />
-                <span style={{
-                    display: 'inline-block',
-                    maxWidth: '130px',  // Đặt kích thước tối đa cho tên sản phẩm
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                }}>
-                    {product ? product.name : ''}
-                </span>
-            </div>
-        );
-    },
-    width: '190px',
 };
 
 // Cột mới: Tổng tiền
@@ -70,9 +48,9 @@ const totalColumn:TableColumn<DataType> = {
     name: 'Tổng tiền',
     selector: row => {
         const totalOrderDetail = row.orderDetails.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-        const discount = row.voucher?.discount ?? 0;
+        const discount = row.voucher?.amount ?? 0;
         const shippingFee = row.shippingFee ?? 0;
-        const totalPrice = totalOrderDetail - discount - shippingFee;
+        const totalPrice = totalOrderDetail - discount + shippingFee;
         return totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     },
     sortable: true,
@@ -106,11 +84,6 @@ const statusColumn:TableColumn<DataType> = {
 const orderDateColumn: TableColumn<DataType> = {
     name: 'Ngày đặt hàng',
     selector: row => {
-        // const dateObject = new Date(row.createdDate);
-        // const day = dateObject.getDate();
-        // const month = dateObject.getMonth() + 1;
-        // const year = dateObject.getFullYear();
-        // return `${day}/${month}/${year}`;
         return formatDate(row.createdDate)
     },
     sortable: true,

@@ -3,7 +3,6 @@ import BASE_URL from "./url";
 import IUser from "../interfaces/IUser"
 import { OrderAddDto } from "../features/order/orderSlice";
 import IOrder from "../interfaces/IOrder";
-
 export interface UserRegister {
     email: string
     password: string
@@ -77,6 +76,13 @@ export const userApi = createApi({
                     body: orderAddDto
                 }),
                 invalidatesTags: ["POST"]
+            }),
+            forgotPassword: builder.mutation<IUser, string>({
+                query: (email) => ({
+                    url: 'users/forgot-password',
+                    method: 'POST',
+                    body: { email },
+                }),
             })
         });
     },
@@ -87,5 +93,6 @@ export const { useRegisterMutation,
     useChangePasswordMutation,
     useUpdateInfoUserMutation,
     useCreateOrderMutation,
-    useGoogleLoginMutation
+    useGoogleLoginMutation,
+    useForgotPasswordMutation
 } = userApi;
