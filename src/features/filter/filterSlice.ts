@@ -14,8 +14,10 @@ export interface FilterInitialState {
     name?: string,
     priceRange?: PriceRange
     categories?: BlogCategory[],
-    rating?: number[] | string,
-    page: number
+    rating?: null | string,
+    page: number,
+    relate?: FilterItem | null,
+    priceSort?: FilterItem | null,
 }
 export const defaultInitial = {
     name: '',
@@ -25,7 +27,10 @@ export const defaultInitial = {
     },
     categories: [],
     rating: "all",
-    page: 0
+    page: 0,
+    relate: null,
+    priceSort: null,
+
 };
 const initialState: FilterInitialState = defaultInitial
 
@@ -51,6 +56,19 @@ const filterSlice = createSlice({
             console.log("Update priceRange", state.priceRange);
 
          },
+         updateRating(state,  action: PayloadAction<string|null>) {
+            state.rating = action.payload;
+            console.log("Update rating", state.rating);
+
+         },
+         updateRelate(state,  action: PayloadAction<FilterItem>) {
+            state.relate = action.payload;
+            console.log("Update relate", state.relate);
+         },
+         updatePriceSort(state,  action: PayloadAction<FilterItem>) {
+            state.priceSort = action.payload;
+            console.log("Update price sort", state.priceSort);
+         },
          resetFilter(state,  action: PayloadAction<FilterInitialState>) {
             state = action.payload
             console.log("Reset filter ", state);
@@ -60,5 +78,5 @@ const filterSlice = createSlice({
     },
 });
 export default filterSlice.reducer
-export const {updateCategories, updatePage, updatePriceRange, resetFilter} = filterSlice.actions;
+export const {updateCategories, updatePage, updatePriceRange, resetFilter, updateRating, updateName, updateRelate, updatePriceSort} = filterSlice.actions;
 

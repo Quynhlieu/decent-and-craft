@@ -1,6 +1,6 @@
 import { Breadcrumbs, Link, Typography } from "@mui/material";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { useLocation, Link as RouterLink} from "react-router-dom";
+import { useLocation, Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useRef } from "react";
@@ -14,7 +14,7 @@ const BreadcrumbHeader = () => {
 
     const productDetailState = useSelector((state: RootState) => state.productDetail);
     const filterState = useSelector((state: RootState) => state.filter);
-    
+
     const productDetail = productDetailState.productDetail;
     const product = productDetailState.productDetail?.product;
     const firstCategory = productDetail?.categoryList[0];
@@ -46,9 +46,12 @@ const BreadcrumbHeader = () => {
     ];
 
     if (pathNames[0] === 'search') {
+        const categories = filterState.categories?.length !== 0 ? filterState.categories?.map(c => c.name).join(', ') : null;
+        const name = filterState.name !== '' ? filterState.name : null
+        const text = [categories, name].filter(i => i !== null);
         breadcrumbs.push(
             <Typography color="text.primary" sx={breadcrumbItemStyle} key="search" ref={(el) => breadcrumbsRef.current[1] = el}>
-                Kết quả tìm kiếm của: {filterState.categories?.map(c => c.name).join(', ')}
+                Kết quả tìm kiếm của:  {text.join(', ')}
             </Typography>
         );
     } else if (pathNames[0] === 'product' && firstCategory) {
@@ -68,11 +71,11 @@ const BreadcrumbHeader = () => {
     }
 
     return (
-            <div ref={containerRef}>
-                <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ marginY: 3, paddingX: 5 }} maxItems={3}>
-                    {breadcrumbs}
-                </Breadcrumbs>
-            </div>
+        <div ref={containerRef}>
+            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ marginY: 3, paddingX: 5 }} maxItems={3}>
+                {breadcrumbs}
+            </Breadcrumbs>
+        </div>
     );
 }
 

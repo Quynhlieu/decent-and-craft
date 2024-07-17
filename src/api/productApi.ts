@@ -1,4 +1,3 @@
-import { FilterInitialState } from './../features/filter/filterSlice';
 import { Page } from './../interfaces/Page';
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import BASE_URL from "./url";
@@ -23,6 +22,12 @@ export const productApi = createApi({
         getProductsByFilters: builder.query<PageIml, {minPrice: number, maxPrice: number, categoryId: number, page: Page }>({
             query: ({minPrice, maxPrice, categoryId, page}) => `products/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&categoryId=${categoryId}&page=${page.number}`
         }),
+        putViewsProductById: builder.mutation<boolean, number>({
+            query: (id) => ({
+                url: `products/${id}/view`,
+                method: 'PUT'
+            }),
+        }),
         getProductByCategoryId: builder.query<PageIml, number>({
             query: (categoryId: number) => `products/filter?categoryId=${categoryId}`
         }),
@@ -36,25 +41,30 @@ export const productApi = createApi({
         }),
         getProductFilters: builder.query<PageIml, FilterInitialState>({
             query: (filterState) => {
-                const size = 8;
                 let params = "products/filter?";
-                if(filterState.categories){
-                    params += String(filterState.categories.map(c => `categoryId=${c.id}`).join('&'));
+                if(filterState.name != ''){
+                    params += `name=${filterState.name}&`
+                }
+                if(filterState.categories && filterState.categories.length != 0){
+                    params += `categoryIds=${filterState.categories.map(c => c.id).join(',')}`;
                 }if(filterState.priceRange?.from!=null){
-                    params += String(`&minPrice=${filterState.priceRange.from}`)
+                    params += `&minPrice=${filterState.priceRange.from}`;
                     // &maxPrice=${filterState.priceRange.from}`);
                 }
                 if(filterState.priceRange?.to!=null){
-                    params += String(`&maxPrice=${filterState.priceRange.to}`)
+                    params += `&maxPrice=${filterState.priceRange.to}`;
                     // &maxPrice=${filterState.priceRange.from}`);
                 }
                 if(filterState.page){
-                    params += String(`&page=${filterState.page}&size=8`);
+                    params += `&page=${filterState.page}`;
+                }
+                if(filterState.rating!="all"){
+                    params += `&minRating=${filterState.rating}`;
                 }
                 console.log("Hello! How a u?", params);
-                return params;
+                return `${params}&size=8`;
             }
         }),
     }),
 })
-export const { useGetAllProductQuery, useGetProductByIdQuery, useGetProductByCategoryIdQuery, useGetProductByCategoryListQuery, useGetProductFiltersQuery, useGetAllHotProductQuery } = productApi
+export const { useGetAllProductQuery, useGetProductByIdQuery, useGetProductByCategoryIdQuery, useGetProductByCategoryListQuery, useGetProductFiltersQuery, useGetAllHotProductQuery, usePutViewsProductByIdMutation } = productApi
