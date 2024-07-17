@@ -222,7 +222,7 @@ export default function Login() {
                     >
                         Đăng nhập
                     </Button>
-                    <FacebookGoogleBtns />
+                    {/* <FacebookGoogleBtns /> */}
                     <ForgotPasswordRegisterBtns />
                 </Box>
             </Box>

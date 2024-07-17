@@ -50,7 +50,7 @@ const BillDetails: React.FC<BillDetailsProps> = ({ order }) => {
                             <strong>Thông tin người nhận:</strong> {order.address.fullName} - {order.address.phoneNumber}
                         </Typography>
                         <Typography variant="body1">
-                            <strong>Ghi chú:</strong> {"Không có"}
+                            <strong>Ghi chú:</strong> {order.notice ?? "Không có"}
                         </Typography>
                     </Box>
                 </Grid>

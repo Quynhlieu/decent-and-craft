@@ -41,8 +41,12 @@ const PurchaseInformation: React.FC = () => {
             const defaultAddress = addresses.find(a => a.defaultAddress);
             if (defaultAddress) {
                 dispatch(orderSetAddressId(defaultAddress?.id));
+                setSelectedAddress(defaultAddress);
             }
-            setSelectedAddress(defaultAddress);
+            else {
+                dispatch(orderSetAddressId(addresses[0].id));
+                setSelectedAddress(addresses[0]);
+            }
         }
     }, [addresses, isLoading]);
 
