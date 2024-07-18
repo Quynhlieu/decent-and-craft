@@ -303,7 +303,9 @@ const SimilarProductList = (prop: { similarProducts: Product[] }) => {
 // Chi tiet san pham
 const Detail = (prop: { productDetail: IProductDetail }) => {
     const { productDetail } = prop;
-    const { data } = useGetProductByCategoryIdQuery(productDetail.categoryList[0].id ?? 1);
+    const { data } = useGetProductByCategoryIdQuery(productDetail.categoryList[0].id);
+    console.log(data);
+    
     const products = data?.content.filter((p) => p.id !== productDetail.id);
     return (
         <Box component="div">

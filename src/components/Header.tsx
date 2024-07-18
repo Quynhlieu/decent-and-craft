@@ -4,7 +4,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppBar, Badge, Button, Divider, IconButton, Slide, Stack, styled, Toolbar, Tooltip, Typography, useScrollTrigger } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { RootState } from '../app/store';
 import { getCount, getTotalPrice } from '../features/cart/cartSlice';
 import { logout } from "../features/user/userSlice.ts";
@@ -16,7 +16,7 @@ import SeachBar from './SearchBar';
 
 const StyledNavLink = styled(NavLink)(({ theme }) => ({
     textDecoration: 'none',
-    fontSize: 30,
+    fontSize: 25,
     padding: 10,
     color: 'inherit',
     '&.active': {

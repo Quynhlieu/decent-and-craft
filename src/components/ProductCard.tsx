@@ -148,7 +148,6 @@ const ProductCard = ({ data: product }: { data: Product }) => {
                                         product,
                                         quantity: 1
                                     }));
-                                    toast.success("Thêm vào giỏ hàng thành công", { autoClose: 1000, position: "bottom-left" });
                                 }}
                             >
                                 {!isInCart ?

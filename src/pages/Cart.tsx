@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Grid, Stack, TextField, Typography } from '@mui/material'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import React from 'react'
+import React, { useState } from 'react'
 import DataTable from 'react-data-table-component'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../app/store'
@@ -19,6 +19,27 @@ import { StyledLink } from '../components/BlogCarousel'
 const QuantityButton = (prop: { cartItem: CartItem }) => {
     const { cartItem } = prop;
     const dispatch = useDispatch();
+    const [localQuantity, setLocalQuantity] = useState(cartItem.quantity);
+
+    const handleBlur = () => {
+        if (localQuantity <= 0) {
+            setLocalQuantity(cartItem.quantity); // Revert to the previous valid quantity
+        } else if (localQuantity > cartItem.product.unitInStock) {
+            setLocalQuantity(cartItem.quantity); // Revert to the previous valid quantity
+        } else {
+            dispatch(cartUpdate({
+                productId: cartItem.product.id,
+                value: localQuantity - cartItem.quantity
+            }));
+        }
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const quantityValue = parseInt(event.target.value, 10);
+        if (!isNaN(quantityValue)) {
+            setLocalQuantity(quantityValue);
+        }
+    };
     const baseSx = {
         borderRadius: 50,
         background: grey[200],
@@ -33,14 +54,18 @@ const QuantityButton = (prop: { cartItem: CartItem }) => {
                         productId: cartItem.product.id,
                         value: -1
                     }))
+                    if (localQuantity > 0) {
+                        setLocalQuantity(pre => pre - 1)
+                    }
                 }}
                 endIcon={<RemoveIcon />} />
             <TextField
                 className="text-field"
                 type="tel"
+                value={localQuantity}
+                onBlur={handleBlur}
+                onChange={handleChange}
                 sx={{ width: 10 }}
-                // onChange={handleQuantity}
-                value={cartItem.quantity}
             />
             <Button sx={{ minWidth: 0 }}
                 onClick={() => {
@@ -48,6 +73,8 @@ const QuantityButton = (prop: { cartItem: CartItem }) => {
                         productId: cartItem.product.id,
                         value: 1
                     }))
+                    if (localQuantity + 1 < cartItem.product.unitInStock)
+                        setLocalQuantity(pre => pre + 1)
                 }}
                 startIcon={<AddIcon />} />
         </Stack>

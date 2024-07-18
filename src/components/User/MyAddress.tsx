@@ -1,19 +1,19 @@
-import React, {useState} from "react";
-import {Box, Container, Fab, Grid, Paper, TextField, Typography} from "@mui/material";
+import React, { useState } from "react";
+import { Box, Container, Fab, Grid, Paper, TextField, Typography } from "@mui/material";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {SubmitHandler, useForm} from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import IAddress from "../../interfaces/IAddress";
-import {useAddAddressMutation, useGetAddressListQuery, useUpdateAddressMutation} from "../../api/addressApi.ts";
-import {useSelector} from "react-redux";
-import {RootState} from "../../app/store.ts";
-import {OrbitProgress} from "react-loading-indicators";
+import { useAddAddressMutation, useGetAddressListQuery, useUpdateAddressMutation } from "../../api/addressApi.ts";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store.ts";
+import { OrbitProgress } from "react-loading-indicators";
 import LocationSelector from "../Payment/LocationSelector.tsx";
 import Swal from "sweetalert2";
 
@@ -30,8 +30,8 @@ interface AddressAddBackProps {
 
 const TitleAddress: React.FC<{ title: string }> = ({ title }) => {
     return (
-        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3}}>
-            <AddLocationIcon color="primary" sx={{mr: 1}}/>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+            <AddLocationIcon color="primary" sx={{ mr: 1 }} />
             <Typography variant="h5" align="center">
                 {title}
             </Typography>
@@ -41,8 +41,8 @@ const TitleAddress: React.FC<{ title: string }> = ({ title }) => {
 
 const BackAndAdd: React.FC<AddressAddBackProps> = ({ onBack, title }) => {
     return (
-        <Box sx={{display: 'flex', justifyContent: 'flex-end', marginTop: 3}}>
-            <Button variant="outlined" color="secondary" onClick={onBack} sx={{marginRight: 2}}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 3 }}>
+            <Button variant="outlined" color="secondary" onClick={onBack} sx={{ marginRight: 2 }}>
                 Quay lại
             </Button>
             <Button type="submit" variant="contained" color="primary">
@@ -65,15 +65,15 @@ interface FormValue {
 interface AddAddressFormProps {
     userId: number;
     onBack: () => void;
-    title : string;
+    title: string;
     defaultValues?: IAddress;
 }
 
-const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, defaultValues}) => {
-    const {register, handleSubmit, formState: {errors}, setValue} = useForm<IAddress>({defaultValues});
+const AddAddressForm: React.FC<AddAddressFormProps> = ({ userId, onBack, title, defaultValues }) => {
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm<IAddress>({ defaultValues });
     const [addAddress] = useAddAddressMutation();
 
-    const[updateAddress] = useUpdateAddressMutation();
+    const [updateAddress] = useUpdateAddressMutation();
 
     const onSubmit: SubmitHandler<FormValue> = async formData => {
         try {
@@ -135,8 +135,8 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
 
     return (
         <Container maxWidth="sm">
-            <Paper elevation={3} sx={{padding: 4, borderRadius: 2}}>
-                <TitleAddress title = {title}/>
+            <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
+                <TitleAddress title={title} />
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
@@ -146,7 +146,7 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                                 id="name"
                                 label="Họ và Tên"
                                 variant="outlined"
-                                {...register("fullName", {required: "Họ và Tên là bắt buộc"})}
+                                {...register("fullName", { required: "Họ và Tên là bắt buộc" })}
                                 error={!!errors.fullName}
                                 helperText={errors.fullName ? errors.fullName.message : ""}
                             />
@@ -161,8 +161,8 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                                 {...register("phoneNumber", {
                                     required: "Số điện thoại là bắt buộc",
                                     pattern: {
-                                        value: /\d{10,11}/,
-                                        message: "Số điện thoại không hợp lệ"
+                                        value: /^0\d{9}$/,
+                                        message: 'Số điện thoại phải gồm 10 chữ số và bắt đầu bằng số 0'
                                     },
                                     maxLength: {
                                         value: 11,
@@ -173,12 +173,12 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                                 helperText={errors.phoneNumber ? errors.phoneNumber.message : ""}
                             />
                         </Grid>
-                        <Grid item xs ={12}>
+                        <Grid item xs={12}>
                             <LocationSelector
                                 province={province}
                                 district={district}
                                 ward={ward}
-                                defaultValues = {defaultValues}
+                                defaultValues={defaultValues}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -188,7 +188,7 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                                 id="description"
                                 label="Mô tả"
                                 variant="outlined"
-                                {...register("description", {required: "Tòa nhà, tên đường là bắt buộc"})}
+                                {...register("description", { required: "Tòa nhà, tên đường là bắt buộc" })}
                                 error={!!errors.description}
                                 helperText={errors.description ? errors.description.message : ""}
                             />
@@ -201,18 +201,18 @@ const AddAddressForm: React.FC<AddAddressFormProps> = ({userId, onBack, title, d
                             />
                         </Grid>
                     </Grid>
-                    <BackAndAdd onBack={onBack} title ={title}/>
+                    <BackAndAdd onBack={onBack} title={title} />
                 </form>
             </Paper>
         </Container>
     );
 };
 
-const AddBtn = ({onBack}: { onBack: () => void }) => {
+const AddBtn = ({ onBack }: { onBack: () => void }) => {
     return (
-        <Box sx={{width: '100%', display: 'flex', justifyContent: "flex-end", paddingTop: 3}}>
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: "flex-end", paddingTop: 3 }}>
             <Fab variant="extended" onClick={onBack}>
-                <AddIcon sx={{mr: 1, flex: 2}}/>
+                <AddIcon sx={{ mr: 1, flex: 2 }} />
                 Thêm
             </Fab>
         </Box>
@@ -237,28 +237,28 @@ const AddressInfo: React.FC<AddressInfoProps> = ({ address, onClickEdit, onClick
                 justifyContent: 'space-between',
                 alignItems: 'center'
             }}>
-                <Box sx={{flex: 1}}>
-                    <Typography variant="body1" sx={{mb: 1}}>
+                <Box sx={{ flex: 1 }}>
+                    <Typography variant="body1" sx={{ mb: 1 }}>
                         Họ tên: <strong>{address.fullName}</strong>
                         {address.defaultAddress && (
-                            <span style={{marginLeft: 8, color: 'green', fontSize: '0.9rem'}}>
-                                    <CheckCircleIcon sx={{verticalAlign: 'middle'}}/> Địa chỉ mặc định
-                                </span>
+                            <span style={{ marginLeft: 8, color: 'green', fontSize: '0.9rem' }}>
+                                <CheckCircleIcon sx={{ verticalAlign: 'middle' }} /> Địa chỉ mặc định
+                            </span>
                         )}
                     </Typography>
-                    <Typography variant="body1" sx={{mb: 1}}>
+                    <Typography variant="body1" sx={{ mb: 1 }}>
                         Số điện thoại: <strong>{address.phoneNumber}</strong>
                     </Typography>
-                    <Typography variant="body1" sx={{mb: 1}}>
+                    <Typography variant="body1" sx={{ mb: 1 }}>
                         Địa
                         chỉ: <strong>{`${address.description}, ${address.ward}, ${address.district}, ${address.province}`}</strong>
                     </Typography>
                 </Box>
                 <Box>
-                    <Typography variant="body1" sx={{mb: 1}}>
+                    <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>Chức năng</strong>
                     </Typography>
-                    <Box sx={{display: 'flex', gap: 1}}>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
                         <Button variant="outlined" sx={{
                             borderColor: '#2196f3',
                             color: '#2196f3',
@@ -267,9 +267,9 @@ const AddressInfo: React.FC<AddressInfoProps> = ({ address, onClickEdit, onClick
                             },
                             mr: 1
                         }}
-                                onClick={onClickEdit}
+                            onClick={onClickEdit}
                         >
-                            <EditIcon/>
+                            <EditIcon />
                         </Button>
                         <Button variant="outlined" color="error" sx={{
                             borderColor: '#f44336',
@@ -278,9 +278,9 @@ const AddressInfo: React.FC<AddressInfoProps> = ({ address, onClickEdit, onClick
                                 backgroundColor: '#ffebee'
                             }
                         }}
-                                onClick={onClickDelete}
+                            onClick={onClickDelete}
                         >
-                            <DeleteIcon/>
+                            <DeleteIcon />
                         </Button>
                     </Box>
                 </Box>
@@ -293,7 +293,7 @@ const MyAddress: React.FC = () => {
     const [title, setTitle] = useState("Thêm địa chỉ mới");
     const [currentAddress, setCurrentAddress] = useState<IAddress | null>(null);
     const user = useSelector((state: RootState) => state.user.user);
-    const {data, isLoading} = useGetAddressListQuery(user?.id ?? 0);
+    const { data, isLoading } = useGetAddressListQuery(user?.id ?? 0);
     const handleBack = () => {
         setIsFormVisible(false);
         setCurrentAddress(null);
@@ -319,9 +319,9 @@ const MyAddress: React.FC = () => {
         // }
     };
     return (
-        <Box sx={{minHeight: 320, width: 800}}>
+        <Box sx={{ minHeight: 320, width: 800 }}>
             {isFormVisible ? (
-                <AddAddressForm onBack={handleBack} defaultValues={currentAddress ?? undefined} userId={user?.id ?? 0} title = {title}/>
+                <AddAddressForm onBack={handleBack} defaultValues={currentAddress ?? undefined} userId={user?.id ?? 0} title={title} />
             ) : (
                 <>
                     <Typography variant='h3' sx={{
@@ -332,7 +332,7 @@ const MyAddress: React.FC = () => {
                         Địa chỉ của tôi
                     </Typography>
 
-                    <Box sx={{width: '100%'}}>
+                    <Box sx={{ width: '100%' }}>
                         {data && data.map((address) => (
                             <AddressInfo
                                 key={address.id}
@@ -343,7 +343,7 @@ const MyAddress: React.FC = () => {
                         ))}
                     </Box>
 
-                    <AddBtn onBack={handleAddClick}/>
+                    <AddBtn onBack={handleAddClick} />
                 </>
             )}
 
@@ -361,7 +361,7 @@ const MyAddress: React.FC = () => {
                     alignItems: 'center',
                     zIndex: 9999,
                 }}>
-                    <OrbitProgress color="color.primary.main" size="medium" text="" textColor=""/>
+                    <OrbitProgress color="color.primary.main" size="medium" text="" textColor="" />
                 </Box>
             )}
         </Box>
